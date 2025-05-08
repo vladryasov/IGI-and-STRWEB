@@ -1,0 +1,96 @@
+# car_analyzer.py
+# Purpose: Analyze Automobile Dataset using Pandas
+# Lab Work: #5 - Object-Oriented Programming (Additional Task)
+# Version: 1.5
+# Developer: [Your Full Name]
+# Date: May 08, 2025
+
+import pandas as pd
+
+class CarAnalyzer:
+    """Class to analyze Automobile Dataset with Pandas."""
+    
+    def __init__(self, filepath):
+        """Initialize with dataset filepath and load data."""
+        self.df = pd.read_csv(filepath)
+        self.series_examples = {}
+        # Print columns to debug
+        #print("Available columns in the dataset:", self.df.columns.tolist())
+
+    def demonstrate_series(self):
+        """Demonstrate Series structure and operations."""
+        # 2. Structure Series
+        print("\n2. Structure Series:")
+        # Use a column that exists (e.g., mpg)
+        mpg_column = 'mpg'
+        if mpg_column not in self.df.columns:
+            raise KeyError(f"Column '{mpg_column}' not found. Available columns: {self.df.columns.tolist()}")
+        mpg_series = self.df[mpg_column]
+        self.series_examples['MPG'] = mpg_series
+        print(f"Series example (MPG):\n{mpg_series.head()}")
+        print(f"Type: {type(mpg_series)}")
+        print(f"Shape: {mpg_series.shape}")
+        print(f"Data type: {mpg_series.dtype}")
+
+        # 3. Creating Series
+        print("\n3. Creating Series:")
+        custom_series = pd.Series([10, 20, 30, 40], index=['a', 'b', 'c', 'd'], name='CustomMPG')
+        self.series_examples['Custom'] = custom_series
+        print(f"Custom Series:\n{custom_series}")
+
+        # 4. Display function (replaced with print)
+        print("\n4. Display function (using print):")
+        print(custom_series)
+
+        # 5. Access elements with .loc and .iloc
+        print("\n5. Access elements with .loc and .iloc:")
+        print(f"Using .loc (index 'b'): {custom_series.loc['b']}")
+        print(f"Using .iloc (position 1): {custom_series.iloc[1]}")
+
+    def analyze_dataframe(self):
+        """Analyze DataFrame structure and operations."""
+        # 6. Object DataFrame. Creation
+        print("\n6. Object DataFrame. Creation:")
+        print("Original DataFrame (first 5 rows):\n", self.df.head())
+
+        # 2. Getting information about DataFrame
+        print("\n2. Information about DataFrame:")
+        print("Shape (rows, columns):", self.df.shape)
+        print("Columns:", self.df.columns.tolist())
+        print("Data types:\n", self.df.dtypes)
+        print("Missing values:\n", self.df.isnull().sum())
+        print("Basic statistics:\n", self.df.describe())
+
+        # 5. Indexing and statistical methods
+        print("\n5. Indexing and Statistical Methods:")
+        
+        # Example 1: Ratio of average mpg for cars with max horsepower vs min horsepower
+        horsepower_column = 'horsepower'
+        if horsepower_column not in self.df.columns:
+            raise KeyError(f"Column '{horsepower_column}' not found. Available columns: {self.df.columns.tolist()}")
+        max_horsepower_car = self.df.loc[self.df[horsepower_column].idxmax()]
+        min_horsepower_car = self.df.loc[self.df[horsepower_column].idxmin()]
+        avg_mpg_max_horsepower = self.df[self.df[horsepower_column] == max_horsepower_car[horsepower_column]]['mpg'].mean()
+        avg_mpg_min_horsepower = self.df[self.df[horsepower_column] == min_horsepower_car[horsepower_column]]['mpg'].mean()
+        ratio_mpg_horsepower = avg_mpg_max_horsepower / avg_mpg_min_horsepower if avg_mpg_min_horsepower != 0 else float('inf')
+        print(f"Ratio of average mpg (max horsepower) to (min horsepower): {ratio_mpg_horsepower:.2f}")
+
+        # Example 2: Average model_year for cars with weight below average
+        weight_column = 'weight'
+        if weight_column not in self.df.columns:
+            raise KeyError(f"Column '{weight_column}' not found. Available columns: {self.df.columns.tolist()}")
+        avg_weight = self.df[weight_column].mean()
+        avg_model_year_low_weight = self.df[self.df[weight_column] < avg_weight]['model_year'].mean()
+        print(f"Average model_year for cars with weight below average: {avg_model_year_low_weight:.2f}")
+
+    def run_analysis(self):
+        """Run all analysis methods."""
+        self.demonstrate_series()
+        self.analyze_dataframe()
+
+# Example usage
+if __name__ == "__main__":
+    # Replace with the actual path to your downloaded CSV file
+    filepath = "/home/vlad/353503_Ryasov_19/IGI/LR4/Task6/Automobile.csv"  # Ensure this file is in the same directory or provide full path
+    analyzer = CarAnalyzer(filepath)
+    analyzer.run_analysis()
