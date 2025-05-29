@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Точки самовывоза</h2>
+    <div class="row">
+        {% for point in points %}
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">{{ point.address }}</h5>
+                    <p class="card-text">
+                        <strong>Режим работы:</strong> {{ point.working_hours }}<br>
+                        <strong>Телефон:</strong> {{ point.phone }}
+                    </p>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <p>На данный момент нет доступных точек самовывоза.</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %} 

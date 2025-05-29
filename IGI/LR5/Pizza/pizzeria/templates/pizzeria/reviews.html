@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block title %}Reviews - Pizzeria{% endblock %}
+
+{% block content %}
+    <h1>Reviews</h1>
+    {% if reviews %}
+        <div style="max-width: 600px; margin: 0 auto;">
+        {% for review in reviews %}
+            <div style="border: 1px solid #ccc; padding: 10px; margin-bottom: 10px; border-radius: 5px;">
+                <p><strong>{{ review.customer.user_profile.user.username }}</strong> ({{ review.rating }}/5)</p>
+                <p>{{ review.text }}</p>
+                <p><small>Posted on {{ review.created_at|date:"d/m/Y H:i" }}</small></p>
+            </div>
+        {% endfor %}
+        </div>
+    {% else %}
+        <p>No reviews yet.</p>
+    {% endif %}
+    {% if request.user.is_authenticated %}
+        {% if request.user.userprofile %}
+            <p>Debug: Role = {{ request.user.userprofile.role }}</p> <!-- Отладочная информация -->
+            {% if request.user.userprofile.role == 'client' or request.user.userprofile.role == 'staff' or request.user.userprofile.role == 'admin' %}
+                <a href="{% url 'create_review' %}">Add a Review</a>
+            {% else %}
+                <p>Debug: Role not allowed for adding reviews.</p>
+            {% endif %}
+        {% else %}
+            <p>Debug: No user profile found.</p>
+        {% endif %}
+    {% endif %}
+    <a href="{% url 'home' %}">Back to Home</a>
+{% endblock %}

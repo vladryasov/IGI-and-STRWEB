@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %}Client List - Pizzeria{% endblock %}
+
+{% block content %}
+    <h1>Client List</h1>
+    {% if clients %}
+        <ul>
+        {% for client in clients %}
+            <li>{{ client.user.username }} - Phone: {{ client.phone }}</li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>No clients found.</p>
+    {% endif %}
+    <a href="{% url 'home' %}">Back to Home</a>
+{% endblock %}
