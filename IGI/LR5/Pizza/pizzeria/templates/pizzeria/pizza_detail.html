@@ -1,0 +1,194 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ pizza.name }} - Pizzeria{% endblock %}
+
+{% block content %}
+<div class="pizza-detail">
+    <div class="pizza-info">
+        {% if pizza.image %}
+        <img src="{{ pizza.image.url }}" alt="{{ pizza.name }}" class="pizza-image">
+        {% endif %}
+        
+        <div class="pizza-content">
+            <h1>{{ pizza.name }}</h1>
+            <p class="description">{{ pizza.description }}</p>
+            <p class="price">от {{ pizza.base_price }} руб.</p>
+            
+            {% if user.is_authenticated %}
+            <form method="post" action="{% url 'add_to_cart' pizza.id %}" class="add-to-cart-form">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="size">Размер:</label>
+                    <select name="size" id="size" required>
+                        <option value="">Выберите размер</option>
+                        {% for size in pizza.sizes.all %}
+                        <option value="{{ size.id }}">{{ size.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="quantity">Количество:</label>
+                    <input type="number" name="quantity" id="quantity" value="1" min="1" required>
+                </div>
+                <button type="submit" class="btn">Добавить в корзину</button>
+            </form>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="reviews-section">
+        <h2>Отзывы</h2>
+        {% if user.is_authenticated %}
+        <form method="post" class="review-form">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="rating">Оценка:</label>
+                <select name="rating" id="rating" required>
+                    <option value="5">5 - Отлично</option>
+                    <option value="4">4 - Хорошо</option>
+                    <option value="3">3 - Нормально</option>
+                    <option value="2">2 - Плохо</option>
+                    <option value="1">1 - Ужасно</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="text">Ваш отзыв:</label>
+                <textarea name="text" id="text" required></textarea>
+            </div>
+            <button type="submit" class="btn">Оставить отзыв</button>
+        </form>
+        {% endif %}
+
+        <div class="reviews-list">
+            {% if reviews %}
+                {% for review in reviews %}
+                <div class="review">
+                    <div class="review-header">
+                        <span class="review-author">{{ review.customer }}</span>
+                        <span class="review-rating">★ {{ review.rating }}/5</span>
+                        <span class="review-date">{{ review.created_at|date:"d.m.Y" }}</span>
+                    </div>
+                    <p class="review-text">{{ review.text }}</p>
+                </div>
+                {% endfor %}
+            {% else %}
+                <p class="no-reviews">Пока нет отзывов. Будьте первым!</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<style>
+.pizza-detail {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.pizza-info {
+    display: flex;
+    gap: 30px;
+    margin-bottom: 40px;
+}
+
+.pizza-image {
+    max-width: 500px;
+    height: auto;
+    border-radius: 8px;
+}
+
+.pizza-content {
+    flex: 1;
+}
+
+.description {
+    color: #666;
+    margin: 15px 0;
+}
+
+.price {
+    font-size: 1.5em;
+    color: #e31837;
+    font-weight: bold;
+    margin: 15px 0;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+select, input[type="number"] {
+    width: 200px;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.btn {
+    background-color: #e31837;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.btn:hover {
+    background-color: #c41230;
+}
+
+.reviews-section {
+    margin-top: 40px;
+}
+
+.review-form {
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 30px;
+}
+
+.review-form textarea {
+    width: 100%;
+    height: 100px;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.reviews-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.review {
+    background-color: white;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.review-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    color: #666;
+}
+
+.review-rating {
+    color: #e31837;
+}
+
+.no-reviews {
+    text-align: center;
+    color: #666;
+    padding: 20px;
+}
+</style>
+{% endblock %} 
