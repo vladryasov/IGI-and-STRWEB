@@ -7,6 +7,7 @@ urlpatterns = [
     path('', views.home, name='home'),
     path('about/', views.about, name='about'),
     path('news/', views.news_list, name='news_list'),
+    path('news/<slug:slug>/', views.news_detail, name='news_detail'),
     path('dictionary/', views.dictionary, name='dictionary'),
     path('contacts/', views.contacts, name='contacts'),
     path('privacy/', views.privacy, name='privacy'),
@@ -24,6 +25,7 @@ urlpatterns = [
     path('pizzas/filter/', views.filter_pizzas, name='filter_pizzas'),
     path('promo/apply/', views.apply_promo, name='apply_promo'),
     path('statistics/', views.order_statistics, name='order_statistics'),
+    path('staff/statistics/', views.staff_statistics, name='staff_statistics'),  # Новый URL для статистики
     # CRUD для категорий
     path('categories/', views.category_list, name='category_list'),
     path('categories/create/', views.category_create, name='category_create'),

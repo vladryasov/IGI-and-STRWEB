@@ -1,0 +1,188 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ action }} новость - Pizzeria{% endblock %}
+
+{% block content %}
+<div class="news-form-container">
+    <div class="news-form">
+        <h1>{{ action }} новость</h1>
+        
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            <div class="form-group">
+                <label for="title">Заголовок</label>
+                <input type="text" id="title" name="title" class="form-control" 
+                       value="{{ news.title|default:'' }}" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="content">Содержание</label>
+                <textarea id="content" name="content" class="form-control" rows="10" required>{{ news.content|default:'' }}</textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="image">Изображение</label>
+                {% if news.image %}
+                    <div class="current-image">
+                        <img src="{{ news.image.url }}" alt="Текущее изображение">
+                        <p>Текущее изображение</p>
+                    </div>
+                {% endif %}
+                <input type="file" id="image" name="image" class="form-control-file" accept="image/*">
+            </div>
+            
+            {% if news %}
+                <div class="form-group">
+                    <label class="checkbox-container">
+                        <input type="checkbox" name="is_published" {% if news.is_published %}checked{% endif %}>
+                        <span class="checkmark"></span>
+                        Опубликовано
+                    </label>
+                </div>
+            {% endif %}
+            
+            <div class="form-actions">
+                <button type="submit" class="btn btn-success">
+                    <i class="fas fa-save"></i> Сохранить
+                </button>
+                <a href="{% url 'news_list' %}" class="btn btn-secondary">
+                    <i class="fas fa-times"></i> Отмена
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+.news-form-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.news-form {
+    background: white;
+    border-radius: 8px;
+    padding: 30px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.news-form h1 {
+    margin: 0 0 30px 0;
+    color: #333;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    color: #333;
+    font-weight: 500;
+}
+
+.form-control {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1em;
+    transition: border-color 0.2s ease;
+}
+
+.form-control:focus {
+    border-color: #4CAF50;
+    outline: none;
+}
+
+textarea.form-control {
+    resize: vertical;
+    min-height: 200px;
+}
+
+.form-control-file {
+    padding: 10px 0;
+}
+
+.current-image {
+    margin: 10px 0;
+    text-align: center;
+}
+
+.current-image img {
+    max-width: 300px;
+    height: auto;
+    border-radius: 4px;
+}
+
+.current-image p {
+    margin: 5px 0;
+    color: #666;
+    font-size: 0.9em;
+}
+
+.checkbox-container {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+}
+
+.checkbox-container input {
+    margin-right: 10px;
+}
+
+.form-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 30px;
+}
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    font-size: 1em;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background-color 0.2s ease;
+}
+
+.btn i {
+    margin-right: 5px;
+}
+
+.btn-success {
+    background: #4CAF50;
+    color: white;
+}
+
+.btn-success:hover {
+    background: #45a049;
+}
+
+.btn-secondary {
+    background: #6c757d;
+    color: white;
+}
+
+.btn-secondary:hover {
+    background: #5a6268;
+}
+
+@media (max-width: 768px) {
+    .news-form-container {
+        padding: 10px;
+    }
+    
+    .news-form {
+        padding: 20px;
+    }
+}
+</style>
+{% endblock %} 

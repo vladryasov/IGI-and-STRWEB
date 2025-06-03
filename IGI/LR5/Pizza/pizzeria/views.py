@@ -2,14 +2,19 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.forms import AuthenticationForm
-from .models import Pizza, Review, PromoCode, Vacancy, UserProfile, PickupPoint, PizzaCategory, Order, OrderItem, Coupon, PizzaSize
+from .models import Pizza, Review, PromoCode, Vacancy, UserProfile, PickupPoint, PizzaCategory, Order, OrderItem, Coupon, PizzaSize, Contact, News
 from .forms import LoginForm, PizzaCategoryForm, RegistrationForm, ProfileEditForm, PizzaForm
 from django.db.models import Q, Sum, Count, Avg
 from django.utils import timezone
 from decimal import Decimal
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.core.paginator import Paginator
 from django.contrib import messages
+import matplotlib.pyplot as plt
+import pandas as pd
+import io
+import base64
+from datetime import timedelta
 
 # Проверка роли
 def get_user_role(user):
@@ -43,13 +48,25 @@ def about(request):
     return render(request, 'pizzeria/about.html')
 
 def news_list(request):
-    return render(request, 'pizzeria/news_list.html')
+    news = News.objects.filter(is_published=True).order_by('-created_at')
+    
+    # Пагинация
+    paginator = Paginator(news, 6)  # 6 новостей на странице
+    page = request.GET.get('page')
+    news_page = paginator.get_page(page)
+    
+    return render(request, 'pizzeria/news_list.html', {'news': news_page})
+
+def news_detail(request, slug):
+    news_item = get_object_or_404(News, slug=slug, is_published=True)
+    return render(request, 'pizzeria/news_detail.html', {'news': news_item})
 
 def dictionary(request):
     return render(request, 'pizzeria/dictionary.html')
 
 def contacts(request):
-    return render(request, 'pizzeria/contacts.html')
+    contacts = Contact.objects.all().order_by('-is_main')  # Основной офис будет первым
+    return render(request, 'pizzeria/contacts.html', {'contacts': contacts})
 
 def privacy(request):
     return render(request, 'pizzeria/privacy.html')
@@ -521,3 +538,196 @@ def remove_from_cart(request, item_id):
         order.calculate_total()
         messages.success(request, 'Товар удален из корзины')
     return redirect('cart')
+
+@user_passes_test(lambda u: is_staff(u) or is_admin(u))
+def staff_statistics(request):
+    # Получаем данные за последние 30 дней
+    end_date = timezone.now()
+    start_date = end_date - timedelta(days=30)
+    
+    # Данные по новым пользователям
+    new_users = UserProfile.objects.filter(
+        created_at__range=(start_date, end_date)
+    ).values('created_at__date').annotate(
+        count=Count('id')
+    ).order_by('created_at__date')
+    
+    # Данные по заказам (исключаем корзины и отмененные заказы)
+    orders = Order.objects.filter(
+        order_date__range=(start_date, end_date),
+        status__in=['confirmed', 'completed', 'delivered']  # только подтвержденные и завершенные заказы
+    ).values('order_date__date').annotate(
+        count=Count('id'),
+        total_revenue=Sum('total_price')
+    ).order_by('order_date__date')
+    
+    # Создаем DataFrame для удобной работы с данными
+    users_df = pd.DataFrame(list(new_users))
+    orders_df = pd.DataFrame(list(orders))
+    
+    # Преобразуем Decimal в float для корректной работы с графиками
+    if not orders_df.empty and 'total_revenue' in orders_df:
+        orders_df['total_revenue'] = orders_df['total_revenue'].astype(float)
+    
+    # Создаем графики
+    plt.figure(figsize=(15, 10))
+    
+    # Настраиваем общий стиль графиков
+    plt.rcParams['axes.grid'] = True
+    plt.rcParams['grid.alpha'] = 0.3
+    plt.rcParams['axes.labelsize'] = 12
+    plt.rcParams['axes.titlesize'] = 14
+    plt.rcParams['lines.linewidth'] = 2
+    plt.rcParams['lines.markersize'] = 8
+    
+    # График новых пользователей
+    plt.subplot(2, 1, 1)
+    if not users_df.empty:
+        max_users = users_df['count'].max()
+        plt.plot(users_df['created_at__date'], users_df['count'], 
+                marker='o', color='#3498db')
+        plt.title('Динамика регистрации новых пользователей', 
+                 pad=20)
+        plt.xlabel('Дата')
+        plt.ylabel('Количество новых пользователей')
+        # Устанавливаем пределы оси Y с запасом
+        plt.ylim(0, max(5, max_users + 2))
+        # Устанавливаем целочисленные деления
+        plt.gca().yaxis.set_major_locator(plt.MaxNLocator(integer=True))
+        plt.xticks(rotation=45)
+    
+    # График заказов и выручки
+    plt.subplot(2, 1, 2)
+    if not orders_df.empty:
+        ax1 = plt.gca()
+        ax2 = ax1.twinx()
+        
+        # Находим максимальные значения для масштабирования
+        max_orders = orders_df['count'].max()
+        max_revenue = orders_df['total_revenue'].max()
+        
+        # График заказов
+        line1 = ax1.plot(orders_df['order_date__date'], orders_df['count'],
+                        color='#2ecc71', marker='o',
+                        label='Количество заказов')
+        
+        # График выручки
+        line2 = ax2.plot(orders_df['order_date__date'], orders_df['total_revenue'],
+                        color='#e74c3c', marker='s',
+                        label='Выручка')
+        
+        # Настройка осей
+        ax1.set_xlabel('Дата')
+        ax1.set_ylabel('Количество заказов', color='#2ecc71')
+        ax2.set_ylabel('Выручка (руб.)', color='#e74c3c')
+        
+        # Устанавливаем пределы осей с запасом
+        ax1.set_ylim(0, max(5, max_orders + 2))
+        # Преобразуем max_revenue в float перед умножением
+        ax2.set_ylim(0, float(max_revenue) * 1.2 if max_revenue else 1000)
+        
+        # Устанавливаем целочисленные деления для заказов
+        ax1.yaxis.set_major_locator(plt.MaxNLocator(integer=True))
+        
+        # Настройка цветов делений на осях
+        ax1.tick_params(axis='y', colors='#2ecc71')
+        ax2.tick_params(axis='y', colors='#e74c3c')
+        
+        lines = line1 + line2
+        labels = [l.get_label() for l in lines]
+        ax1.legend(lines, labels, loc='upper left')
+        
+        plt.title('Динамика заказов и выручки', pad=20)
+        plt.xticks(rotation=45)
+    
+    # Сохраняем графики в память
+    buffer = io.BytesIO()
+    plt.tight_layout()
+    plt.savefig(buffer, format='png', dpi=300, bbox_inches='tight')
+    buffer.seek(0)
+    image_png = buffer.getvalue()
+    buffer.close()
+    
+    # Кодируем график в base64 для отображения в шаблоне
+    graphic = base64.b64encode(image_png).decode('utf-8')
+    
+    # Очищаем текущую фигуру
+    plt.clf()
+    
+    # Дополнительная статистика (исключаем корзины и отмененные заказы)
+    valid_orders = Order.objects.filter(status__in=['confirmed', 'completed', 'delivered'])
+    
+    total_users = UserProfile.objects.count()
+    total_orders = valid_orders.count()
+    average_order_value = valid_orders.aggregate(avg=Avg('total_price'))['avg'] or 0
+    
+    # Статистика за период (30 дней)
+    period_orders_qs = valid_orders.filter(order_date__range=(start_date, end_date))
+    
+    context = {
+        'graphic': graphic,
+        'total_users': total_users,
+        'total_orders': total_orders,
+        'average_order_value': round(float(average_order_value), 2),
+        'period_new_users': users_df['count'].sum() if not users_df.empty else 0,
+        'period_orders': period_orders_qs.count(),
+        'period_revenue': round(float(period_orders_qs.aggregate(Sum('total_price'))['total_price__sum'] or 0), 2)
+    }
+    
+    return render(request, 'pizzeria/staff_statistics.html', context)
+
+@user_passes_test(lambda u: is_staff(u) or is_admin(u))
+def news_create(request):
+    if request.method == 'POST':
+        title = request.POST.get('title')
+        content = request.POST.get('content')
+        image = request.FILES.get('image')
+        
+        if title and content:
+            news = News.objects.create(
+                title=title,
+                content=content,
+                image=image,
+                author=request.user.userprofile
+            )
+            messages.success(request, 'Новость успешно создана!')
+            return redirect('news_detail', slug=news.slug)
+    
+    return render(request, 'pizzeria/news_form.html', {'action': 'Создать'})
+
+@user_passes_test(lambda u: is_staff(u) or is_admin(u))
+def news_edit(request, slug):
+    news_item = get_object_or_404(News, slug=slug)
+    
+    if request.method == 'POST':
+        title = request.POST.get('title')
+        content = request.POST.get('content')
+        image = request.FILES.get('image')
+        is_published = request.POST.get('is_published') == 'on'
+        
+        if title and content:
+            news_item.title = title
+            news_item.content = content
+            news_item.is_published = is_published
+            if image:
+                news_item.image = image
+            news_item.save()
+            
+            messages.success(request, 'Новость успешно обновлена!')
+            return redirect('news_detail', slug=news_item.slug)
+    
+    return render(request, 'pizzeria/news_form.html', {
+        'news': news_item,
+        'action': 'Редактировать'
+    })
+
+@user_passes_test(lambda u: is_staff(u) or is_admin(u))
+def news_delete(request, slug):
+    news_item = get_object_or_404(News, slug=slug)
+    
+    if request.method == 'POST':
+        news_item.delete()
+        messages.success(request, 'Новость успешно удалена!')
+        return redirect('news_list')
+    
+    return render(request, 'pizzeria/news_confirm_delete.html', {'news': news_item})

@@ -7,6 +7,8 @@ from .validators import validate_phone
 from django.db.models.signals import post_save
 from django.core.exceptions import ValidationError
 from django.dispatch import receiver
+from decimal import Decimal
+from django.utils.text import slugify
 
 # Валидатор телефона
 def validate_phone(value):
@@ -89,7 +91,7 @@ class Order(models.Model):
     total_price = models.DecimalField(max_digits=8, decimal_places=2, default=0.00)
     order_date = models.DateTimeField(default=timezone.now)
     delivery_date = models.DateTimeField(null=True, blank=True)
-    status = models.CharField(max_length=20, default="Pending")
+    status = models.CharField(max_length=20, default="cart")
     pickup_point = models.ForeignKey('PickupPoint', on_delete=models.SET_NULL, null=True, blank=True)
     is_delivery = models.BooleanField(default=True)
     delivery_address = models.CharField(max_length=255, blank=True, null=True)
@@ -103,17 +105,23 @@ class Order(models.Model):
         return f"Order #{self.id} by {self.customer}"
 
     def calculate_total(self):
-        total = sum(item.price * item.quantity for item in self.orderitem_set.all())
+        total = sum(item.price * Decimal(str(item.quantity)) for item in self.orderitem_set.all())
+        
         if self.promo_code and self.promo_code.is_active:
-            total = total * (1 - self.promo_code.discount)
+            discount = Decimal(str(self.promo_code.discount))
+            total = total * (Decimal('1.0') - discount)
+        
         if self.coupon and self.coupon.is_active and not self.coupon.used:
-            total = total * (1 - self.coupon.discount)
+            discount = Decimal(str(self.coupon.discount))
+            total = total * (Decimal('1.0') - discount)
+            
             if self.coupon.one_time_use:
                 self.coupon.used = True
                 self.coupon.save()
-        self.total_price = total
+        
+        self.total_price = total.quantize(Decimal('0.01'))
         self.save()
-        return total
+        return self.total_price
 
 # Элемент заказа
 class OrderItem(models.Model):
@@ -129,12 +137,16 @@ class OrderItem(models.Model):
 # Промокод
 class PromoCode(models.Model):
     code = models.CharField(max_length=20, unique=True)
-    discount = models.FloatField(default=0.1)
+    discount = models.DecimalField(max_digits=4, decimal_places=2, default=Decimal('0.10'))
     is_active = models.BooleanField(default=True)
     expiry_date = models.DateField()
 
     def __str__(self):
         return self.code
+
+    def clean(self):
+        if self.discount < Decimal('0.0') or self.discount > Decimal('1.0'):
+            raise ValidationError('Скидка должна быть между 0 и 1 (0% - 100%)')
 
 # Отзыв
 class Review(models.Model):
@@ -169,7 +181,7 @@ class PickupPoint(models.Model):
 # Купон
 class Coupon(models.Model):
     code = models.CharField(max_length=20, unique=True)
-    discount = models.FloatField(default=0.15)
+    discount = models.DecimalField(max_digits=4, decimal_places=2, default=Decimal('0.15'))
     is_physical = models.BooleanField(default=True)
     is_active = models.BooleanField(default=True)
     expiry_date = models.DateField()
@@ -178,6 +190,10 @@ class Coupon(models.Model):
 
     def __str__(self):
         return self.code
+
+    def clean(self):
+        if self.discount < Decimal('0.0') or self.discount > Decimal('1.0'):
+            raise ValidationError('Скидка должна быть между 0 и 1 (0% - 100%)')
 
 # Статистика заказов
 class OrderStatistics(models.Model):
@@ -189,3 +205,49 @@ class OrderStatistics(models.Model):
 
     def __str__(self):
         return f"Statistics for {self.date}"
+
+# Контакты
+class Contact(models.Model):
+    address = models.CharField(max_length=255, verbose_name='Адрес')
+    phone = models.CharField(max_length=17, validators=[validate_phone], verbose_name='Телефон')
+    email = models.EmailField(verbose_name='Email')
+    working_hours = models.CharField(max_length=100, verbose_name='Часы работы')
+    map_link = models.URLField(verbose_name='Ссылка на карту', blank=True, null=True)
+    is_main = models.BooleanField(default=False, verbose_name='Основной офис')
+    
+    class Meta:
+        verbose_name = 'Контакт'
+        verbose_name_plural = 'Контакты'
+    
+    def __str__(self):
+        return f"{self.address} ({self.phone})"
+    
+    def save(self, *args, **kwargs):
+        if self.is_main:
+            # Если этот контакт помечен как основной, снимаем отметку с других
+            Contact.objects.filter(is_main=True).update(is_main=False)
+        super().save(*args, **kwargs)
+
+# Новости
+class News(models.Model):
+    title = models.CharField(max_length=200, verbose_name='Заголовок')
+    content = models.TextField(verbose_name='Содержание')
+    image = models.ImageField(upload_to='news/', blank=True, null=True, verbose_name='Изображение')
+    created_at = models.DateTimeField(default=timezone.now, verbose_name='Дата создания')
+    is_published = models.BooleanField(default=True, verbose_name='Опубликовано')
+    author = models.ForeignKey(UserProfile, on_delete=models.SET_NULL, null=True, verbose_name='Автор')
+    slug = models.SlugField(unique=True, blank=True, verbose_name='URL')
+    
+    class Meta:
+        verbose_name = 'Новость'
+        verbose_name_plural = 'Новости'
+        ordering = ['-created_at']
+    
+    def __str__(self):
+        return self.title
+    
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            # Генерируем slug из заголовка
+            self.slug = slugify(self.title)
+        super().save(*args, **kwargs)

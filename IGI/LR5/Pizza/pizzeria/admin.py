@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import PizzaCategory, PizzaSize, Pizza, Courier, Order, OrderItem, PromoCode, Review, Vacancy, UserProfile, PickupPoint, Coupon, OrderStatistics
+from .models import PizzaCategory, PizzaSize, Pizza, Courier, Order, OrderItem, PromoCode, Review, Vacancy, UserProfile, PickupPoint, Coupon, OrderStatistics, Contact, News
 
 @admin.register(UserProfile)
 class UserProfileAdmin(admin.ModelAdmin):
@@ -68,3 +68,18 @@ class CouponAdmin(admin.ModelAdmin):
 class OrderStatisticsAdmin(admin.ModelAdmin):
     list_display = ('date', 'total_orders', 'total_revenue', 'average_order_value', 'most_popular_pizza')
     list_filter = ('date',)
+
+@admin.register(Contact)
+class ContactAdmin(admin.ModelAdmin):
+    list_display = ('address', 'phone', 'email', 'working_hours', 'is_main')
+    list_filter = ('is_main',)
+    search_fields = ('address', 'phone', 'email')
+    ordering = ('-is_main', 'address')
+
+@admin.register(News)
+class NewsAdmin(admin.ModelAdmin):
+    list_display = ('title', 'author', 'created_at', 'is_published')
+    list_filter = ('is_published', 'created_at')
+    search_fields = ('title', 'content')
+    prepopulated_fields = {'slug': ('title',)}
+    ordering = ('-created_at',)

@@ -87,6 +87,7 @@
                 {% if request.user.userprofile.role == 'staff' or request.user.userprofile.role == 'admin' %}
                     <a href="{% url 'client_list' %}">Клиенты</a>
                     <a href="{% url 'category_list' %}">Категории</a>
+                    <a href="{% url 'staff_statistics' %}">Статистика</a>
                 {% endif %}
                 <a href="{% url 'edit_profile' %}">Профиль</a>
                 <a href="{% url 'logout' %}">Выйти</a>
