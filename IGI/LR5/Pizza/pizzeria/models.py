@@ -9,6 +9,7 @@ from django.core.exceptions import ValidationError
 from django.dispatch import receiver
 from decimal import Decimal
 from django.utils.text import slugify
+from datetime import date
 
 # Валидатор телефона
 def validate_phone(value):
@@ -26,13 +27,20 @@ ROLE_CHOICES = (
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='client')
-    phone = models.CharField(max_length=17, validators=[validate_phone], blank=True, null=True)
+    phone = models.CharField(max_length=17, validators=[validate_phone], blank=True, null=True, verbose_name='Телефон')
     email = models.EmailField(blank=True, null=True)
-    age = models.PositiveIntegerField(validators=[MinValueValidator(18)], null=True)
+    birth_date = models.DateField(verbose_name='Дата рождения', null=True)
     created_at = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
         return f"{self.user.username} ({self.role})"
+
+    @property
+    def age(self):
+        if self.birth_date:
+            today = date.today()
+            return today.year - self.birth_date.year - ((today.month, today.day) < (self.birth_date.month, self.birth_date.day))
+        return None
 
 # Сигнал для автоматического создания UserProfile
 @receiver(post_save, sender=User)
@@ -214,6 +222,7 @@ class Contact(models.Model):
     working_hours = models.CharField(max_length=100, verbose_name='Часы работы')
     map_link = models.URLField(verbose_name='Ссылка на карту', blank=True, null=True)
     is_main = models.BooleanField(default=False, verbose_name='Основной офис')
+    image = models.ImageField(upload_to='contacts/', blank=True, null=True, verbose_name='Изображение')
     
     class Meta:
         verbose_name = 'Контакт'
@@ -248,6 +257,17 @@ class News(models.Model):
     
     def save(self, *args, **kwargs):
         if not self.slug:
-            # Генерируем slug из заголовка
-            self.slug = slugify(self.title)
+            # Генерируем базовый slug из заголовка
+            base_slug = slugify(self.title)
+            
+            # Проверяем уникальность slug
+            unique_slug = base_slug
+            counter = 1
+            
+            while News.objects.filter(slug=unique_slug).exists():
+                unique_slug = f"{base_slug}-{counter}"
+                counter += 1
+            
+            self.slug = unique_slug
+        
         super().save(*args, **kwargs)

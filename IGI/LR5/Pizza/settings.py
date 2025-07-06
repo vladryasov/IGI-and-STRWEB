@@ -119,7 +119,15 @@ USE_TZ = True
 STATIC_URL = 'static/'
 LOGIN_URL = '/login/'
 
+# Media files (uploads)
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# News API settings
+NEWS_API_KEY = '465605e049134912a4e879e67c7175ad'  # Замените на ваш API ключ
+NEWS_API_URL = 'https://newsapi.org/v2/everything'

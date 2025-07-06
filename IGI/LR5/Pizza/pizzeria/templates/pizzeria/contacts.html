@@ -13,6 +13,12 @@
                     <div class="main-office-badge">Основной офис</div>
                 {% endif %}
                 
+                {% if contact.image %}
+                    <div class="contact-image">
+                        <img src="{{ contact.image.url }}" alt="{{ contact.address }}">
+                    </div>
+                {% endif %}
+                
                 <div class="contact-info">
                     <h3>{{ contact.address }}</h3>
                     <p><i class="fas fa-phone"></i> {{ contact.phone }}</p>
@@ -112,6 +118,19 @@
     background-color: white;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.contact-image {
+    margin: -20px -20px 20px -20px;
+    border-radius: 8px 8px 0 0;
+    overflow: hidden;
+    height: 200px;
+}
+
+.contact-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 @media (max-width: 768px) {
