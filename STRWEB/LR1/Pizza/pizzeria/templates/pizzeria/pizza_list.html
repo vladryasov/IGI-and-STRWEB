@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <!-- Фильтры -->
+        <div class="col-md-3">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Фильтры</h5>
+                    <form method="get">
+                        <!-- Категории -->
+                        <div class="mb-3">
+                            <label class="form-label">Категория</label>
+                            <select name="category" class="form-select">
+                                <option value="">Все категории</option>
+                                {% for category in categories %}
+                                <option value="{{ category.name }}" {% if request.GET.category == category.name %}selected{% endif %}>
+                                    {{ category.name }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <!-- Цена -->
+                        <div class="mb-3">
+                            <label class="form-label">Цена</label>
+                            <div class="row">
+                                <div class="col">
+                                    <input type="number" name="min_price" class="form-control" placeholder="От" value="{{ request.GET.min_price }}">
+                                </div>
+                                <div class="col">
+                                    <input type="number" name="max_price" class="form-control" placeholder="До" value="{{ request.GET.max_price }}">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Сортировка -->
+                        <div class="mb-3">
+                            <label class="form-label">Сортировка</label>
+                            <select name="sort" class="form-select">
+                                <option value="">По умолчанию</option>
+                                <option value="price_asc" {% if request.GET.sort == 'price_asc' %}selected{% endif %}>По возрастанию цены</option>
+                                <option value="price_desc" {% if request.GET.sort == 'price_desc' %}selected{% endif %}>По убыванию цены</option>
+                                <option value="name" {% if request.GET.sort == 'name' %}selected{% endif %}>По названию</option>
+                            </select>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100">Применить</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Список пицц -->
+        <div class="col-md-9">
+            <div class="row">
+                {% for pizza in pizzas %}
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100">
+                        {% if pizza.image %}
+                        <img src="{{ pizza.image.url }}" class="card-img-top" alt="{{ pizza.name }}">
+                        {% endif %}
+                        <div class="card-body">
+                            <h5 class="card-title">{{ pizza.name }}</h5>
+                            <p class="card-text">{{ pizza.description }}</p>
+                            <p class="card-text">
+                                <small class="text-muted">
+                                    {% for category in pizza.categories.all %}
+                                    <span class="badge bg-secondary">{{ category.name }}</span>
+                                    {% endfor %}
+                                </small>
+                            </p>
+                            <p class="card-text">
+                                <strong>Цена: </strong>от {{ pizza.base_price }} руб.
+                            </p>
+                            <a href="#" class="btn btn-primary">Добавить в корзину</a>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="col-12">
+                    <p>Пиццы не найдены.</p>
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- Пагинация -->
+            {% if pizzas.has_other_pages %}
+            <nav aria-label="Page navigation" class="mt-4">
+                <ul class="pagination justify-content-center">
+                    {% if pizzas.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ pizzas.previous_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}">&laquo;</a>
+                    </li>
+                    {% endif %}
+
+                    {% for num in pizzas.paginator.page_range %}
+                    <li class="page-item {% if pizzas.number == num %}active{% endif %}">
+                        <a class="page-link" href="?page={{ num }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}">{{ num }}</a>
+                    </li>
+                    {% endfor %}
+
+                    {% if pizzas.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ pizzas.next_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}">&raquo;</a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </nav>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %} 

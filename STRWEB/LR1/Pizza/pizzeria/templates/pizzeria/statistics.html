@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Статистика</h2>
+
+    <!-- Общая статистика -->
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Всего заказов</h5>
+                    <p class="card-text display-4">{{ total_orders }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Общая выручка</h5>
+                    <p class="card-text display-4">{{ total_revenue|floatformat:2 }} руб.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Средний чек</h5>
+                    <p class="card-text display-4">{{ avg_order_value|floatformat:2 }} руб.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Популярные пиццы -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title">Популярные пиццы</h5>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Название</th>
+                            <th>Количество заказов</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for pizza in popular_pizzas %}
+                        <tr>
+                            <td>{{ pizza.pizza__name }}</td>
+                            <td>{{ pizza.total_ordered }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Статистика по курьерам -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title">Статистика по курьерам</h5>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Курьер</th>
+                            <th>Количество заказов</th>
+                            <th>Общая сумма</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for stat in courier_stats %}
+                        <tr>
+                            <td>{{ stat.courier__user_profile__user__username }}</td>
+                            <td>{{ stat.total_orders }}</td>
+                            <td>{{ stat.total_earnings|floatformat:2 }} руб.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Статистика по клиентам -->
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Статистика по клиентам</h5>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Клиент</th>
+                            <th>Количество заказов</th>
+                            <th>Общая сумма</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for stat in customer_stats %}
+                        <tr>
+                            <td>{{ stat.customer__user_profile__user__username }}</td>
+                            <td>{{ stat.total_orders }}</td>
+                            <td>{{ stat.total_spent|floatformat:2 }} руб.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

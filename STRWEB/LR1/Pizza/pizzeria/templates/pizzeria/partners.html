@@ -1,0 +1,165 @@
+{% extends 'base.html' %}
+
+{% block title %}Партнеры - Pizzeria{% endblock %}
+{% block description %}Наши партнеры - компании, с которыми мы сотрудничаем для предоставления лучшего сервиса.{% endblock %}
+
+{% block content %}
+<article>
+    <header>
+        <h1>Наши партнеры</h1>
+        <p>Мы гордимся сотрудничеством с ведущими компаниями в сфере общественного питания и доставки.</p>
+    </header>
+
+    {% if partners %}
+    <section>
+        <h2>Компании-партнеры</h2>
+        
+        <!-- Таблица партнеров -->
+        <table>
+            <caption>Список наших партнеров с контактной информацией</caption>
+            <thead>
+                <tr>
+                    <th scope="col" id="logo">Логотип</th>
+                    <th scope="col" id="name">Название компании</th>
+                    <th scope="col" id="description">Описание сотрудничества</th>
+                    <th scope="col" id="website">Официальный сайт</th>
+                    <th scope="col" id="date">Дата начала сотрудничества</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for partner in partners %}
+                <tr>
+                    <td headers="logo">
+                        <figure>
+                            {% if partner.logo %}
+                                <img src="{{ partner.logo.url }}" alt="Логотип {{ partner.name }}" width="80" height="80">
+                            {% else %}
+                                <div style="width: 80px; height: 80px; background-color: #f0f0f0; display: flex; align-items: center; justify-content: center; border: 1px solid #ddd;">
+                                    <span style="font-size: 12px; color: #666;">Логотип</span>
+                                </div>
+                            {% endif %}
+                            <figcaption>{{ partner.name }}</figcaption>
+                        </figure>
+                    </td>
+                    <td headers="name">
+                        <strong>{{ partner.name }}</strong>
+                    </td>
+                    <td headers="description">
+                        {{ partner.description|default:"Описание сотрудничества отсутствует" }}
+                    </td>
+                    <td headers="website">
+                        <a href="{{ partner.website_url }}" target="_blank" rel="noopener noreferrer" aria-label="Перейти на сайт {{ partner.name }}">
+                            Посетить сайт
+                        </a>
+                    </td>
+                    <td headers="date">
+                        <time datetime="{{ partner.created_at|date:'Y-m-d' }}">
+                            {{ partner.created_at|date:'d.m.Y' }}
+                        </time>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
+
+    <!-- Дополнительная информация о партнерстве -->
+    <section>
+        <h2>Преимущества партнерства</h2>
+        <ul>
+            <li><strong>Качественные ингредиенты:</strong> Мы работаем только с проверенными поставщиками</li>
+            <li><strong>Быстрая доставка:</strong> Наши партнеры обеспечивают оперативную доставку</li>
+            <li><strong>Конкурентные цены:</strong> Благодаря партнерству мы предлагаем доступные цены</li>
+            <li><strong>Инновационные технологии:</strong> Используем современные решения в приготовлении</li>
+        </ul>
+    </section>
+
+    <!-- Цитата -->
+    <section>
+        <h2>Отзыв о партнерстве</h2>
+        <blockquote>
+            <p>"Сотрудничество с Pizzeria открыло для нас новые возможности в сфере общественного питания. Качество продукции и сервиса на высшем уровне!"</p>
+            <footer>
+                <cite>— Генеральный директор компании-партнера</cite>
+            </footer>
+        </blockquote>
+    </section>
+
+    {% else %}
+    <section>
+        <p>Информация о партнерах временно недоступна.</p>
+    </section>
+    {% endif %}
+
+    <!-- Контактная информация для потенциальных партнеров -->
+    <section>
+        <h2>Стать партнером</h2>
+        <p>Если вы хотите стать нашим партнером, свяжитесь с нами:</p>
+        <address>
+            <p><strong>Телефон:</strong> <a href="tel:+375291234567">+375 (29) 123-45-67</a></p>
+            <p><strong>Email:</strong> <a href="mailto:partners@pizzeria.by">partners@pizzeria.by</a></p>
+            <p><strong>Адрес:</strong> г. Минск, ул. Примерная, д. 1</p>
+        </address>
+    </section>
+</article>
+
+<style>
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: left;
+}
+
+th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+}
+
+caption {
+    font-weight: bold;
+    margin-bottom: 10px;
+    text-align: left;
+}
+
+figure {
+    margin: 0;
+    text-align: center;
+}
+
+figcaption {
+    font-size: 0.9em;
+    color: #666;
+    margin-top: 5px;
+}
+
+blockquote {
+    border-left: 4px solid #e31837;
+    padding-left: 20px;
+    margin: 20px 0;
+    font-style: italic;
+}
+
+address {
+    font-style: normal;
+    background-color: #f9f9f9;
+    padding: 15px;
+    border-radius: 5px;
+}
+
+ul {
+    padding-left: 20px;
+}
+
+li {
+    margin-bottom: 10px;
+}
+</style>
+{% endblock %}
+
+

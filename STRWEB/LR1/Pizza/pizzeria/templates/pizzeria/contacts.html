@@ -1,0 +1,394 @@
+{% extends 'base.html' %}
+
+{% block title %}Контакты - Pizzeria{% endblock %}
+{% block description %}Контактная информация нашей пиццерии, адреса офисов и информация о сотрудниках.{% endblock %}
+
+{% block content %}
+<article>
+    <header>
+        <h1>Наши контакты</h1>
+        <p>Свяжитесь с нами любым удобным способом. Мы всегда рады помочь!</p>
+    </header>
+    
+    <!-- Контактная информация офисов -->
+    <section>
+        <h2>Наши офисы</h2>
+        <div class="contacts-grid">
+            {% for contact in contacts %}
+                <article class="contact-card {% if contact.is_main %}main-office{% endif %}">
+                    {% if contact.is_main %}
+                        <div class="main-office-badge">Основной офис</div>
+                    {% endif %}
+                    
+                    {% if contact.image %}
+                        <figure class="contact-image">
+                            <img src="{{ contact.image.url }}" alt="{{ contact.address }}" width="300" height="200">
+                            <figcaption>{{ contact.address }}</figcaption>
+                        </figure>
+                    {% endif %}
+                    
+                    <div class="contact-info">
+                        <h3>{{ contact.address }}</h3>
+                        <address>
+                            <p><strong>Телефон:</strong> <a href="tel:{{ contact.phone }}">{{ contact.phone }}</a></p>
+                            <p><strong>Email:</strong> <a href="mailto:{{ contact.email }}">{{ contact.email }}</a></p>
+                            <p><strong>Часы работы:</strong> {{ contact.working_hours }}</p>
+                        </address>
+                        
+                        {% if contact.map_link %}
+                            <p><a href="{{ contact.map_link }}" target="_blank" rel="noopener noreferrer" class="map-link">
+                                📍 Показать на карте
+                            </a></p>
+                        {% endif %}
+                    </div>
+                </article>
+            {% empty %}
+                <p class="no-contacts">Контактная информация будет добавлена в ближайшее время.</p>
+            {% endfor %}
+        </div>
+    </section>
+
+    <!-- Сотрудники -->
+    {% if employees %}
+    <section>
+        <h2>Наша команда</h2>
+        <p>Познакомьтесь с нашими сотрудниками, которые делают вашу пиццу вкусной!</p>
+        
+        <table>
+            <caption>Информация о сотрудниках нашей пиццерии</caption>
+            <thead>
+                <tr>
+                    <th scope="col">Фото</th>
+                    <th scope="col">Имя</th>
+                    <th scope="col">Должность</th>
+                    <th scope="col">Телефон</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Описание работы</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for employee in employees %}
+                <tr>
+                    <td>
+                        <figure>
+                            <img src="{{ employee.photo.url }}" alt="Фото {{ employee.name }}" width="80" height="80">
+                            <figcaption>{{ employee.name }}</figcaption>
+                        </figure>
+                    </td>
+                    <td><strong>{{ employee.name }}</strong></td>
+                    <td>{{ employee.position }}</td>
+                    <td><a href="tel:{{ employee.phone }}">{{ employee.phone }}</a></td>
+                    <td><a href="mailto:{{ employee.email }}">{{ employee.email }}</a></td>
+                    <td>{{ employee.description }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
+    {% endif %}
+
+    <!-- Форма обратной связи -->
+    <section>
+        <h2>Свяжитесь с нами</h2>
+        <p>Есть вопросы или предложения? Заполните форму ниже, и мы обязательно ответим!</p>
+        
+        <form method="post" action="{% url 'contacts' %}">
+            {% csrf_token %}
+            
+            <fieldset>
+                <legend>Контактная информация</legend>
+                
+                <div>
+                    <label for="name">Ваше имя:</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                
+                <div>
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                
+                <div>
+                    <label for="phone">Телефон:</label>
+                    <input type="tel" id="phone" name="phone" pattern="\+375\s\(29\)\s\d{3}-\d{2}-\d{2}" placeholder="+375 (29) 123-45-67">
+                </div>
+            </fieldset>
+
+            <fieldset>
+                <legend>Сообщение</legend>
+                
+                <div>
+                    <label for="subject">Тема сообщения:</label>
+                    <select id="subject" name="subject" required>
+                        <option value="">Выберите тему</option>
+                        <option value="order">Заказ</option>
+                        <option value="complaint">Жалоба</option>
+                        <option value="suggestion">Предложение</option>
+                        <option value="question">Вопрос</option>
+                        <option value="other">Другое</option>
+                    </select>
+                </div>
+                
+                <div>
+                    <label for="message">Сообщение:</label>
+                    <textarea id="message" name="message" rows="5" cols="50" required placeholder="Опишите ваш вопрос или предложение..."></textarea>
+                </div>
+            </fieldset>
+
+            <div>
+                <label>
+                    <input type="checkbox" name="agree_terms" required>
+                    Я согласен с <a href="{% url 'privacy' %}" target="_blank">условиями обработки персональных данных</a>
+                </label>
+            </div>
+
+            <div>
+                <button type="submit" class="btn">Отправить сообщение</button>
+                <button type="reset" class="btn btn-secondary">Очистить форму</button>
+            </div>
+        </form>
+    </section>
+
+    <!-- Дополнительная информация -->
+    <section>
+        <h2>Полезная информация</h2>
+        
+        <h3>Время работы:</h3>
+        <dl>
+            <dt><strong>Понедельник - Пятница:</strong></dt>
+            <dd>10:00 - 23:00</dd>
+            
+            <dt><strong>Суббота - Воскресенье:</strong></dt>
+            <dd>11:00 - 24:00</dd>
+            
+            <dt><strong>Праздничные дни:</strong></dt>
+            <dd>11:00 - 22:00</dd>
+        </dl>
+
+        <h3>Способы связи:</h3>
+        <ul>
+            <li><strong>Телефон:</strong> <a href="tel:+375291234567">+375 (29) 123-45-67</a></li>
+            <li><strong>Email:</strong> <a href="mailto:info@pizzeria.by">info@pizzeria.by</a></li>
+            <li><strong>Telegram:</strong> @pizzeria_by</li>
+            <li><strong>Viber:</strong> +375 (29) 123-45-67</li>
+        </ul>
+    </section>
+</article>
+
+<style>
+.contacts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    margin: 20px 0;
+}
+
+.contact-card {
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    position: relative;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.contact-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.main-office {
+    border: 2px solid #4CAF50;
+}
+
+.main-office-badge {
+    position: absolute;
+    top: -10px;
+    right: 10px;
+    background-color: #4CAF50;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-size: 0.8em;
+}
+
+.contact-info h3 {
+    margin: 0 0 15px 0;
+    color: #333;
+    font-size: 1.2em;
+}
+
+.contact-info address {
+    font-style: normal;
+}
+
+.contact-info p {
+    margin: 10px 0;
+    color: #666;
+}
+
+.map-link {
+    color: #4CAF50;
+    text-decoration: none;
+}
+
+.map-link:hover {
+    text-decoration: underline;
+}
+
+.no-contacts {
+    grid-column: 1 / -1;
+    text-align: center;
+    color: #666;
+    padding: 40px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.contact-image {
+    margin: -20px -20px 20px -20px;
+    border-radius: 8px 8px 0 0;
+    overflow: hidden;
+    height: 200px;
+}
+
+.contact-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: left;
+}
+
+th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+}
+
+caption {
+    font-weight: bold;
+    margin-bottom: 10px;
+    text-align: left;
+}
+
+figure {
+    margin: 0;
+    text-align: center;
+}
+
+figcaption {
+    font-size: 0.9em;
+    color: #666;
+    margin-top: 5px;
+}
+
+fieldset {
+    border: 1px solid #ddd;
+    padding: 15px;
+    margin: 15px 0;
+}
+
+legend {
+    font-weight: bold;
+    padding: 0 10px;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+input[type="text"], input[type="email"], input[type="tel"], select, textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+}
+
+textarea {
+    resize: vertical;
+}
+
+input[type="checkbox"] {
+    margin-right: 8px;
+}
+
+.btn {
+    padding: 10px 20px;
+    background-color: #e31837;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-right: 10px;
+}
+
+.btn:hover {
+    background-color: #c41230;
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+}
+
+.btn-secondary:hover {
+    background-color: #5a6268;
+}
+
+dl {
+    background-color: #f9f9f9;
+    padding: 15px;
+    border-radius: 5px;
+}
+
+dt {
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+dd {
+    margin-left: 0;
+    margin-bottom: 10px;
+}
+
+ul {
+    padding-left: 20px;
+}
+
+li {
+    margin-bottom: 10px;
+}
+
+@media (max-width: 768px) {
+    .contacts-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .contact-card {
+        margin-bottom: 20px;
+    }
+    
+    table {
+        font-size: 0.9em;
+    }
+    
+    th, td {
+        padding: 8px;
+    }
+}
+</style>
+{% endblock %}

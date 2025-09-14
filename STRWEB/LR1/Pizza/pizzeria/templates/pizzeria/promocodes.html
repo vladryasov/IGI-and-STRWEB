@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block title %}Promocodes - Pizzeria{% endblock %}
+
+{% block content %}
+    <h1>Promocodes</h1>
+    <h2>Active Promocodes</h2>
+    {% if active_promos %}
+        <ul>
+        {% for promo in active_promos %}
+            <li>{{ promo.code }} - Discount: {{ promo.discount }}% (Expires: {{ promo.expiry_date|date:"d/m/Y" }})</li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>No active promocodes.</p>
+    {% endif %}
+
+    <h2>Archived Promocodes</h2>
+    {% if archived_promos %}
+        <ul>
+        {% for promo in archived_promos %}
+            <li>{{ promo.code }} - Discount: {{ promo.discount }}% (Expired: {{ promo.expiry_date|date:"d/m/Y" }})</li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>No archived promocodes.</p>
+    {% endif %}
+{% endblock %}

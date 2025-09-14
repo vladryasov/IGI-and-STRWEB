@@ -1,0 +1,156 @@
+{% extends 'base.html' %}
+
+{% block title %}Вакансии - Pizzeria{% endblock %}
+{% block description %}Актуальные вакансии в нашей пиццерии. Присоединяйтесь к нашей команде!{% endblock %}
+
+{% block content %}
+<article>
+    <header>
+        <h1>Вакансии в нашей пиццерии</h1>
+        <p>Мы всегда рады новым талантливым сотрудникам! Присоединяйтесь к нашей дружной команде.</p>
+    </header>
+
+    {% if vacancies %}
+    <section>
+        <h2>Открытые вакансии</h2>
+        <div class="vacancies-list">
+            {% for vacancy in vacancies %}
+            <article class="vacancy-card">
+                <header>
+                    <h3>{{ vacancy.title }}</h3>
+                    <time datetime="{{ vacancy.created_at|date:'Y-m-d' }}" class="vacancy-date">
+                        Опубликовано: {{ vacancy.created_at|date:'d.m.Y' }}
+                    </time>
+                </header>
+                
+                <div class="vacancy-content">
+                    <p><strong>Описание:</strong></p>
+                    <p>{{ vacancy.description }}</p>
+                    
+                    {% if vacancy.requirements %}
+                    <p><strong>Требования:</strong></p>
+                    <ul>
+                        {% for requirement in vacancy.requirements %}
+                        <li>{{ requirement }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                    
+                    {% if vacancy.salary %}
+                    <p><strong>Зарплата:</strong> {{ vacancy.salary }}</p>
+                    {% endif %}
+                    
+                    {% if vacancy.schedule %}
+                    <p><strong>График работы:</strong> {{ vacancy.schedule }}</p>
+                    {% endif %}
+                </div>
+                
+                <footer class="vacancy-footer">
+                    <p><strong>Контакты для отклика:</strong></p>
+                    <address>
+                        <p>Email: <a href="mailto:hr@pizzeria.by">hr@pizzeria.by</a></p>
+                        <p>Телефон: <a href="tel:+375291234567">+375 (29) 123-45-67</a></p>
+                    </address>
+                </footer>
+            </article>
+            {% endfor %}
+        </div>
+    </section>
+    {% else %}
+    <section>
+        <div class="no-vacancies">
+            <h2>В данный момент открытых вакансий нет</h2>
+            <p>Но мы всегда рассматриваем резюме талантливых людей!</p>
+            <p>Отправьте свое резюме на <a href="mailto:hr@pizzeria.by">hr@pizzeria.by</a></p>
+        </div>
+    </section>
+    {% endif %}
+
+    <!-- Общая информация о работе -->
+    <section>
+        <h2>Почему работать у нас?</h2>
+        <ul>
+            <li><strong>Дружный коллектив</strong> - мы ценим каждого сотрудника</li>
+            <li><strong>Гибкий график</strong> - подстраиваемся под ваши потребности</li>
+            <li><strong>Обучение</strong> - предоставляем возможность профессионального роста</li>
+            <li><strong>Премии</strong> - поощряем хорошую работу</li>
+            <li><strong>Скидки</strong> - сотрудники получают скидки на нашу продукцию</li>
+        </ul>
+    </section>
+
+    <!-- Контактная информация -->
+    <section>
+        <h2>Как подать заявку?</h2>
+        <address>
+            <p><strong>Отдел кадров:</strong></p>
+            <p>Email: <a href="mailto:hr@pizzeria.by">hr@pizzeria.by</a></p>
+            <p>Телефон: <a href="tel:+375291234567">+375 (29) 123-45-67</a></p>
+            <p>Адрес: г. Минск, ул. Примерная, д. 1</p>
+            <p>Время работы: Пн-Пт с 9:00 до 18:00</p>
+        </address>
+    </section>
+</article>
+
+<style>
+.vacancies-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin: 20px 0;
+}
+
+.vacancy-card {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    border-left: 4px solid #e31837;
+}
+
+.vacancy-date {
+    color: #666;
+    font-size: 0.9em;
+}
+
+.vacancy-content {
+    margin: 15px 0;
+}
+
+.vacancy-content ul {
+    padding-left: 20px;
+}
+
+.vacancy-content li {
+    margin-bottom: 5px;
+}
+
+.vacancy-footer {
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid #eee;
+}
+
+.no-vacancies {
+    text-align: center;
+    padding: 40px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    color: #666;
+}
+
+address {
+    font-style: normal;
+    background-color: #f9f9f9;
+    padding: 15px;
+    border-radius: 5px;
+}
+
+ul {
+    padding-left: 20px;
+}
+
+li {
+    margin-bottom: 10px;
+}
+</style>
+{% endblock %}

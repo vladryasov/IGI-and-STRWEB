@@ -1,0 +1,202 @@
+{% extends 'base.html' %}
+
+{% block title %}Словарь терминов - Pizzeria{% endblock %}
+{% block description %}Часто задаваемые вопросы и ответы о нашей пиццерии, доставке и услугах.{% endblock %}
+
+{% block content %}
+<article>
+    <header>
+        <h1>Словарь терминов и часто задаваемые вопросы</h1>
+        <p>Здесь вы найдете ответы на самые популярные вопросы о нашей пиццерии, доставке и услугах.</p>
+    </header>
+
+    {% if terms %}
+    <section>
+        <h2>Вопросы и ответы</h2>
+        
+        <!-- Список вопросов -->
+        <nav>
+            <h3>Быстрая навигация по вопросам:</h3>
+            <ul>
+                {% for term in terms %}
+                <li><a href="#term-{{ term.id }}">{{ term.question }}</a></li>
+                {% endfor %}
+            </ul>
+        </nav>
+
+        <!-- Детальные ответы -->
+        <dl>
+            {% for term in terms %}
+            <dt id="term-{{ term.id }}">
+                <strong>{{ term.question }}</strong>
+                <time datetime="{{ term.created_at|date:'Y-m-d' }}" class="term-date">
+                    (добавлено {{ term.created_at|date:'d.m.Y' }})
+                </time>
+            </dt>
+            <dd>{{ term.answer }}</dd>
+            {% endfor %}
+        </dl>
+    </section>
+
+    {% else %}
+    <section>
+        <p>Вопросы и ответы временно недоступны.</p>
+    </section>
+    {% endif %}
+
+    <!-- Дополнительная информация -->
+    <section>
+        <h2>Полезная информация</h2>
+        
+        <h3>Определения терминов:</h3>
+        <dl>
+            <dt><strong>Пицца</strong></dt>
+            <dd>Итальянское блюдо в виде круглой лепешки из теста, покрытой томатным соусом, сыром и различными начинками.</dd>
+            
+            <dt><strong>Доставка</strong></dt>
+            <dd>Услуга по доставке готовых блюд по указанному адресу в течение определенного времени.</dd>
+            
+            <dt><strong>Самовывоз</strong></dt>
+            <dd>Способ получения заказа, при котором клиент самостоятельно забирает готовый заказ из ресторана.</dd>
+            
+            <dt><strong>Промокод</strong></dt>
+            <dd>Специальный код, дающий право на скидку при оформлении заказа.</dd>
+        </dl>
+
+        <h3>Сокращения:</h3>
+        <p>
+            <abbr title="Пиццерия">Пицц.</abbr> - наше заведение<br>
+            <abbr title="Доставка">Дост.</abbr> - услуга доставки<br>
+            <abbr title="Самовывоз">С/В</abbr> - самовывоз<br>
+            <abbr title="Безналичный расчет">Б/Н</abbr> - безналичный расчет
+        </p>
+    </section>
+
+    <!-- Примеры использования -->
+    <section>
+        <h2>Примеры использования</h2>
+        
+        <h3>Пример листинга ингредиентов:</h3>
+        <pre><code>Состав пиццы "Маргарита":
+- Тесто для пиццы
+- Томатный соус
+- Моцарелла
+- Базилик
+- Оливковое масло
+- Соль, перец</code></pre>
+
+        <h3>Пример четверостишия:</h3>
+        <pre>Пицца наша вкусная,
+Доставка быстрая,
+Клиенты довольные,
+Компания славная!</pre>
+
+        <h3>Цитата:</h3>
+        <blockquote>
+            <p>"Пицца - это не просто еда, это искусство!"</p>
+            <footer>
+                <cite>— Шеф-повар нашей пиццерии</cite>
+            </footer>
+        </blockquote>
+    </section>
+
+    <!-- Контактная информация -->
+    <section>
+        <h2>Не нашли ответ на свой вопрос?</h2>
+        <p>Если у вас есть вопросы, которые не освещены в этом словаре, свяжитесь с нами:</p>
+        <address>
+            <p><strong>Телефон:</strong> <a href="tel:+375291234567">+375 (29) 123-45-67</a></p>
+            <p><strong>Email:</strong> <a href="mailto:support@pizzeria.by">support@pizzeria.by</a></p>
+            <p><strong>Время работы:</strong> Ежедневно с 10:00 до 23:00</p>
+        </address>
+    </section>
+</article>
+
+<style>
+dl {
+    margin: 20px 0;
+}
+
+dt {
+    font-weight: bold;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border-left: 4px solid #e31837;
+}
+
+dd {
+    margin-left: 0;
+    margin-bottom: 20px;
+    padding: 10px;
+    background-color: #fafafa;
+    border-radius: 5px;
+}
+
+.term-date {
+    font-size: 0.8em;
+    color: #666;
+    font-weight: normal;
+}
+
+nav ul {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+nav li {
+    margin-bottom: 5px;
+}
+
+nav a {
+    text-decoration: none;
+    color: #e31837;
+}
+
+nav a:hover {
+    text-decoration: underline;
+}
+
+pre {
+    background-color: #f4f4f4;
+    padding: 15px;
+    border-radius: 5px;
+    white-space: pre-wrap;
+    font-family: monospace;
+    overflow-x: auto;
+}
+
+code {
+    font-family: monospace;
+    background-color: #f4f4f4;
+    padding: 2px 4px;
+    border-radius: 3px;
+}
+
+blockquote {
+    border-left: 4px solid #e31837;
+    padding-left: 20px;
+    margin: 20px 0;
+    font-style: italic;
+    background-color: #f9f9f9;
+    padding: 15px 20px;
+}
+
+address {
+    font-style: normal;
+    background-color: #f9f9f9;
+    padding: 15px;
+    border-radius: 5px;
+}
+
+abbr {
+    text-decoration: underline;
+    text-decoration-style: dotted;
+}
+
+abbr:hover {
+    cursor: help;
+}
+</style>
+{% endblock %}

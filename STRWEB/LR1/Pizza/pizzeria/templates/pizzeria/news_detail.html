@@ -1,0 +1,127 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ news.title }} - Pizzeria{% endblock %}
+
+{% block content %}
+<div class="news-detail-container">
+    <div class="news-detail">
+        <h1>{{ news.title }}</h1>
+        
+        <div class="news-meta">
+            <span><i class="fas fa-user"></i> {{ news.author.user.username }}</span>
+            <span><i class="fas fa-calendar"></i> {{ news.created_at|date:"d.m.Y H:i" }}</span>
+        </div>
+        
+        {% if news.image %}
+            <div class="news-image">
+                <img src="{{ news.image.url }}" alt="{{ news.title }}">
+            </div>
+        {% endif %}
+        
+        <div class="news-content">
+            {{ news.content|linebreaks }}
+        </div>
+        
+        <div class="news-navigation">
+            <a href="{% url 'news_list' %}" class="back-to-news">
+                <i class="fas fa-arrow-left"></i> Вернуться к списку новостей
+            </a>
+        </div>
+    </div>
+</div>
+
+<style>
+.news-detail-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.news-detail {
+    background: white;
+    border-radius: 8px;
+    padding: 30px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.news-detail h1 {
+    margin: 0 0 20px 0;
+    color: #333;
+    font-size: 2em;
+}
+
+.news-meta {
+    color: #666;
+    margin-bottom: 20px;
+    font-size: 0.9em;
+}
+
+.news-meta span {
+    margin-right: 20px;
+}
+
+.news-meta i {
+    color: #4CAF50;
+    margin-right: 5px;
+}
+
+.news-image {
+    margin: 20px 0;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.news-image img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.news-content {
+    color: #333;
+    line-height: 1.6;
+    font-size: 1.1em;
+}
+
+.news-content p {
+    margin-bottom: 1em;
+}
+
+.news-navigation {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+}
+
+.back-to-news {
+    color: #4CAF50;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    font-weight: 500;
+    transition: color 0.2s ease;
+}
+
+.back-to-news i {
+    margin-right: 5px;
+}
+
+.back-to-news:hover {
+    color: #45a049;
+}
+
+@media (max-width: 768px) {
+    .news-detail-container {
+        padding: 10px;
+    }
+    
+    .news-detail {
+        padding: 20px;
+    }
+    
+    .news-detail h1 {
+        font-size: 1.5em;
+    }
+}
+</style>
+{% endblock %} 

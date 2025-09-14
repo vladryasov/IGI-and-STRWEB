@@ -1,0 +1,268 @@
+{% extends 'base.html' %}
+
+{% block title %}О компании - Pizzeria{% endblock %}
+{% block description %}Узнайте больше о нашей пиццерии: история, миссия, ценности и команда.{% endblock %}
+
+{% block content %}
+<article>
+    <header>
+        <h1>О нашей компании</h1>
+        {% if company_info %}
+            {% if company_info.logo %}
+            <figure>
+                <img src="{{ company_info.logo.url }}" alt="Логотип компании" width="200" height="100">
+                <figcaption>Логотип нашей пиццерии</figcaption>
+            </figure>
+            {% endif %}
+        {% endif %}
+    </header>
+
+    {% if company_info %}
+    <section>
+        <h2>{{ company_info.title }}</h2>
+        <p>{{ company_info.content }}</p>
+        
+        <section>
+            <h3>Видео о нашей компании</h3>
+            <figure>
+                <iframe width="560" height="315" src="https://www.youtube.com/embed/uNGZAMx3w-c" 
+                        title="Видео о компании" frameborder="0" 
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                        allowfullscreen>
+                    Ваш браузер не поддерживает видео.
+                </iframe>
+                <figcaption>Презентационное видео нашей пиццерии</figcaption>
+            </figure>
+        </section>
+
+        <!-- Дополнительные медиа элементы -->
+        <section>
+            <h3>Медиа контент</h3>
+            
+            <!-- YouTube видео о приготовлении пиццы -->
+            <figure>
+                <h4>Видео приготовления пиццы</h4>
+                <iframe width="400" height="300" src="https://www.youtube.com/embed/QdFQF9otqJ0" 
+                        title="Как приготовить пиццу" frameborder="0" 
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                        allowfullscreen>
+                    Ваш браузер не поддерживает видео.
+                </iframe>
+                <figcaption>Процесс приготовления нашей фирменной пиццы</figcaption>
+            </figure>
+
+            <!-- YouTube видео о рецепте пиццы -->
+            <figure>
+                <h4>Рецепт классической пиццы</h4>
+                <iframe width="400" height="300" src="https://www.youtube.com/embed/7toSikYGFNM" 
+                        title="Рецепт классической пиццы" frameborder="0" 
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                        allowfullscreen>
+                    Ваш браузер не поддерживает видео.
+                </iframe>
+                <figcaption>Классический рецепт итальянской пиццы</figcaption>
+            </figure>
+        </section>
+    </section>
+
+    <!-- История компании -->
+    {% if company_history %}
+    <section>
+        <h2>История компании</h2>
+        <p>Наша компания прошла долгий путь развития:</p>
+        
+        <table>
+            <caption>Основные вехи развития компании</caption>
+            <thead>
+                <tr>
+                    <th scope="col">Год</th>
+                    <th scope="col">Событие</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for event in company_history %}
+                <tr>
+                    <td><time datetime="{{ event.year }}">{{ event.year }}</time></td>
+                    <td>{{ event.event }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
+    {% endif %}
+
+    <!-- Реквизиты -->
+    {% if company_info.requisites %}
+    <section>
+        <h2>Реквизиты компании</h2>
+        <pre>{{ company_info.requisites }}</pre>
+    </section>
+    {% endif %}
+
+    <!-- Сертификат -->
+    {% if company_info.certificate_text %}
+    <section>
+        <h2>Сертификат качества</h2>
+        <blockquote>
+            <p>{{ company_info.certificate_text }}</p>
+            <footer>
+                <cite>— Сертификат соответствия качества</cite>
+            </footer>
+        </blockquote>
+    </section>
+    {% endif %}
+
+    {% else %}
+    <section>
+        <p>Информация о компании временно недоступна.</p>
+    </section>
+    {% endif %}
+
+    <!-- Миссия и ценности -->
+    <section>
+        <h2>Наша миссия</h2>
+        <p><strong>Доставлять радость через вкусную пиццу!</strong></p>
+        <p>Мы стремимся сделать каждый день наших клиентов немного лучше, предлагая качественную пиццу из свежих ингредиентов.</p>
+        
+        <h3>Наши ценности:</h3>
+        <ul>
+            <li><strong>Качество:</strong> Используем только свежие и качественные ингредиенты</li>
+            <li><strong>Скорость:</strong> Быстрая доставка и приготовление</li>
+            <li><strong>Сервис:</strong> Внимательное отношение к каждому клиенту</li>
+            <li><strong>Инновации:</strong> Постоянно совершенствуем наши рецепты</li>
+        </ul>
+    </section>
+
+    <!-- Статистика -->
+    <section>
+        <h2>Наши достижения</h2>
+        <table>
+            <caption>Статистика работы компании</caption>
+            <thead>
+                <tr>
+                    <th scope="col">Показатель</th>
+                    <th scope="col">Значение</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Годы работы</td>
+                    <td>5+ лет</td>
+                </tr>
+                <tr>
+                    <td>Довольных клиентов</td>
+                    <td>10,000+</td>
+                </tr>
+                <tr>
+                    <td>Видов пиццы</td>
+                    <td>50+</td>
+                </tr>
+                <tr>
+                    <td>Среднее время доставки</td>
+                    <td>35 минут</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <!-- Контактная информация -->
+    <section>
+        <h2>Свяжитесь с нами</h2>
+        <address>
+            <p><strong>Телефон:</strong> <a href="tel:+375291234567">+375 (29) 123-45-67</a></p>
+            <p><strong>Email:</strong> <a href="mailto:info@pizzeria.by">info@pizzeria.by</a></p>
+            <p><strong>Адрес:</strong> г. Минск, ул. Примерная, д. 1</p>
+            <p><strong>Время работы:</strong> Ежедневно с 10:00 до 23:00</p>
+        </address>
+    </section>
+</article>
+
+<style>
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: left;
+}
+
+th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+}
+
+caption {
+    font-weight: bold;
+    margin-bottom: 10px;
+    text-align: left;
+}
+
+figure {
+    margin: 20px 0;
+    text-align: center;
+}
+
+figcaption {
+    font-size: 0.9em;
+    color: #666;
+    margin-top: 5px;
+}
+
+iframe {
+    max-width: 100%;
+    border: none;
+}
+
+blockquote {
+    border-left: 4px solid #e31837;
+    padding-left: 20px;
+    margin: 20px 0;
+    font-style: italic;
+    background-color: #f9f9f9;
+    padding: 15px 20px;
+}
+
+pre {
+    background-color: #f4f4f4;
+    padding: 15px;
+    border-radius: 5px;
+    white-space: pre-wrap;
+    font-family: monospace;
+}
+
+ul {
+    padding-left: 20px;
+}
+
+li {
+    margin-bottom: 10px;
+}
+
+address {
+    font-style: normal;
+    background-color: #f9f9f9;
+    padding: 15px;
+    border-radius: 5px;
+}
+
+dl {
+    background-color: #f9f9f9;
+    padding: 15px;
+    border-radius: 5px;
+}
+
+dt {
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+dd {
+    margin-left: 0;
+    margin-bottom: 10px;
+}
+</style>
+{% endblock %}

@@ -1,0 +1,180 @@
+{% extends 'base.html' %}
+
+{% block title %}Статистика - Pizzeria{% endblock %}
+
+{% block content %}
+<div class="statistics-container">
+    <h1>Статистика за последние 30 дней</h1>
+
+    <div class="stats-summary">
+        <div class="stat-card">
+            <h3>Общая статистика</h3>
+            <div class="stat-item">
+                <span class="stat-label">Всего пользователей:</span>
+                <span class="stat-value">{{ total_users }}</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Всего заказов:</span>
+                <span class="stat-value">{{ total_orders }}</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Средний чек:</span>
+                <span class="stat-value">{{ average_order_value|floatformat:2 }} ₽</span>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <h3>За период (30 дней)</h3>
+            <div class="stat-item">
+                <span class="stat-label">Новых пользователей:</span>
+                <span class="stat-value">{{ period_new_users }}</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Заказов:</span>
+                <span class="stat-value">{{ period_orders }}</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Выручка:</span>
+                <span class="stat-value">{{ period_revenue|floatformat:2 }} ₽</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="graphics">
+        {% if graphic %}
+        <div class="graph-container">
+            <img src="data:image/png;base64,{{ graphic }}" alt="Статистика" class="statistics-graph">
+            <div class="graph-legend">
+                <p class="legend-note">* График показывает динамику регистраций и заказов за последние 30 дней</p>
+            </div>
+        </div>
+        {% else %}
+        <div class="no-data">
+            <p>Нет данных для отображения графиков</p>
+            <p class="no-data-note">Данные появятся после первых заказов</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<style>
+.statistics-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.stats-summary {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 30px;
+    gap: 20px;
+}
+
+.stat-card {
+    flex: 1;
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: transform 0.2s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.stat-card h3 {
+    margin-top: 0;
+    color: #333;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+    font-size: 1.4em;
+}
+
+.stat-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 15px 0;
+    padding: 5px 0;
+    border-bottom: 1px solid #f5f5f5;
+}
+
+.stat-label {
+    color: #666;
+    font-size: 1.1em;
+}
+
+.stat-value {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #2c3e50;
+}
+
+.graphics {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.graph-container {
+    position: relative;
+}
+
+.statistics-graph {
+    width: 100%;
+    height: auto;
+    margin-top: 20px;
+    border-radius: 4px;
+}
+
+.graph-legend {
+    margin-top: 15px;
+    padding-top: 10px;
+    border-top: 1px solid #eee;
+}
+
+.legend-note {
+    color: #666;
+    font-size: 0.9em;
+    font-style: italic;
+    margin: 0;
+}
+
+.no-data {
+    text-align: center;
+    padding: 40px 20px;
+    color: #666;
+}
+
+.no-data-note {
+    font-size: 0.9em;
+    color: #999;
+    margin-top: 10px;
+}
+
+@media (max-width: 768px) {
+    .stats-summary {
+        flex-direction: column;
+    }
+    
+    .stat-card {
+        margin-bottom: 20px;
+    }
+
+    .stat-item {
+        flex-direction: column;
+        align-items: flex-start;
+        text-align: left;
+    }
+
+    .stat-value {
+        margin-top: 5px;
+    }
+}
+</style>
+{% endblock %} 

@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block title %}Access Denied - Pizzeria{% endblock %}
+
+{% block content %}
+    <h1>Access Denied</h1>
+    <p>{{ message }}</p>
+    <a href="{% url 'home' %}">Back to Home</a>
+    {% if not request.user.is_authenticated %}
+        <p>Please <a href="{% url 'login' %}">login</a> to access this page.</p>
+    {% endif %}
+{% endblock %}
