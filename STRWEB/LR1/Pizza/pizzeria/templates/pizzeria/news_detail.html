@@ -3,32 +3,41 @@
 {% block title %}{{ news.title }} - Pizzeria{% endblock %}
 
 {% block content %}
-<div class="news-detail-container">
-    <div class="news-detail">
-        <h1>{{ news.title }}</h1>
-        
-        <div class="news-meta">
-            <span><i class="fas fa-user"></i> {{ news.author.user.username }}</span>
-            <span><i class="fas fa-calendar"></i> {{ news.created_at|date:"d.m.Y H:i" }}</span>
-        </div>
+<section class="news-detail-container" role="main" aria-labelledby="news-title">
+    <article class="news-detail">
+        <header>
+            <h1 id="news-title">{{ news.title }}</h1>
+            
+            <div class="news-meta">
+                <span><i class="fas fa-user" aria-hidden="true"></i> 
+                    <span class="sr-only">Автор:</span> {{ news.author.user.username }}
+                </span>
+                <span><i class="fas fa-calendar" aria-hidden="true"></i> 
+                    <span class="sr-only">Дата публикации:</span> 
+                    <time datetime="{{ news.created_at|date:'Y-m-d\TH:i' }}">{{ news.created_at|date:"d.m.Y H:i" }}</time>
+                </span>
+            </div>
+        </header>
         
         {% if news.image %}
-            <div class="news-image">
-                <img src="{{ news.image.url }}" alt="{{ news.title }}">
-            </div>
+            <figure class="news-image">
+                <img src="{{ news.image.url }}" alt="{{ news.title }}" loading="lazy">
+                <figcaption class="sr-only">Изображение к новости: {{ news.title }}</figcaption>
+            </figure>
         {% endif %}
         
         <div class="news-content">
             {{ news.content|linebreaks }}
         </div>
         
-        <div class="news-navigation">
+        <nav class="news-navigation" aria-label="Навигация по новостям">
             <a href="{% url 'news_list' %}" class="back-to-news">
-                <i class="fas fa-arrow-left"></i> Вернуться к списку новостей
+                <i class="fas fa-arrow-left" aria-hidden="true"></i> 
+                <span>Вернуться к списку новостей</span>
             </a>
-        </div>
-    </div>
-</div>
+        </nav>
+    </article>
+</section>
 
 <style>
 .news-detail-container {
@@ -108,6 +117,18 @@
 
 .back-to-news:hover {
     color: #45a049;
+}
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
 }
 
 @media (max-width: 768px) {

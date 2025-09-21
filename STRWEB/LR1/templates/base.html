@@ -4,15 +4,37 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="{% block description %}Лучшая пиццерия в городе. Свежие ингредиенты, быстрая доставка, вкусная пицца на любой вкус.{% endblock %}">
-    <meta name="keywords" content="{% block keywords %}пицца, доставка, еда, ресторан, пиццерия{% endblock %}">
     <meta name="author" content="Pizzeria Company">
     <meta name="robots" content="index, follow">
+    <meta name="theme-color" content="#e31837">
+    <meta name="msapplication-TileColor" content="#e31837">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Pizzeria">
+    
+    <!-- Open Graph метаданные -->
     <meta property="og:title" content="{% block og_title %}Pizzeria{% endblock %}">
     <meta property="og:description" content="{% block og_description %}Лучшая пиццерия в городе{% endblock %}">
     <meta property="og:type" content="website">
     <meta property="og:url" content="{{ request.build_absolute_uri }}">
     <meta property="og:image" content="{% block og_image %}{{ request.build_absolute_uri }}/media/pizzas/images.png{% endblock %}">
+    <meta property="og:site_name" content="Pizzeria">
+    <meta property="og:locale" content="ru_RU">
+    
+    <!-- Twitter Card метаданные -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{% block twitter_title %}Pizzeria{% endblock %}">
+    <meta name="twitter:description" content="{% block twitter_description %}Лучшая пиццерия в городе{% endblock %}">
+    <meta name="twitter:image" content="{% block twitter_image %}{{ request.build_absolute_uri }}/media/pizzas/images.png{% endblock %}">
+    
+    <!-- Иконки -->
     <link rel="icon" type="image/x-icon" href="/media/pizzas/images.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/media/pizzas/images.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/media/pizzas/images.png">
+    <link rel="apple-touch-icon" href="/media/pizzas/images.png">
+    
+    <!-- Канонический URL -->
+    <link rel="canonical" href="{{ request.build_absolute_uri }}">
     <title>{% block title %}Pizzeria{% endblock %}</title>
     <style>
         body {
@@ -79,6 +101,55 @@
             clear: both;
             display: table;
         }
+        
+        /* Стили для футера */
+        footer {
+            background-color: #333;
+            color: white;
+            padding: 30px 0;
+            margin-top: 40px;
+        }
+        
+        footer .container {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+        }
+        
+        footer h2, footer h3 {
+            color: #e31837;
+            margin-bottom: 15px;
+        }
+        
+        footer address {
+            font-style: normal;
+            margin: 10px 0;
+        }
+        
+        footer nav ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        footer nav li {
+            margin-bottom: 8px;
+        }
+        
+        footer nav a {
+            color: #ccc;
+            text-decoration: none;
+        }
+        
+        footer nav a:hover {
+            color: #e31837;
+        }
+        
+        @media (max-width: 768px) {
+            footer .container {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -93,6 +164,7 @@
                 <a href="{% url 'vacancies' %}" aria-label="Вакансии">Вакансии</a>
                 <a href="{% url 'contacts' %}" aria-label="Контактная информация">Контакты</a>
                 <a href="{% url 'partners' %}" aria-label="Наши партнеры">Партнеры</a>
+                <a href="{% url 'html_demo' %}" aria-label="Демонстрация HTML элементов">HTML Demo</a>
             </div>
             <div class="nav-right">
                 {% if request.user.is_authenticated %}
@@ -112,19 +184,34 @@
         </nav>
     </header>
 
-    <main class="container">
+    <main class="container" role="main">
         {% block content %}
         {% endblock %}
     </main>
 
-    <footer>
+    <footer role="contentinfo">
         <div class="container">
-            <p>&copy; 2025 Pizzeria Company. Все права защищены.</p>
-            <p>
-                <a href="{% url 'privacy' %}">Политика конфиденциальности</a> | 
-                <a href="{% url 'contacts' %}">Контакты</a> | 
-                <a href="{% url 'vacancies' %}">Вакансии</a>
-            </p>
+            <section>
+                <h2>Информация о компании</h2>
+                <p>&copy; <time datetime="2025">2025</time> Pizzeria Company. Все права защищены.</p>
+                <address>
+                    <p><strong>Адрес:</strong> г. Минск, ул. Примерная, д. 1</p>
+                    <p><strong>Телефон:</strong> <a href="tel:+375291234567">+375 (29) 123-45-67</a></p>
+                    <p><strong>Email:</strong> <a href="mailto:info@pizzeria.by">info@pizzeria.by</a></p>
+                </address>
+            </section>
+            
+            <nav aria-label="Дополнительная навигация">
+                <h3>Полезные ссылки</h3>
+                <ul>
+                    <li><a href="{% url 'privacy' %}">Политика конфиденциальности</a></li>
+                    <li><a href="{% url 'contacts' %}">Контакты</a></li>
+                    <li><a href="{% url 'vacancies' %}">Вакансии</a></li>
+                    <li><a href="{% url 'dictionary' %}">Вопросы и ответы</a></li>
+                    <li><a href="{% url 'html_demo' %}">Демонстрация HTML</a></li>
+                    <li><a href="{% url 'validation_check' %}">Проверка валидации</a></li>
+                </ul>
+            </nav>
         </div>
     </footer>
 </body>

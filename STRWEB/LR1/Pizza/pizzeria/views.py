@@ -748,3 +748,11 @@ def partners(request):
 def payment(request):
     """Страница оплаты"""
     return render(request, 'pizzeria/payment.html')
+
+def html_demo(request):
+    """Демонстрационная страница HTML элементов"""
+    return render(request, 'pizzeria/html_demo.html')
+
+def validation_check(request):
+    """Страница проверки валидации HTML"""
+    return render(request, 'pizzeria/validation_check.html')

@@ -3,57 +3,89 @@
 {% block title %}Новости - Pizzeria{% endblock %}
 
 {% block content %}
-<div class="news-container">
-    <h1>Новости</h1>
+<section class="news-container" role="main" aria-labelledby="news-heading">
+    <header>
+        <h1 id="news-heading">Новости</h1>
+    </header>
     
-    <div class="news-grid">
+    <div class="news-grid" role="list" aria-label="Список новостей">
         {% for news_item in news %}
-            <div class="news-card">
+            <article class="news-card" role="listitem">
                 {% if news_item.image %}
-                    <div class="news-image">
-                        <img src="{{ news_item.image.url }}" alt="{{ news_item.title }}">
-                    </div>
+                    <figure class="news-image">
+                        <img src="{{ news_item.image.url }}" alt="{{ news_item.title }}" loading="lazy">
+                        <figcaption class="sr-only">Изображение к новости: {{ news_item.title }}</figcaption>
+                    </figure>
                 {% endif %}
                 
                 <div class="news-content">
-                    <h3>{{ news_item.title }}</h3>
-                    <p class="news-meta">
-                        <i class="fas fa-user"></i> {{ news_item.author.user.username|default:"Система" }}
-                        <i class="fas fa-calendar"></i> {{ news_item.created_at|date:"d.m.Y" }}
-                    </p>
-                    <p class="news-excerpt">{{ news_item.content|truncatewords:30 }}</p>
+                    <header>
+                        <h3>{{ news_item.title }}</h3>
+                        <div class="news-meta">
+                            <span><i class="fas fa-user" aria-hidden="true"></i> 
+                                <span class="sr-only">Автор:</span> {{ news_item.author.user.username|default:"Система" }}
+                            </span>
+                            <span><i class="fas fa-calendar" aria-hidden="true"></i> 
+                                <span class="sr-only">Дата публикации:</span> 
+                                <time datetime="{{ news_item.created_at|date:'Y-m-d' }}">{{ news_item.created_at|date:"d.m.Y" }}</time>
+                            </span>
+                        </div>
+                    </header>
+                    
+                    <div class="news-excerpt">
+                        <p>{{ news_item.content|truncatewords:30 }}</p>
+                    </div>
+                    
                     {% if news_item.slug|length > 0 %}
-                        <a href="{% url 'news_detail' slug=news_item.slug %}" class="read-more">
-                            Читать далее <i class="fas fa-arrow-right"></i>
-                        </a>
+                        <footer>
+                            <a href="{% url 'news_detail' slug=news_item.slug %}" class="read-more" 
+                               aria-label="Читать полную новость: {{ news_item.title }}">
+                                <span>Читать далее</span> 
+                                <i class="fas fa-arrow-right" aria-hidden="true"></i>
+                            </a>
+                        </footer>
                     {% endif %}
                 </div>
-            </div>
+            </article>
         {% empty %}
-            <p class="no-news">На данный момент новостей нет.</p>
+            <div class="no-news" role="status" aria-live="polite">
+                <p>На данный момент новостей нет.</p>
+            </div>
         {% endfor %}
     </div>
     
     {% if news.has_other_pages %}
-        <div class="pagination">
+        <nav class="pagination" aria-label="Навигация по страницам новостей">
             {% if news.has_previous %}
-                <a href="?page={{ news.previous_page_number }}" class="page-link">&laquo;</a>
+                <a href="?page={{ news.previous_page_number }}" class="page-link" 
+                   aria-label="Предыдущая страница">
+                    <span aria-hidden="true">&laquo;</span>
+                    <span class="sr-only">Предыдущая</span>
+                </a>
             {% endif %}
             
             {% for num in news.paginator.page_range %}
                 {% if news.number == num %}
-                    <span class="page-link active">{{ num }}</span>
+                    <span class="page-link active" aria-current="page" aria-label="Текущая страница {{ num }}">
+                        {{ num }}
+                    </span>
                 {% else %}
-                    <a href="?page={{ num }}" class="page-link">{{ num }}</a>
+                    <a href="?page={{ num }}" class="page-link" aria-label="Страница {{ num }}">
+                        {{ num }}
+                    </a>
                 {% endif %}
             {% endfor %}
             
             {% if news.has_next %}
-                <a href="?page={{ news.next_page_number }}" class="page-link">&raquo;</a>
+                <a href="?page={{ news.next_page_number }}" class="page-link" 
+                   aria-label="Следующая страница">
+                    <span aria-hidden="true">&raquo;</span>
+                    <span class="sr-only">Следующая</span>
+                </a>
             {% endif %}
-        </div>
+        </nav>
     {% endif %}
-</div>
+</section>
 
 <style>
 .news-container {
@@ -130,7 +162,7 @@
     font-weight: 500;
     display: inline-flex;
     align-items: center;
-    transition: color 0.2s ease;
+    transition: color 0.2s ease; 
 }
 
 .read-more i {
@@ -177,6 +209,18 @@
     background: white;
     border-radius: 8px;
     color: #666;
+}
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
 }
 
 @media (max-width: 768px) {

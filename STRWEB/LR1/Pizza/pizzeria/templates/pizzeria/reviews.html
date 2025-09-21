@@ -1,33 +1,211 @@
 {% extends 'base.html' %}
 
-{% block title %}Reviews - Pizzeria{% endblock %}
+{% block title %}Отзывы - Pizzeria{% endblock %}
+
+{% block description %}Отзывы наших клиентов о качестве пиццы и обслуживании в нашей пиццерии.{% endblock %}
+
+{% block og_title %}Отзывы клиентов - Pizzeria{% endblock %}
+{% block og_description %}Читайте отзывы наших клиентов о качестве пиццы и обслуживании{% endblock %}
 
 {% block content %}
-    <h1>Reviews</h1>
-    {% if reviews %}
-        <div style="max-width: 600px; margin: 0 auto;">
-        {% for review in reviews %}
-            <div style="border: 1px solid #ccc; padding: 10px; margin-bottom: 10px; border-radius: 5px;">
-                <p><strong>{{ review.customer.user_profile.user.username }}</strong> ({{ review.rating }}/5)</p>
-                <p>{{ review.text }}</p>
-                <p><small>Posted on {{ review.created_at|date:"d/m/Y H:i" }}</small></p>
-            </div>
-        {% endfor %}
-        </div>
-    {% else %}
-        <p>No reviews yet.</p>
-    {% endif %}
-    {% if request.user.is_authenticated %}
-        {% if request.user.userprofile %}
-            <p>Debug: Role = {{ request.user.userprofile.role }}</p> <!-- Отладочная информация -->
-            {% if request.user.userprofile.role == 'client' or request.user.userprofile.role == 'staff' or request.user.userprofile.role == 'admin' %}
-                <a href="{% url 'create_review' %}">Add a Review</a>
-            {% else %}
-                <p>Debug: Role not allowed for adding reviews.</p>
-            {% endif %}
+    <header>
+        <h1>Отзывы клиентов</h1>
+        <p>Узнайте, что говорят наши клиенты о качестве нашей пиццы и обслуживании</p>
+    </header>
+
+    <main>
+        {% if reviews %}
+            <section aria-label="Список отзывов клиентов">
+                <h2>Отзывы наших клиентов</h2>
+                <div class="reviews-container">
+                    {% for review in reviews %}
+                        <article class="review-item" itemscope itemtype="https://schema.org/Review">
+                            <header class="review-header">
+                                <h3 class="review-author" itemprop="author" itemscope itemtype="https://schema.org/Person">
+                                    <span itemprop="name">{{ review.customer.user_profile.user.username }}</span>
+                                </h3>
+                                <div class="review-rating" itemprop="reviewRating" itemscope itemtype="https://schema.org/Rating">
+                                    <span class="rating-value" itemprop="ratingValue">{{ review.rating }}</span>
+                                    <span class="rating-max" itemprop="bestRating">5</span>
+                                    <span class="rating-stars" aria-label="Рейтинг {{ review.rating }} из 5 звезд">
+                                        {% for i in "12345" %}
+                                            {% if forloop.counter <= review.rating %}
+                                                ★
+                                            {% else %}
+                                                ☆
+                                            {% endif %}
+                                        {% endfor %}
+                                    </span>
+                                </div>
+                            </header>
+                            
+                            <div class="review-content" itemprop="reviewBody">
+                                <p>{{ review.text }}</p>
+                            </div>
+                            
+                            <footer class="review-footer">
+                                <time datetime="{{ review.created_at|date:'c' }}" itemprop="datePublished">
+                                    Опубликовано {{ review.created_at|date:"d.m.Y в H:i" }}
+                                </time>
+                            </footer>
+                        </article>
+                    {% endfor %}
+                </div>
+            </section>
         {% else %}
-            <p>Debug: No user profile found.</p>
+            <section aria-label="Отсутствие отзывов">
+                <h2>Пока нет отзывов</h2>
+                <p>Станьте первым, кто оставит отзыв о нашей пиццерии!</p>
+            </section>
         {% endif %}
-    {% endif %}
-    <a href="{% url 'home' %}">Back to Home</a>
+
+        {% if request.user.is_authenticated %}
+            <section aria-label="Добавление нового отзыва">
+                {% if request.user.userprofile %}
+                    {% if request.user.userprofile.role == 'client' or request.user.userprofile.role == 'staff' or request.user.userprofile.role == 'admin' %}
+                        <h2>Оставить отзыв</h2>
+                        <p>Поделитесь своим мнением о нашей пиццерии</p>
+                        <a href="{% url 'create_review' %}" class="btn btn-primary" aria-label="Добавить новый отзыв">
+                            Добавить отзыв
+                        </a>
+                    {% else %}
+                        <p class="access-message">У вас нет прав для добавления отзывов.</p>
+                    {% endif %}
+                {% else %}
+                    <p class="access-message">Для добавления отзыва необходимо завершить регистрацию профиля.</p>
+                {% endif %}
+            </section>
+        {% endif %}
+
+        <nav aria-label="Навигация по сайту">
+            <a href="{% url 'home' %}" class="btn btn-secondary" aria-label="Вернуться на главную страницу">
+                ← Вернуться на главную
+            </a>
+        </nav>
+    </main>
+
+    <style>
+        .reviews-container {
+            max-width: 800px;
+            margin: 0 auto;
+            display: grid;
+            gap: 20px;
+        }
+
+        .review-item {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: box-shadow 0.3s ease;
+        }
+
+        .review-item:hover {
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .review-author {
+            margin: 0;
+            color: #333;
+            font-size: 1.1em;
+        }
+
+        .review-rating {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .rating-stars {
+            color: #ffc107;
+            font-size: 1.2em;
+        }
+
+        .rating-value {
+            font-weight: bold;
+            color: #e31837;
+        }
+
+        .rating-max {
+            color: #666;
+        }
+
+        .review-content {
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+
+        .review-content p {
+            margin: 0;
+            color: #555;
+        }
+
+        .review-footer {
+            font-size: 0.9em;
+            color: #888;
+        }
+
+        .review-footer time {
+            font-style: italic;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+            margin: 10px 5px;
+        }
+
+        .btn-primary {
+            background-color: #e31837;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #c1152f;
+        }
+
+        .btn-secondary {
+            background-color: #333;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background-color: #555;
+        }
+
+        .access-message {
+            color: #666;
+            font-style: italic;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            border-left: 4px solid #e31837;
+        }
+
+        @media (max-width: 768px) {
+            .review-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            .reviews-container {
+                padding: 0 10px;
+            }
+        }
+    </style>
 {% endblock %}

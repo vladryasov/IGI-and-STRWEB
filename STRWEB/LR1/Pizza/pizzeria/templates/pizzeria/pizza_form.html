@@ -1,41 +1,49 @@
 {% extends 'base.html' %}
 
 {% block title %}{{ action }} пиццу - Pizzeria{% endblock %}
+{% block description %}Форма для {{ action|lower }} пиццы в пиццерии{% endblock %}
 
 {% block content %}
-<div class="form-container">
-    <h2>{{ action }} пиццу</h2>
+<section class="form-container">
+    <header>
+        <h1>{{ action }} пиццу</h1>
+    </header>
 
     {% if messages %}
-        {% for message in messages %}
-            <div class="message {% if message.tags %}{{ message.tags }}{% endif %}">
-                {{ message }}
-            </div>
-        {% endfor %}
+        <div class="messages">
+            {% for message in messages %}
+                <div class="message {% if message.tags %}{{ message.tags }}{% endif %}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
     {% endif %}
 
-    <form method="post" enctype="multipart/form-data">
+    <form method="post" enctype="multipart/form-data" class="pizza-form">
         {% csrf_token %}
-        {% for field in form %}
-            <div class="form-group">
-                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-                {{ field }}
-                {% if field.help_text %}
-                    <small class="help-text">{{ field.help_text }}</small>
-                {% endif %}
-                {% if field.errors %}
-                    {% for error in field.errors %}
-                        <div class="error">{{ error }}</div>
-                    {% endfor %}
-                {% endif %}
-            </div>
-        {% endfor %}
+        <fieldset>
+            <legend>Информация о пицце</legend>
+            {% for field in form %}
+                <div class="form-group">
+                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.help_text %}
+                        <small class="help-text">{{ field.help_text }}</small>
+                    {% endif %}
+                    {% if field.errors %}
+                        {% for error in field.errors %}
+                            <div class="error">{{ error }}</div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </fieldset>
         <div class="form-actions">
             <button type="submit" class="btn">{{ action }}</button>
             <a href="{% url 'home' %}" class="btn btn-secondary">Отмена</a>
         </div>
     </form>
-</div>
+</section>
 
 <style>
 .form-container {

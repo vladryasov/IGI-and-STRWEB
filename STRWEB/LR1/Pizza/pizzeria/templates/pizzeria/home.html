@@ -4,17 +4,17 @@
 {% block description %}Добро пожаловать в лучшую пиццерию города! Свежие ингредиенты, быстрая доставка, вкусная пицца на любой вкус.{% endblock %}
 
 {% block content %}
-<article class="main-content">
+<article class="main-content" itemscope itemtype="https://schema.org/Restaurant">
     <!-- Логотип и баннер -->
     <header>
-        <figure>
-            <img src="/media/pizzas/images.png" alt="Логотип Pizzeria" width="200" height="100">
+        <figure itemprop="logo" itemscope itemtype="https://schema.org/ImageObject">
+            <img src="/media/logos/pngtree-pizza-restaurant-creative-logo-png-image_5570350.png" alt="Логотип Pizzeria" width="200" height="200" itemprop="url">
             <figcaption>Логотип нашей пиццерии</figcaption>
         </figure>
         
         <section class="banner-section">
-            <h1>Добро пожаловать в нашу пиццерию!</h1>
-            <p><strong>Лучшая пицца в городе!</strong> Свежие ингредиенты, быстрая доставка, неповторимый вкус.</p>
+            <h1 itemprop="name">Добро пожаловать в нашу пиццерию!</h1>
+            <p itemprop="description"><strong>Лучшая пицца в городе!</strong> Свежие ингредиенты, быстрая доставка, неповторимый вкус.</p>
             
             <!-- Баннеры -->
             <div class="banners">
@@ -49,11 +49,11 @@
     {% if context.latest_news %}
     <section class="latest-news">
         <h2>Последние новости</h2>
-        <article>
-            <h3>{{ context.latest_news.title }}</h3>
-            <p><time datetime="{{ context.latest_news.created_at|date:'Y-m-d' }}">{{ context.latest_news.created_at|date:'d.m.Y' }}</time></p>
-            <p>{{ context.latest_news.content|truncatewords:20 }}</p>
-            <a href="{% url 'news_detail' context.latest_news.slug %}" aria-label="Читать полную новость">Читать далее</a>
+        <article itemscope itemtype="https://schema.org/NewsArticle">
+            <h3 itemprop="headline">{{ context.latest_news.title }}</h3>
+            <p><time datetime="{{ context.latest_news.created_at|date:'Y-m-d' }}" itemprop="datePublished">{{ context.latest_news.created_at|date:'d.m.Y' }}</time></p>
+            <p itemprop="description">{{ context.latest_news.content|truncatewords:20 }}</p>
+            <a href="{% url 'news_detail' context.latest_news.slug %}" aria-label="Читать полную новость" itemprop="url">Читать далее</a>
         </article>
     </section>
     {% endif %}
@@ -74,11 +74,11 @@
             </thead>
             <tbody>
                 {% for partner in context.partners %}
-                <tr>
-                    <td><img src="{{ partner.logo.url }}" alt="Логотип {{ partner.name }}" width="50" height="50"></td>
-                    <td>{{ partner.name }}</td>
-                    <td>{{ partner.description|default:"Описание отсутствует" }}</td>
-                    <td><a href="{{ partner.website_url }}" target="_blank" rel="noopener noreferrer">Перейти на сайт</a></td>
+                <tr itemscope itemtype="https://schema.org/Organization">
+                    <td><img src="{{ partner.logo.url }}" alt="Логотип {{ partner.name }}" width="50" height="50" itemprop="logo"></td>
+                    <td itemprop="name">{{ partner.name }}</td>
+                    <td itemprop="description">{{ partner.description|default:"Описание отсутствует" }}</td>
+                    <td><a href="{{ partner.website_url }}" target="_blank" rel="noopener noreferrer" itemprop="url">Перейти на сайт</a></td>
                 </tr>
                 {% endfor %}
             </tbody>
@@ -101,18 +101,20 @@
             
             <div class="pizza-grid">
                 {% for pizza in category.pizza_set.all %}
-                <article class="pizza-card">
+                <article class="pizza-card" itemscope itemtype="https://schema.org/Product">
                     {% if pizza.image %}
-                    <figure>
-                        <img src="{{ pizza.image.url }}" alt="{{ pizza.name }}" class="pizza-image">
+                    <figure itemprop="image" itemscope itemtype="https://schema.org/ImageObject">
+                        <img src="{{ pizza.image.url }}" alt="{{ pizza.name }}" class="pizza-image" itemprop="url">
                         <figcaption>{{ pizza.name }}</figcaption>
                     </figure>
                     {% endif %}
-                    <h4>{{ pizza.name }}</h4>
-                    <p class="pizza-description">{{ pizza.description }}</p>
-                    <p class="pizza-price">от <strong>{{ pizza.base_price }}</strong> руб.</p>
+                    <h4 itemprop="name">{{ pizza.name }}</h4>
+                    <p class="pizza-description" itemprop="description">{{ pizza.description }}</p>
+                    <p class="pizza-price" itemprop="offers" itemscope itemtype="https://schema.org/Offer">
+                        от <strong itemprop="price">{{ pizza.base_price }}</strong> <span itemprop="priceCurrency" content="RUB">руб.</span>
+                    </p>
                     <div class="pizza-actions">
-                        <a href="{% url 'pizza_detail' pizza.id %}" class="btn" aria-label="Подробнее о {{ pizza.name }}">Подробнее</a>
+                        <a href="{% url 'pizza_detail' pizza.id %}" class="btn" aria-label="Подробнее о {{ pizza.name }}" itemprop="url">Подробнее</a>
                         {% if user.is_authenticated %}
                         <form method="post" action="{% url 'add_to_cart' pizza.id %}" class="add-to-cart-form">
                             {% csrf_token %}
@@ -134,15 +136,17 @@
         <h2>Другие пиццы</h2>
         <div class="pizza-grid">
             {% for pizza in context.pizzas_without_category %}
-            <div class="pizza-card">
+            <div class="pizza-card" itemscope itemtype="https://schema.org/Product">
                 {% if pizza.image %}
-                <img src="{{ pizza.image.url }}" alt="{{ pizza.name }}" class="pizza-image">
+                <img src="{{ pizza.image.url }}" alt="{{ pizza.name }}" class="pizza-image" itemprop="image">
                 {% endif %}
-                <h3>{{ pizza.name }}</h3>
-                <p class="pizza-description">{{ pizza.description }}</p>
-                <p class="pizza-price">от {{ pizza.base_price }} руб.</p>
+                <h3 itemprop="name">{{ pizza.name }}</h3>
+                <p class="pizza-description" itemprop="description">{{ pizza.description }}</p>
+                <p class="pizza-price" itemprop="offers" itemscope itemtype="https://schema.org/Offer">
+                    от <span itemprop="price">{{ pizza.base_price }}</span> <span itemprop="priceCurrency" content="RUB">руб.</span>
+                </p>
                 <div class="pizza-actions">
-                    <a href="{% url 'pizza_detail' pizza.id %}" class="btn">Подробнее</a>
+                    <a href="{% url 'pizza_detail' pizza.id %}" class="btn" itemprop="url">Подробнее</a>
                     {% if user.is_authenticated %}
                     <form method="post" action="{% url 'add_to_cart' pizza.id %}" class="add-to-cart-form">
                         {% csrf_token %}

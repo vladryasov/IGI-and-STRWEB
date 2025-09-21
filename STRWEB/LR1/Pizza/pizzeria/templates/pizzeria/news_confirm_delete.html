@@ -3,29 +3,33 @@
 {% block title %}Удаление новости - Pizzeria{% endblock %}
 
 {% block content %}
-<div class="delete-container">
-    <div class="delete-card">
-        <h1>Удаление новости</h1>
+<section class="delete-container" role="main" aria-labelledby="delete-heading">
+    <article class="delete-card">
+        <header>
+            <h1 id="delete-heading">Удаление новости</h1>
+        </header>
         
-        <div class="warning-message">
-            <i class="fas fa-exclamation-triangle"></i>
-            <p>Вы уверены, что хотите удалить новость "{{ news.title }}"?</p>
+        <div class="warning-message" role="alert" aria-live="polite">
+            <i class="fas fa-exclamation-triangle" aria-hidden="true"></i>
+            <p>Вы уверены, что хотите удалить новость "<strong>{{ news.title }}</strong>"?</p>
             <p class="warning-text">Это действие нельзя будет отменить.</p>
         </div>
         
-        <form method="post">
+        <form method="post" role="form" aria-label="Форма подтверждения удаления">
             {% csrf_token %}
             <div class="form-actions">
-                <button type="submit" class="btn btn-danger">
-                    <i class="fas fa-trash"></i> Удалить
+                <button type="submit" class="btn btn-danger" aria-describedby="warning-text">
+                    <i class="fas fa-trash" aria-hidden="true"></i> 
+                    <span>Удалить</span>
                 </button>
-                <a href="{% url 'news_detail' slug=news.slug %}" class="btn btn-secondary">
-                    <i class="fas fa-times"></i> Отмена
+                <a href="{% url 'news_detail' slug=news.slug %}" class="btn btn-secondary" role="button">
+                    <i class="fas fa-times" aria-hidden="true"></i> 
+                    <span>Отмена</span>
                 </a>
             </div>
         </form>
-    </div>
-</div>
+    </article>
+</section>
 
 <style>
 .delete-container {

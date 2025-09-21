@@ -47,4 +47,8 @@ urlpatterns = [
     # Новые маршруты
     path('partners/', views.partners, name='partners'),
     path('payment/', views.payment, name='payment'),
+    # Демонстрационная страница HTML элементов
+    path('html-demo/', views.html_demo, name='html_demo'),
+    # Страница проверки валидации
+    path('validation-check/', views.validation_check, name='validation_check'),
 ]

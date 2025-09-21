@@ -3,56 +3,77 @@
 {% block title %}{{ action }} новость - Pizzeria{% endblock %}
 
 {% block content %}
-<div class="news-form-container">
-    <div class="news-form">
-        <h1>{{ action }} новость</h1>
+<section class="news-form-container" role="main" aria-labelledby="form-heading">
+    <article class="news-form">
+        <header>
+            <h1 id="form-heading">{{ action }} новость</h1>
+        </header>
         
-        <form method="post" enctype="multipart/form-data">
+        <form method="post" enctype="multipart/form-data" role="form" aria-label="Форма {{ action|lower }} новости">
             {% csrf_token %}
             
-            <div class="form-group">
-                <label for="title">Заголовок</label>
-                <input type="text" id="title" name="title" class="form-control" 
-                       value="{{ news.title|default:'' }}" required>
-            </div>
+            <fieldset class="form-group">
+                <legend class="sr-only">Основная информация о новости</legend>
+                <div class="form-group">
+                    <label for="title">Заголовок <span class="required" aria-label="обязательное поле">*</span></label>
+                    <input type="text" id="title" name="title" class="form-control" 
+                           value="{{ news.title|default:'' }}" required 
+                           aria-describedby="title-help" aria-required="true">
+                    <div id="title-help" class="sr-only">Введите заголовок новости</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="content">Содержание <span class="required" aria-label="обязательное поле">*</span></label>
+                    <textarea id="content" name="content" class="form-control" rows="10" required 
+                              aria-describedby="content-help" aria-required="true">{{ news.content|default:'' }}</textarea>
+                    <div id="content-help" class="sr-only">Введите содержание новости</div>
+                </div>
+            </fieldset>
             
-            <div class="form-group">
-                <label for="content">Содержание</label>
-                <textarea id="content" name="content" class="form-control" rows="10" required>{{ news.content|default:'' }}</textarea>
-            </div>
-            
-            <div class="form-group">
-                <label for="image">Изображение</label>
-                {% if news.image %}
-                    <div class="current-image">
-                        <img src="{{ news.image.url }}" alt="Текущее изображение">
-                        <p>Текущее изображение</p>
-                    </div>
-                {% endif %}
-                <input type="file" id="image" name="image" class="form-control-file" accept="image/*">
-            </div>
+            <fieldset class="form-group">
+                <legend class="sr-only">Изображение новости</legend>
+                <div class="form-group">
+                    <label for="image">Изображение</label>
+                    {% if news.image %}
+                        <figure class="current-image">
+                            <img src="{{ news.image.url }}" alt="Текущее изображение новости" loading="lazy">
+                            <figcaption>Текущее изображение</figcaption>
+                        </figure>
+                    {% endif %}
+                    <input type="file" id="image" name="image" class="form-control-file" accept="image/*" 
+                           aria-describedby="image-help">
+                    <div id="image-help" class="sr-only">Выберите изображение для новости (опционально)</div>
+                </div>
+            </fieldset>
             
             {% if news %}
-                <div class="form-group">
-                    <label class="checkbox-container">
-                        <input type="checkbox" name="is_published" {% if news.is_published %}checked{% endif %}>
-                        <span class="checkmark"></span>
-                        Опубликовано
-                    </label>
-                </div>
+                <fieldset class="form-group">
+                    <legend class="sr-only">Настройки публикации</legend>
+                    <div class="form-group">
+                        <label class="checkbox-container">
+                            <input type="checkbox" name="is_published" {% if news.is_published %}checked{% endif %}
+                                   aria-describedby="publish-help">
+                            <span class="checkmark" aria-hidden="true"></span>
+                            <span>Опубликовано</span>
+                        </label>
+                        <div id="publish-help" class="sr-only">Отметьте, если новость должна быть опубликована</div>
+                    </div>
+                </fieldset>
             {% endif %}
             
             <div class="form-actions">
                 <button type="submit" class="btn btn-success">
-                    <i class="fas fa-save"></i> Сохранить
+                    <i class="fas fa-save" aria-hidden="true"></i> 
+                    <span>Сохранить</span>
                 </button>
-                <a href="{% url 'news_list' %}" class="btn btn-secondary">
-                    <i class="fas fa-times"></i> Отмена
+                <a href="{% url 'news_list' %}" class="btn btn-secondary" role="button">
+                    <i class="fas fa-times" aria-hidden="true"></i> 
+                    <span>Отмена</span>
                 </a>
             </div>
         </form>
-    </div>
-</div>
+    </article>
+</section>
 
 <style>
 .news-form-container {
@@ -173,6 +194,33 @@ textarea.form-control {
 
 .btn-secondary:hover {
     background: #5a6268;
+}
+
+.required {
+    color: #dc3545;
+    font-weight: bold;
+}
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+fieldset {
+    border: none;
+    margin: 0;
+    padding: 0;
+}
+
+legend {
+    margin-bottom: 10px;
 }
 
 @media (max-width: 768px) {

@@ -1,28 +1,290 @@
 {% extends 'base.html' %}
 
-{% block title %}Promocodes - Pizzeria{% endblock %}
+{% block title %}Акции и промокоды - Pizzeria{% endblock %}
+
+{% block description %}Актуальные промокоды и скидки в нашей пиццерии. Специальные предложения для наших клиентов.{% endblock %}
+
+{% block og_title %}Акции и промокоды - Pizzeria{% endblock %}
+{% block og_description %}Актуальные промокоды и скидки в нашей пиццерии{% endblock %}
 
 {% block content %}
-    <h1>Promocodes</h1>
-    <h2>Active Promocodes</h2>
-    {% if active_promos %}
-        <ul>
-        {% for promo in active_promos %}
-            <li>{{ promo.code }} - Discount: {{ promo.discount }}% (Expires: {{ promo.expiry_date|date:"d/m/Y" }})</li>
-        {% endfor %}
-        </ul>
-    {% else %}
-        <p>No active promocodes.</p>
-    {% endif %}
+    <header>
+        <h1>Акции и промокоды</h1>
+        <p>Специальные предложения и скидки для наших клиентов</p>
+    </header>
 
-    <h2>Archived Promocodes</h2>
-    {% if archived_promos %}
-        <ul>
-        {% for promo in archived_promos %}
-            <li>{{ promo.code }} - Discount: {{ promo.discount }}% (Expired: {{ promo.expiry_date|date:"d/m/Y" }})</li>
-        {% endfor %}
-        </ul>
-    {% else %}
-        <p>No archived promocodes.</p>
-    {% endif %}
+    <main>
+        <section aria-label="Активные промокоды">
+            <h2>Активные промокоды</h2>
+            {% if active_promos %}
+                <div class="promocodes-container">
+                    {% for promo in active_promos %}
+                        <article class="promocode-card" itemscope itemtype="https://schema.org/Offer">
+                            <header class="promocode-header">
+                                <h3 class="promocode-code" itemprop="name">{{ promo.code }}</h3>
+                                <div class="promocode-discount" itemprop="priceSpecification" itemscope itemtype="https://schema.org/PriceSpecification">
+                                    <span class="discount-value" itemprop="price">{{ promo.discount }}</span>
+                                    <span class="discount-unit">% скидка</span>
+                                </div>
+                            </header>
+                            
+                            <div class="promocode-content">
+                                <div class="promocode-details">
+                                    <p class="promocode-description">
+                                        Используйте промокод <strong>{{ promo.code }}</strong> при оформлении заказа и получите скидку {{ promo.discount }}%
+                                    </p>
+                                </div>
+                                
+                                <footer class="promocode-footer">
+                                    <div class="promocode-expiry">
+                                        <span class="expiry-label">Действует до:</span>
+                                        <time datetime="{{ promo.expiry_date|date:'c' }}" itemprop="priceValidUntil">
+                                            {{ promo.expiry_date|date:"d.m.Y" }}
+                                        </time>
+                                    </div>
+                                    
+                                    {% if promo.description %}
+                                        <div class="promocode-conditions">
+                                            <p><strong>Условия:</strong> {{ promo.description }}</p>
+                                        </div>
+                                    {% endif %}
+                                </footer>
+                            </div>
+                            
+                        </article>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="empty-state">
+                    <h3>Нет активных промокодов</h3>
+                    <p>В данный момент нет активных промокодов. Следите за обновлениями!</p>
+                </div>
+            {% endif %}
+        </section>
+
+        <section aria-label="Архивные промокоды">
+            <h2>Архивные промокоды</h2>
+            {% if archived_promos %}
+                <div class="promocodes-container archived">
+                    {% for promo in archived_promos %}
+                        <article class="promocode-card archived" itemscope itemtype="https://schema.org/Offer">
+                            <header class="promocode-header">
+                                <h3 class="promocode-code">{{ promo.code }}</h3>
+                                <div class="promocode-discount">
+                                    <span class="discount-value">{{ promo.discount }}</span>
+                                    <span class="discount-unit">% скидка</span>
+                                </div>
+                            </header>
+                            
+                            <div class="promocode-content">
+                                <div class="promocode-details">
+                                    <p class="promocode-description">
+                                        Промокод <strong>{{ promo.code }}</strong> (скидка {{ promo.discount }}%)
+                                    </p>
+                                </div>
+                                
+                                <footer class="promocode-footer">
+                                    <div class="promocode-expiry expired">
+                                        <span class="expiry-label">Истек:</span>
+                                        <time datetime="{{ promo.expiry_date|date:'c' }}">
+                                            {{ promo.expiry_date|date:"d.m.Y" }}
+                                        </time>
+                                    </div>
+                                </footer>
+                            </div>
+                        </article>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="empty-state">
+                    <h3>Нет архивных промокодов</h3>
+                    <p>Архив промокодов пуст.</p>
+                </div>
+            {% endif %}
+        </section>
+
+        <nav aria-label="Навигация по сайту">
+            <a href="{% url 'home' %}" class="btn btn-secondary" aria-label="Вернуться на главную страницу">
+                ← Вернуться на главную
+            </a>
+        </nav>
+    </main>
+
+    <style>
+        .promocodes-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .promocode-card {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .promocode-card.archived {
+            opacity: 0.6;
+            background-color: #f8f9fa;
+        }
+
+        .promocode-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .promocode-code {
+            margin: 0;
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #e31837;
+            font-family: monospace;
+            background-color: #f8f9fa;
+            padding: 5px 8px;
+            border-radius: 4px;
+            border: 1px solid #e31837;
+        }
+
+        .promocode-card.archived .promocode-code {
+            color: #6c757d;
+            border-color: #6c757d;
+        }
+
+        .promocode-discount {
+            text-align: center;
+        }
+
+        .discount-value {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #e31837;
+            display: block;
+        }
+
+        .discount-unit {
+            font-size: 0.8em;
+            color: #666;
+        }
+
+        .promocode-card.archived .discount-value {
+            color: #6c757d;
+        }
+
+        .promocode-description {
+            color: #555;
+            line-height: 1.4;
+            margin: 0 0 10px 0;
+            font-size: 0.9em;
+        }
+
+        .promocode-expiry {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-bottom: 8px;
+            font-size: 0.85em;
+        }
+
+        .expiry-label {
+            color: #666;
+            font-weight: bold;
+        }
+
+        .promocode-expiry time {
+            color: #28a745;
+            font-weight: bold;
+        }
+
+        .promocode-expiry.expired time {
+            color: #dc3545;
+        }
+
+        .promocode-conditions {
+            background-color: #f8f9fa;
+            padding: 8px;
+            border-radius: 4px;
+            border-left: 3px solid #e31837;
+            font-size: 0.85em;
+        }
+
+        .promocode-conditions p {
+            margin: 0;
+            color: #555;
+        }
+
+        .btn-secondary {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #333;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+
+        .btn-secondary:hover {
+            background-color: #555;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 30px 20px;
+            background-color: #f8f9fa;
+            border-radius: 6px;
+            border: 1px dashed #dee2e6;
+        }
+
+        .empty-state h3 {
+            color: #6c757d;
+            margin-bottom: 8px;
+        }
+
+        .empty-state p {
+            color: #6c757d;
+            margin: 0;
+        }
+
+        section {
+            margin-bottom: 30px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 6px;
+        }
+
+        section h2 {
+            color: #e31837;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            .promocodes-container {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+
+            .promocode-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+
+            .promocode-code {
+                font-size: 1.1em;
+            }
+
+            .discount-value {
+                font-size: 1.3em;
+            }
+        }
+    </style>
+
 {% endblock %}

@@ -4,14 +4,14 @@
 {% block description %}Актуальные вакансии в нашей пиццерии. Присоединяйтесь к нашей команде!{% endblock %}
 
 {% block content %}
-<article>
+<article class="vacancies-page">
     <header>
         <h1>Вакансии в нашей пиццерии</h1>
         <p>Мы всегда рады новым талантливым сотрудникам! Присоединяйтесь к нашей дружной команде.</p>
     </header>
 
     {% if vacancies %}
-    <section>
+    <section class="current-vacancies">
         <h2>Открытые вакансии</h2>
         <div class="vacancies-list">
             {% for vacancy in vacancies %}
@@ -57,7 +57,7 @@
         </div>
     </section>
     {% else %}
-    <section>
+    <section class="no-vacancies-section">
         <div class="no-vacancies">
             <h2>В данный момент открытых вакансий нет</h2>
             <p>Но мы всегда рассматриваем резюме талантливых людей!</p>
@@ -67,7 +67,7 @@
     {% endif %}
 
     <!-- Общая информация о работе -->
-    <section>
+    <section class="benefits-section">
         <h2>Почему работать у нас?</h2>
         <ul>
             <li><strong>Дружный коллектив</strong> - мы ценим каждого сотрудника</li>
@@ -79,7 +79,7 @@
     </section>
 
     <!-- Контактная информация -->
-    <section>
+    <section class="contact-info-section">
         <h2>Как подать заявку?</h2>
         <address>
             <p><strong>Отдел кадров:</strong></p>

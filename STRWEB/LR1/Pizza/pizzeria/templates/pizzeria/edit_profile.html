@@ -3,21 +3,23 @@
 {% block title %}Профиль - Pizzeria{% endblock %}
 
 {% block content %}
-<div class="profile-container">
+<main class="profile-container">
     <h1>Профиль пользователя</h1>
 
     {% if messages %}
-    <div class="messages">
+    <section class="messages" aria-live="polite">
         {% for message in messages %}
-        <div class="message {% if message.tags %}{{ message.tags }}{% endif %}">
+        <div class="message {% if message.tags %}{{ message.tags }}{% endif %}" role="alert">
             {{ message }}
         </div>
         {% endfor %}
-    </div>
+    </section>
     {% endif %}
 
-    <div class="profile-section">
-        <h2>Личные данные</h2>
+    <section class="profile-section">
+        <header>
+            <h2>Личные данные</h2>
+        </header>
         <form method="post" class="profile-form">
             {% csrf_token %}
             {% for field in form %}
@@ -38,38 +40,40 @@
                 <button type="submit" class="btn btn-save">Сохранить изменения</button>
             </div>
         </form>
-    </div>
+    </section>
 
-    <div class="orders-section">
-        <h2>Мои заказы</h2>
+    <section class="orders-section">
+        <header>
+            <h2>Мои заказы</h2>
+        </header>
         {% if orders %}
             {% for order in orders %}
-            <div class="order-card">
-                <div class="order-header">
+            <article class="order-card">
+                <header class="order-header">
                     <h3>Заказ #{{ order.id }}</h3>
-                    <span class="order-date">{{ order.order_date|date:"d.m.Y H:i" }}</span>
-                    <span class="order-status">Статус: {{ order.status }}</span>
-                </div>
-                <div class="order-items">
+                    <time class="order-date" datetime="{{ order.order_date|date:'Y-m-d\TH:i' }}">{{ order.order_date|date:"d.m.Y H:i" }}</time>
+                    <span class="order-status" aria-label="Статус заказа">Статус: {{ order.status }}</span>
+                </header>
+                <section class="order-items" aria-label="Товары в заказе">
                     {% for item in order.orderitem_set.all %}
-                    <div class="order-item">
+                    <div class="order-item" role="listitem">
                         <span class="item-name">{{ item.pizza.name }}</span>
                         <span class="item-size">{{ item.size.name }}</span>
-                        <span class="item-quantity">x{{ item.quantity }}</span>
-                        <span class="item-price">{{ item.price }} руб.</span>
+                        <span class="item-quantity" aria-label="Количество">x{{ item.quantity }}</span>
+                        <span class="item-price" aria-label="Цена">{{ item.price }} руб.</span>
                     </div>
                     {% endfor %}
-                </div>
-                <div class="order-total">
+                </section>
+                <footer class="order-total">
                     Итого: {{ order.total_price }} руб.
-                </div>
-            </div>
+                </footer>
+            </article>
             {% endfor %}
         {% else %}
             <p class="no-orders">У вас пока нет заказов</p>
         {% endif %}
-    </div>
-</div>
+    </section>
+</main>
 
 <style>
 .profile-container {
