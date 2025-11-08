@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Отзывы - Pizzeria{% endblock %}
+
+{% block description %}Отзывы наших клиентов о качестве пиццы и обслуживании в нашей пиццерии.{% endblock %}
+
+{% block og_title %}Отзывы клиентов - Pizzeria{% endblock %}
+{% block og_description %}Читайте отзывы наших клиентов о качестве пиццы и обслуживании{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/reviews.css' %}">
+{% endblock %}
+
+{% block content %}
+    <header>
+        <h1>Отзывы клиентов</h1>
+        <p>Узнайте, что говорят наши клиенты о качестве нашей пиццы и обслуживании</p>
+    </header>
+
+    <main>
+        {% if reviews %}
+            <section aria-label="Список отзывов клиентов">
+                <h2>Отзывы наших клиентов</h2>
+                <div class="reviews-container">
+                    {% for review in reviews %}
+                        <article class="review-item" itemscope itemtype="https://schema.org/Review">
+                            <header class="review-header">
+                                <h3 class="review-author" itemprop="author" itemscope itemtype="https://schema.org/Person">
+                                    <span itemprop="name">{{ review.customer.user.username }}</span>
+                                </h3>
+                                <div class="review-rating" itemprop="reviewRating" itemscope itemtype="https://schema.org/Rating">
+                                    <span class="rating-value" itemprop="ratingValue">{{ review.rating }}</span>
+                                    <span class="rating-max" itemprop="bestRating">5</span>
+                                    <span class="rating-stars" aria-label="Рейтинг {{ review.rating }} из 5 звезд">
+                                        {% for i in "12345" %}
+                                            {% if forloop.counter <= review.rating %}
+                                                ★
+                                            {% else %}
+                                                ☆
+                                            {% endif %}
+                                        {% endfor %}
+                                    </span>
+                                </div>
+                            </header>
+                            
+                            <div class="review-content" itemprop="reviewBody">
+                                <p>{{ review.text }}</p>
+                            </div>
+                            
+                            <footer class="review-footer">
+                                <time datetime="{{ review.created_at|date:'c' }}" itemprop="datePublished">
+                                    Опубликовано {{ review.created_at|date:"d.m.Y в H:i" }}
+                                </time>
+                            </footer>
+                        </article>
+                    {% endfor %}
+                </div>
+            </section>
+        {% else %}
+            <section aria-label="Отсутствие отзывов">
+                <h2>Пока нет отзывов</h2>
+                <p>Станьте первым, кто оставит отзыв о нашей пиццерии!</p>
+            </section>
+        {% endif %}
+
+        {% if request.user.is_authenticated %}
+            <section aria-label="Добавление нового отзыва">
+                {% if request.user.userprofile %}
+                    {% if request.user.userprofile.role == 'client' or request.user.userprofile.role == 'staff' or request.user.userprofile.role == 'admin' %}
+                        <h2>Оставить отзыв</h2>
+                        <p>Поделитесь своим мнением о нашей пиццерии</p>
+                        <a href="{% url 'create_review' %}" class="btn btn-primary" aria-label="Добавить новый отзыв">
+                            Добавить отзыв
+                        </a>
+                    {% else %}
+                        <p class="access-message">У вас нет прав для добавления отзывов.</p>
+                    {% endif %}
+                {% else %}
+                    <p class="access-message">Для добавления отзыва необходимо завершить регистрацию профиля.</p>
+                {% endif %}
+            </section>
+        {% endif %}
+
+        <nav aria-label="Навигация по сайту">
+            <a href="{% url 'home' %}" class="btn btn-secondary" aria-label="Вернуться на главную страницу">
+                ← Вернуться на главную
+            </a>
+        </nav>
+    </main>
+{% endblock %}

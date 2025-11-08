@@ -1,0 +1,66 @@
+article {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    line-height: 1.6;
+}
+
+article p {
+    text-indent: 1em;
+    word-spacing: 0.25em;
+    letter-spacing: 0.01em;
+    font-family: 'small-caps', Georgia, sans-serif;
+    font-variant: small-caps;
+}
+article p:first-letter {
+    color: #e31837;
+    font-weight: bold;
+    font-size: 1.2em;
+}
+
+section {
+    margin-bottom: 30px;
+}
+
+h1 {
+    color: #e31837;
+    border-bottom: 2px solid #e31837;
+    padding-bottom: 10px;
+}
+
+h2 {
+    color: #333;
+    margin-top: 30px;
+}
+
+ul {
+    padding-left: 20px;
+}
+
+li {
+    margin-bottom: 8px;
+}
+
+address {
+    font-style: normal;
+    background-color: #f9f9f9;
+    padding: 15px;
+    border-radius: 5px;
+    margin-top: 15px;
+}
+
+time {
+    color: #666;
+    font-style: italic;
+}
+
+strong {
+    color: #e31837;
+}
+
+
+
+
+
+
+

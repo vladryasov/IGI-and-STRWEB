@@ -1,0 +1,208 @@
+{% extends 'base.html' %}
+
+{% block title %}Профиль - Pizzeria{% endblock %}
+
+{% block content %}
+<main class="profile-container">
+    <h1>Профиль пользователя</h1>
+
+    {% if messages %}
+    <section class="messages" aria-live="polite">
+        {% for message in messages %}
+        <div class="message {% if message.tags %}{{ message.tags }}{% endif %}" role="alert">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </section>
+    {% endif %}
+
+    <section class="profile-section">
+        <header>
+            <h2>Личные данные</h2>
+        </header>
+        <form method="post" class="profile-form">
+            {% csrf_token %}
+            {% for field in form %}
+            <div class="form-group">
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+                {% if field.help_text %}
+                <small class="help-text">{{ field.help_text }}</small>
+                {% endif %}
+                {% if field.errors %}
+                {% for error in field.errors %}
+                <div class="error">{{ error }}</div>
+                {% endfor %}
+                {% endif %}
+            </div>
+            {% endfor %}
+            <div class="form-actions">
+                <button type="submit" class="btn btn-save">Сохранить изменения</button>
+            </div>
+        </form>
+    </section>
+
+    <section class="orders-section">
+        <header>
+            <h2>Мои заказы</h2>
+        </header>
+        {% if orders %}
+            {% for order in orders %}
+            <article class="order-card">
+                <header class="order-header">
+                    <h3>Заказ #{{ order.id }}</h3>
+                    <time class="order-date" datetime="{{ order.order_date|date:'Y-m-d\TH:i' }}">{{ order.order_date|date:"d.m.Y H:i" }}</time>
+                    <span class="order-status" aria-label="Статус заказа">Статус: {{ order.status }}</span>
+                </header>
+                <section class="order-items" aria-label="Товары в заказе">
+                    {% for item in order.orderitem_set.all %}
+                    <div class="order-item" role="listitem">
+                        <span class="item-name">{{ item.pizza.name }}</span>
+                        <span class="item-size">{{ item.size.name }}</span>
+                        <span class="item-quantity" aria-label="Количество">x{{ item.quantity }}</span>
+                        <span class="item-price" aria-label="Цена">{{ item.price }} руб.</span>
+                    </div>
+                    {% endfor %}
+                </section>
+                <footer class="order-total">
+                    Итого: {{ order.total_price }} руб.
+                </footer>
+            </article>
+            {% endfor %}
+        {% else %}
+            <p class="no-orders">У вас пока нет заказов</p>
+        {% endif %}
+    </section>
+</main>
+
+<style>
+.profile-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.messages {
+    margin-bottom: 20px;
+}
+
+.message {
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+}
+
+.success {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.error {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+.profile-section, .orders-section {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin-bottom: 30px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.help-text {
+    display: block;
+    color: #666;
+    font-size: 0.9em;
+    margin-top: 5px;
+}
+
+.form-actions {
+    margin-top: 20px;
+}
+
+.btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1em;
+}
+
+.btn-save {
+    background-color: #28a745;
+    color: white;
+}
+
+.order-card {
+    background-color: #f8f9fa;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.order-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+.order-header h3 {
+    margin: 0;
+}
+
+.order-date {
+    color: #666;
+}
+
+.order-status {
+    padding: 4px 8px;
+    background-color: #e9ecef;
+    border-radius: 4px;
+}
+
+.order-items {
+    margin-bottom: 15px;
+}
+
+.order-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.order-total {
+    text-align: right;
+    font-weight: bold;
+    font-size: 1.1em;
+}
+
+.no-orders {
+    text-align: center;
+    color: #666;
+    padding: 20px;
+}
+</style>
+{% endblock %}

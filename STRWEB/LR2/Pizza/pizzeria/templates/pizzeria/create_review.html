@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %}Create Review - Pizzeria{% endblock %}
+
+{% block content %}
+    <h1>Create a Review</h1>
+    {% if error %}
+        <p style="color: red;">{{ error }}</p>
+    {% endif %}
+    <form method="post">
+        {% csrf_token %}
+        <p>
+            <label for="rating">Rating (1-5):</label>
+            <input type="number" name="rating" id="rating" min="1" max="5" required>
+        </p>
+        <p>
+            <label for="text">Review Text:</label>
+            <textarea name="text" id="text" required></textarea>
+        </p>
+        <button type="submit">Submit Review</button>
+    </form>
+    <a href="{% url 'reviews' %}">Back to Reviews</a>
+{% endblock %}

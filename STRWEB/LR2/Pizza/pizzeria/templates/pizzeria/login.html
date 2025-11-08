@@ -1,0 +1,255 @@
+{% extends 'base.html' %}
+
+{% block title %}Вход в систему - Pizzeria{% endblock %}
+
+{% block description %}Войдите в свой аккаунт пиццерии для заказа пиццы и управления профилем.{% endblock %}
+
+{% block og_title %}Вход в систему - Pizzeria{% endblock %}
+{% block og_description %}Войдите в свой аккаунт для заказа пиццы и управления профилем{% endblock %}
+
+{% block content %}
+    <header>
+        <h1>Вход в систему</h1>
+        <p>Войдите в свой аккаунт для заказа пиццы и управления профилем</p>
+    </header>
+
+    <main>
+        <section aria-label="Форма входа в систему">
+            <h2>Авторизация</h2>
+            
+            {% if form.non_field_errors %}
+                <div class="error-messages" role="alert" aria-live="polite">
+                    {% for error in form.non_field_errors %}
+                        <div class="error">{{ error }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <form method="post" class="login-form" novalidate>
+                {% csrf_token %}
+                
+                <fieldset class="form-fieldset">
+                    <legend class="sr-only">Данные для входа</legend>
+                    
+                    {% for field in form %}
+                        <div class="form-group" {% if field.errors %}aria-invalid="true"{% endif %}>
+                            <label for="{{ field.id_for_label }}" class="form-label">
+                                {{ field.label }}
+                                {% if field.field.required %}
+                                    <span class="required" aria-label="обязательное поле">*</span>
+                                {% endif %}
+                            </label>
+                            
+                            {{ field }}
+                            
+                            {% if field.help_text %}
+                                <div class="form-help" id="{{ field.id_for_label }}_help">
+                                    {{ field.help_text }}
+                                </div>
+                            {% endif %}
+                            
+                            {% if field.errors %}
+                                <div class="field-errors" role="alert" aria-live="polite">
+                                    {% for error in field.errors %}
+                                        <div class="error">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </fieldset>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary" aria-describedby="login-help">
+                        Войти в систему
+                    </button>
+                </div>
+            </form>
+        </section>
+
+        <section aria-label="Дополнительные действия">
+            <h2>Нет аккаунта?</h2>
+            <p>Если у вас еще нет аккаунта, вы можете создать его бесплатно.</p>
+            <nav aria-label="Навигация по регистрации">
+                <a href="{% url 'register' %}" class="btn btn-secondary" aria-label="Перейти к регистрации нового аккаунта">
+                    Зарегистрироваться
+                </a>
+            </nav>
+        </section>
+
+        <nav aria-label="Навигация по сайту">
+            <a href="{% url 'home' %}" class="btn btn-outline" aria-label="Вернуться на главную страницу">
+                ← Вернуться на главную
+            </a>
+        </nav>
+    </main>
+
+    <style>
+        .login-form {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 30px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .form-fieldset {
+            border: none;
+            padding: 0;
+            margin: 0 0 20px 0;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .required {
+            color: #e31837;
+            margin-left: 3px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #e31837;
+            box-shadow: 0 0 0 3px rgba(227, 24, 55, 0.1);
+        }
+
+        .form-group[aria-invalid="true"] input {
+            border-color: #dc3545;
+        }
+
+        .form-help {
+            font-size: 0.9em;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .field-errors {
+            margin-top: 5px;
+        }
+
+        .error-messages {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            border-radius: 5px;
+            color: #721c24;
+        }
+
+        .error {
+            color: #dc3545;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+
+        .form-actions {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            margin: 10px 5px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background-color: #e31837;
+            color: white;
+            width: 100%;
+        }
+
+        .btn-primary:hover {
+            background-color: #c1152f;
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background-color: #218838;
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            color: #333;
+            border: 2px solid #333;
+        }
+
+        .btn-outline:hover {
+            background-color: #333;
+            color: white;
+        }
+
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        section {
+            margin-bottom: 40px;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+        }
+
+        section h2 {
+            color: #e31837;
+            margin-bottom: 15px;
+        }
+
+        section p {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        @media (max-width: 768px) {
+            .login-form {
+                margin: 0 10px;
+                padding: 20px;
+            }
+
+            .btn {
+                width: 100%;
+                margin: 10px 0;
+            }
+        }
+    </style>
+{% endblock %}

@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ news.title }} - Pizzeria{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/news.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="news-detail-container" role="main" aria-labelledby="news-title">
+    <article class="news-detail">
+        <header>
+            <h1 id="news-title">{{ news.title }}</h1>
+            
+            <div class="news-meta">
+                <span><i class="fas fa-user" aria-hidden="true"></i> 
+                    <span class="sr-only">Автор:</span> {{ news.author.user.username }}
+                </span>
+                <span><i class="fas fa-calendar" aria-hidden="true"></i> 
+                    <span class="sr-only">Дата публикации:</span> 
+                    <time datetime="{{ news.created_at|date:'Y-m-d\TH:i' }}">{{ news.created_at|date:"d.m.Y H:i" }}</time>
+                </span>
+            </div>
+        </header>
+        
+        {% if news.image %}
+            <figure class="news-image">
+                <img src="{{ news.image.url }}" alt="{{ news.title }}" loading="lazy">
+                <figcaption class="sr-only">Изображение к новости: {{ news.title }}</figcaption>
+            </figure>
+        {% endif %}
+        
+        <div class="news-content">
+            {{ news.content|linebreaks }}
+        </div>
+        
+        <nav class="news-navigation" aria-label="Навигация по новостям">
+            <a href="{% url 'news_list' %}" class="back-to-news">
+                <i class="fas fa-arrow-left" aria-hidden="true"></i> 
+                <span>Вернуться к списку новостей</span>
+            </a>
+        </nav>
+    </article>
+</section>
+{% endblock %} 

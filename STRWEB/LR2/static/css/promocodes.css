@@ -1,0 +1,255 @@
+.promocodes-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+    margin: 2rem 0;
+}
+
+.promocode-card {
+    background: var(--bg-white);
+    border: 2px solid var(--border-color);
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: var(--shadow-sm);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.promocode-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 100%);
+}
+
+.promocode-card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--primary-light);
+}
+
+.promocode-card.archived {
+    opacity: 0.7;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-color: #dee2e6;
+}
+
+.promocode-card.archived::before {
+    background: linear-gradient(90deg, #6c757d 0%, #868e96 100%);
+}
+
+.promocode-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid var(--border-color);
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.promocode-code {
+    margin: 0;
+    font-size: 1.4em;
+    font-weight: 700;
+    color: var(--primary);
+    font-family: 'Courier New', monospace;
+    background: linear-gradient(135deg, rgba(255, 107, 53, 0.1) 0%, rgba(255, 140, 97, 0.1) 100%);
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    border: 2px solid var(--primary);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+.promocode-card.archived .promocode-code {
+    color: #6c757d;
+    border-color: #6c757d;
+    background: rgba(108, 117, 125, 0.1);
+}
+
+.promocode-discount {
+    text-align: center;
+}
+
+.discount-value {
+    font-size: 2.5em;
+    font-weight: 700;
+    color: var(--primary);
+    display: block;
+    line-height: 1;
+    font-family: 'Playfair Display', serif;
+}
+
+.discount-unit {
+    font-size: 0.85em;
+    color: var(--text-muted);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.promocode-card.archived .discount-value {
+    color: #6c757d;
+}
+
+.promocode-content {
+    margin: 1.5rem 0;
+}
+
+.promocode-description {
+    color: var(--text-dark);
+    line-height: 1.7;
+    margin: 0 0 1rem 0;
+    font-size: 1em;
+    text-align: justify;
+}
+
+.promocode-description strong {
+    color: var(--primary);
+    font-weight: 600;
+}
+
+.promocode-footer {
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border-color);
+}
+
+.promocode-expiry {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+    font-size: 0.9em;
+}
+
+.expiry-label {
+    color: var(--text-muted);
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.85em;
+    letter-spacing: 0.05em;
+}
+
+.promocode-expiry time {
+    color: var(--success);
+    font-weight: 600;
+}
+
+.promocode-expiry.expired time {
+    color: var(--error);
+}
+
+.promocode-conditions {
+    background: linear-gradient(135deg, rgba(255, 107, 53, 0.05) 0%, rgba(255, 140, 97, 0.05) 100%);
+    padding: 1rem;
+    border-radius: 8px;
+    border-left: 4px solid var(--primary);
+    font-size: 0.9em;
+}
+
+.promocode-conditions p {
+    margin: 0;
+    color: var(--text-dark);
+    line-height: 1.6;
+}
+
+.promocode-conditions strong {
+    color: var(--primary);
+    font-weight: 600;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+    background: var(--bg-white);
+    border-radius: 12px;
+    border: 2px dashed var(--border-color);
+    grid-column: 1 / -1;
+}
+
+.empty-state h3 {
+    color: var(--text-dark);
+    margin-bottom: 1rem;
+}
+
+.empty-state p {
+    color: var(--text-muted);
+    margin: 0;
+}
+
+/* Заголовки секций */
+section {
+    margin-bottom: 3rem;
+    padding: 2rem;
+    background: linear-gradient(135deg, rgba(255, 107, 53, 0.03) 0%, rgba(255, 140, 97, 0.03) 100%);
+    border-radius: 12px;
+}
+
+section h2 {
+    color: var(--primary);
+    margin-bottom: 1.5rem;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-size: 2em;
+    position: relative;
+    padding-bottom: 1rem;
+}
+
+section h2::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 3px;
+    background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 100%);
+    border-radius: 2px;
+}
+
+@media (max-width: 768px) {
+    .promocodes-container {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+    
+    .promocode-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+    
+    .promocode-code {
+        font-size: 1.2em;
+        width: 100%;
+        text-align: center;
+    }
+    
+    .discount-value {
+        font-size: 2em;
+    }
+    
+    section {
+        padding: 1.5rem;
+    }
+    
+    section h2 {
+        font-size: 1.5em;
+    }
+}
+
+
+
+
+
+
+
+

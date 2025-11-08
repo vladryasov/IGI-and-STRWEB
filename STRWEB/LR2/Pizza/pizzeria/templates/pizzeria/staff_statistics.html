@@ -1,0 +1,334 @@
+{% extends 'base.html' %}
+
+{% block title %}Статистика - Pizzeria{% endblock %}
+{% block description %}Статистика работы пиццерии за последние 30 дней: количество пользователей, заказов, выручка и графики динамики{% endblock %}
+
+{% block content %}
+<article class="statistics-container" role="main" aria-labelledby="main-heading">
+    <header>
+        <h1 id="main-heading">Статистика за последние 30 дней</h1>
+        <p class="page-description">Обзор ключевых показателей работы пиццерии</p>
+    </header>
+
+    <section class="stats-summary" aria-labelledby="summary-heading">
+        <h2 id="summary-heading" class="sr-only">Сводная статистика</h2>
+        
+        <article class="stat-card" role="region" aria-labelledby="overall-stats-heading">
+            <header>
+                <h3 id="overall-stats-heading">Общая статистика</h3>
+            </header>
+            <dl class="stats-list">
+                <div class="stat-item">
+                    <dt class="stat-label">Всего пользователей:</dt>
+                    <dd class="stat-value" aria-label="{{ total_users }} пользователей">{{ total_users }}</dd>
+                </div>
+                <div class="stat-item">
+                    <dt class="stat-label">Всего заказов:</dt>
+                    <dd class="stat-value" aria-label="{{ total_orders }} заказов">{{ total_orders }}</dd>
+                </div>
+                <div class="stat-item">
+                    <dt class="stat-label">Средний чек:</dt>
+                    <dd class="stat-value" aria-label="{{ average_order_value|floatformat:2 }} рублей">{{ average_order_value|floatformat:2 }} ₽</dd>
+                </div>
+            </dl>
+        </article>
+
+        <article class="stat-card" role="region" aria-labelledby="period-stats-heading">
+            <header>
+                <h3 id="period-stats-heading">За период (30 дней)</h3>
+            </header>
+            <dl class="stats-list">
+                <div class="stat-item">
+                    <dt class="stat-label">Новых пользователей:</dt>
+                    <dd class="stat-value" aria-label="{{ period_new_users }} новых пользователей">{{ period_new_users }}</dd>
+                </div>
+                <div class="stat-item">
+                    <dt class="stat-label">Заказов:</dt>
+                    <dd class="stat-value" aria-label="{{ period_orders }} заказов">{{ period_orders }}</dd>
+                </div>
+                <div class="stat-item">
+                    <dt class="stat-label">Выручка:</dt>
+                    <dd class="stat-value" aria-label="{{ period_revenue|floatformat:2 }} рублей">{{ period_revenue|floatformat:2 }} ₽</dd>
+                </div>
+            </dl>
+        </article>
+    </section>
+
+    <section class="graphics" aria-labelledby="graphics-heading">
+        <header>
+            <h2 id="graphics-heading">Графическая аналитика</h2>
+        </header>
+        {% if graphic %}
+        <figure class="graph-container" role="img" aria-labelledby="graph-caption">
+            <img src="data:image/png;base64,{{ graphic }}" 
+                 alt="График динамики регистраций и заказов за последние 30 дней" 
+                 class="statistics-graph"
+                 loading="lazy">
+            <figcaption id="graph-caption" class="graph-legend">
+                <p class="legend-note">* График показывает динамику регистраций и заказов за последние 30 дней</p>
+            </figcaption>
+        </figure>
+        {% else %}
+        <div class="no-data" role="status" aria-live="polite">
+            <p>Нет данных для отображения графиков</p>
+            <p class="no-data-note">Данные появятся после первых заказов</p>
+        </div>
+        {% endif %}
+    </section>
+</article>
+
+<style>
+/* Основной контейнер */
+.statistics-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Заголовок страницы */
+.statistics-container header {
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.statistics-container h1 {
+    color: #2c3e50;
+    margin-bottom: 10px;
+    font-size: 2.2em;
+}
+
+.page-description {
+    color: #666;
+    font-size: 1.1em;
+    margin: 0;
+}
+
+/* Секция со статистикой */
+.stats-summary {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    margin-bottom: 40px;
+}
+
+/* Карточки статистики */
+.stat-card {
+    background-color: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    border: 1px solid #e9ecef;
+}
+
+.stat-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 15px rgba(0,0,0,0.15);
+    border-color: #e31837;
+}
+
+.stat-card header {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.stat-card h3 {
+    margin: 0;
+    color: #2c3e50;
+    font-size: 1.4em;
+    font-weight: 600;
+    border-bottom: 3px solid #e31837;
+    padding-bottom: 10px;
+    display: inline-block;
+}
+
+/* Список статистики */
+.stats-list {
+    margin: 0;
+    padding: 0;
+}
+
+.stat-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 18px 0;
+    padding: 12px 0;
+    border-bottom: 1px solid #f8f9fa;
+    transition: background-color 0.2s ease;
+}
+
+.stat-item:hover {
+    background-color: #f8f9fa;
+    border-radius: 6px;
+    padding-left: 8px;
+    padding-right: 8px;
+}
+
+.stat-item:last-child {
+    border-bottom: none;
+}
+
+.stat-label {
+    color: #495057;
+    font-size: 1.1em;
+    font-weight: 500;
+    flex: 1;
+}
+
+.stat-value {
+    font-size: 1.3em;
+    font-weight: bold;
+    color: #e31837;
+    text-align: right;
+    min-width: 80px;
+}
+
+/* Секция графиков */
+.graphics {
+    background-color: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    border: 1px solid #e9ecef;
+}
+
+.graphics header {
+    margin-bottom: 25px;
+    text-align: center;
+}
+
+.graphics h2 {
+    color: #2c3e50;
+    font-size: 1.8em;
+    margin: 0;
+    border-bottom: 3px solid #e31837;
+    padding-bottom: 10px;
+    display: inline-block;
+}
+
+/* Контейнер графика */
+.graph-container {
+    position: relative;
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid #dee2e6;
+}
+
+.statistics-graph {
+    width: 100%;
+    height: auto;
+    border-radius: 6px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Легенда графика */
+.graph-legend {
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 2px solid #e9ecef;
+    text-align: center;
+}
+
+.legend-note {
+    color: #6c757d;
+    font-size: 0.95em;
+    font-style: italic;
+    margin: 0;
+}
+
+/* Состояние отсутствия данных */
+.no-data {
+    text-align: center;
+    padding: 60px 20px;
+    color: #6c757d;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    border: 2px dashed #dee2e6;
+}
+
+.no-data p {
+    font-size: 1.2em;
+    margin-bottom: 10px;
+}
+
+.no-data-note {
+    font-size: 1em;
+    color: #adb5bd;
+    margin: 0;
+}
+
+/* Скрытый заголовок для скрин-ридеров */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .statistics-container {
+        padding: 15px;
+    }
+    
+    .stats-summary {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    
+    .stat-card {
+        padding: 20px;
+    }
+
+    .stat-item {
+        flex-direction: column;
+        align-items: flex-start;
+        text-align: left;
+        gap: 8px;
+    }
+
+    .stat-value {
+        margin-top: 5px;
+        text-align: left;
+        min-width: auto;
+    }
+    
+    .graphics {
+        padding: 20px;
+    }
+    
+    .statistics-container h1 {
+        font-size: 1.8em;
+    }
+    
+    .graphics h2 {
+        font-size: 1.5em;
+    }
+}
+
+@media (max-width: 480px) {
+    .statistics-container {
+        padding: 10px;
+    }
+    
+    .stat-card {
+        padding: 15px;
+    }
+    
+    .graphics {
+        padding: 15px;
+    }
+    
+    .statistics-container h1 {
+        font-size: 1.6em;
+    }
+}
+</style>
+{% endblock %} 

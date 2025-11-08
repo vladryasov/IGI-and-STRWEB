@@ -1,0 +1,634 @@
+{% extends 'base.html' %}
+
+{% block title %}Демонстрация HTML элементов - Pizzeria{% endblock %}
+{% block description %}Демонстрация всех HTML элементов: семантическая верстка, формы, таблицы, медиа и многое другое.{% endblock %}
+
+{% block content %}
+<article class="html-demo" id="top">
+    <header>
+        <h1>Демонстрация HTML элементов</h1>
+        <p>Эта страница демонстрирует использование всех требуемых HTML элементов согласно техническому заданию.</p>
+    </header>
+
+    <!-- Семантическое выделение текста -->
+    <section>
+        <h2 id="text-semantics">Семантическое выделение текста</h2>
+        
+        <h3>Основные элементы выделения:</h3>
+        <p>
+            <strong>Жирный текст</strong> - для важной информации<br>
+            <em>Курсив</em> - для выделения<br>
+            <mark>Выделенный текст</mark> - для подчеркивания важности<br>
+            <cite>Цитата</cite> - для ссылки на источник<br>
+            <abbr title="Пиццерия">Пицц.</abbr> - сокращение с расшифровкой<br>
+            <dfn>Пицца</dfn> - определение термина<br>
+            <time datetime="2025-01-15">15 января 2025</time> - дата и время<br>
+            <code>console.log()</code> - код<br>
+            <kbd>Ctrl+C</kbd> - клавиатурный ввод<br>
+            <samp>Результат выполнения</samp> - результат программы<br>
+            <var>x</var> - переменная<br>
+            <small>Мелкий текст</small> - дополнительная информация<br>
+            <del>Удаленный текст</del> - зачеркнутый<br>
+            <ins>Добавленный текст</ins> - подчеркнутый<br>
+            <sub>Подстрочный</sub> и <sup>надстрочный</sup> текст
+        </p>
+
+        <h3>Цитаты:</h3>
+        <blockquote cite="https://example.com">
+            <p>"Пицца - это не просто еда, это искусство!"</p>
+            <footer>
+                <cite>— Шеф-повар нашей пиццерии</cite>
+            </footer>
+        </blockquote>
+
+        <h3>Определения:</h3>
+        <dl>
+            <dt><strong>Пицца</strong></dt>
+            <dd>Итальянское блюдо в виде круглой лепешки из теста, покрытой томатным соусом, сыром и различными начинками.</dd>
+            
+            <dt><strong>Доставка</strong></dt>
+            <dd>Услуга по доставке готовых блюд по указанному адресу в течение определенного времени.</dd>
+            
+            <dt><strong>Самовывоз</strong></dt>
+            <dd>Способ получения заказа, при котором клиент самостоятельно забирает готовый заказ из ресторана.</dd>
+        </dl>
+    </section>
+
+    <!-- Списки -->
+    <section>
+        <h2 id="lists">Списки</h2>
+        
+        <h3>Маркированный список:</h3>
+        <ul>
+            <li>Пицца Маргарита</li>
+            <li>Пицца Пепперони</li>
+            <li>Пицца Четыре сыра</li>
+            <li>Пицца Гавайская</li>
+        </ul>
+
+        <h3>Нумерованный список:</h3>
+        <ol>
+            <li>Выберите пиццу</li>
+            <li>Укажите размер</li>
+            <li>Добавьте в корзину</li>
+            <li>Оформите заказ</li>
+        </ol>
+
+        <h3>Список определений:</h3>
+        <dl>
+            <dt>Маленькая пицца</dt>
+            <dd>25 см в диаметре, 2-3 порции</dd>
+            <dt>Средняя пицца</dt>
+            <dd>30 см в диаметре, 3-4 порции</dd>
+            <dt>Большая пицца</dt>
+            <dd>35 см в диаметре, 4-6 порций</dd>
+        </dl>
+    </section>
+
+    <!-- Таблицы -->
+    <section>
+        <h2 id="tables">Таблицы с заголовочными ячейками</h2>
+        
+        <h3>Таблица с объединенными ячейками:</h3>
+        <table>
+            <caption>Меню пиццерии с ценами и характеристиками</caption>
+            <thead>
+                <tr>
+                    <th scope="col" id="name">Название</th>
+                    <th scope="col" id="size">Размер</th>
+                    <th scope="col" id="price">Цена (руб.)</th>
+                    <th scope="col" id="calories">Калории</th>
+                    <th scope="col" id="rating">Рейтинг</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td headers="name" rowspan="2">Маргарита</td>
+                    <td headers="size">Маленькая</td>
+                    <td headers="price">450</td>
+                    <td headers="calories">650</td>
+                    <td headers="rating">4.8</td>
+                </tr>
+                <tr>
+                    <td headers="size">Большая</td>
+                    <td headers="price">750</td>
+                    <td headers="calories">1200</td>
+                    <td headers="rating">4.8</td>
+                </tr>
+                <tr>
+                    <td headers="name" rowspan="2">Пепперони</td>
+                    <td headers="size">Маленькая</td>
+                    <td headers="price">550</td>
+                    <td headers="calories">720</td>
+                    <td headers="rating">4.9</td>
+                </tr>
+                <tr>
+                    <td headers="size">Большая</td>
+                    <td headers="price">850</td>
+                    <td headers="calories">1350</td>
+                    <td headers="rating">4.9</td>
+                </tr>
+                <tr>
+                    <td headers="name" colspan="4">Итого позиций: 4</td>
+                    <td headers="rating">Средний: 4.85</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <!-- Медиа элементы -->
+    <section>
+        <h2 id="media">Медиа элементы</h2>
+        
+        <h3>Изображения:</h3>
+        <figure>
+            <img src="/media/pizzas/images.png" alt="Пицца Маргарита" width="300" height="200" loading="lazy">
+            <figcaption>Пицца Маргарита - классика итальянской кухни</figcaption>
+        </figure>
+
+        <h3>Адаптивное изображение:</h3>
+        <picture>
+            <source media="(min-width: 768px)" srcset="/media/pizzas/images.png">
+            <source media="(min-width: 480px)" srcset="/media/pizzas/images.png">
+            <img src="/media/pizzas/images.png" alt="Адаптивная пицца" style="max-width: 100%; height: auto;">
+        </picture>
+
+        <h3>Видео:</h3>
+        <figure>
+            <video width="400" height="300" controls poster="/media/pizzas/images.png">
+                <source src="https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_1mb.mp4" type="video/mp4">
+                <source src="https://sample-videos.com/zip/10/webm/SampleVideo_1280x720_1mb.webm" type="video/webm">
+                Ваш браузер не поддерживает видео.
+            </video>
+            <figcaption>Процесс приготовления пиццы</figcaption>
+        </figure>
+
+        <h3>Аудио:</h3>
+        <figure>
+            <audio controls>
+                <source src="https://www.soundjay.com/misc/sounds/bell-ringing-05.wav" type="audio/wav">
+                <source src="https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3" type="audio/mpeg">
+                Ваш браузер не поддерживает аудио.
+            </audio>
+            <figcaption>Звук готового заказа</figcaption>
+        </figure>
+
+        <h3>YouTube видео (iframe):</h3>
+        <figure>
+            <iframe width="560" height="315" src="https://www.youtube.com/embed/uNGZAMx3w-c" 
+                    title="Видео о приготовлении пиццы" frameborder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                    allowfullscreen>
+                Ваш браузер не поддерживает iframe.
+            </iframe>
+            <figcaption>Обучающее видео о приготовлении пиццы</figcaption>
+        </figure>
+    </section>
+
+    <!-- Ссылки и якоря -->
+    <section>
+        <h2 id="links">Ссылки и якоря</h2>
+        
+        <h3>Различные типы ссылок:</h3>
+        <nav>
+            <ul>
+                <li><a href="{% url 'home' %}">Внутренняя ссылка на главную</a></li>
+                <li><a href="https://example.com" target="_blank" rel="noopener noreferrer">Внешняя ссылка</a></li>
+                <li><a href="mailto:info@pizzeria.by">Ссылка на email</a></li>
+                <li><a href="tel:+375291234567">Ссылка на телефон</a></li>
+                <li><a href="#top">Якорная ссылка наверх</a></li>
+                <li><a href="/media/LR1 СТРweb HTML.pdf" download>Скачать документ</a></li>
+            </ul>
+        </nav>
+
+        <h3>Якоря на странице:</h3>
+        <nav>
+            <ul>
+                <li><a href="#text-semantics">Семантическое выделение текста</a></li>
+                <li><a href="#lists">Списки</a></li>
+                <li><a href="#tables">Таблицы</a></li>
+                <li><a href="#media">Медиа</a></li>
+                <li><a href="#links">Ссылки</a></li>
+                <li><a href="#containers">Контейнерные элементы</a></li>
+                <li><a href="#multicolumn">Многоколоночная верстка</a></li>
+                <li><a href="#figures">Фигуры (SVG)</a></li>
+                <li><a href="#navigation">Навигация</a></li>
+                <li><a href="#text-examples">Примеры текста</a></li>
+                <li><a href="#global-attributes">Глобальные атрибуты</a></li>
+            </ul>
+        </nav>
+    </section>
+
+    <!-- Контейнерные элементы -->
+    <section>
+        <h2 id="containers">Контейнерные элементы</h2>
+        
+        <div class="container-demo">
+            <h3>Div контейнер:</h3>
+            <div style="background-color: #f0f0f0; padding: 15px; border: 1px solid #ccc;">
+                <p>Это содержимое в div контейнере.</p>
+            </div>
+        </div>
+
+        <div class="span-demo">
+            <h3>Span элементы:</h3>
+            <p>Это <span style="color: red; font-weight: bold;">красный жирный текст</span> в span элементе.</p>
+        </div>
+    </section>
+
+    <!-- Многоколоночная верстка -->
+    <section>
+        <h2 id="multicolumn">Многоколоночная верстка (CSS Columns)</h2>
+        <div class="multicolumn">
+            <p>Наша пиццерия предлагает большой выбор пицц, приготовленных из свежих ингредиентов. Тонкое тесто, сочные соусы и щедрые начинки — всё для вашего идеального вкуса.</p>
+            <p>Попробуйте классическую «Маргариту», пикантную «Пепперони» или нежную «Четыре сыра». Для любителей экспериментов доступны сезонные варианты и авторские рецепты от шеф-повара.</p>
+            <p>Мы уделяем внимание каждому заказу: аккуратная упаковка, сохранение температуры и быст delivery позволяют вам наслаждаться любимой пиццей дома или в офисе.</p>
+            <p>Также у нас действуют акции и промокоды для постоянных клиентов. Следите за новостями и обновлениями, чтобы не пропустить выгодные предложения.</p>
+            <p>Вы можете оформить заказ онлайн, выбрать удобное время доставки или самовывоз. Наша команда всегда готова помочь с выбором и ответить на любые вопросы.</p>
+        </div>
+    </section>
+
+    <!-- Фигуры -->
+    <section>
+        <h2 id="figures">Фигуры (SVG)</h2>
+        
+        <figure>
+            <svg width="200" height="200" viewBox="0 0 200 200">
+                <circle cx="100" cy="100" r="80" fill="#e31837" stroke="#000" stroke-width="2"/>
+                <text x="100" y="110" text-anchor="middle" fill="white" font-size="20" font-weight="bold">PIZZA</text>
+            </svg>
+            <figcaption>Логотип пиццерии в SVG</figcaption>
+        </figure>
+    </section>
+
+    <!-- Навигация -->
+    <section>
+        <h2 id="navigation">Навигация</h2>
+        
+        <h3>Горизонтальная навигация:</h3>
+        <nav class="horizontal-nav">
+            <ul>
+                <li><a href="{% url 'home' %}">Главная</a></li>
+                <li><a href="{% url 'about' %}">О нас</a></li>
+                <li><a href="{% url 'news_list' %}">Новости</a></li>
+                <li><a href="{% url 'contacts' %}">Контакты</a></li>
+            </ul>
+        </nav>
+
+        <h3>Вертикальная навигация:</h3>
+        <nav class="vertical-nav">
+            <ol>
+                <li><a href="{% url 'home' %}">Главная</a></li>
+                <li><a href="{% url 'about' %}">О нас</a></li>
+                <li><a href="{% url 'news_list' %}">Новости</a></li>
+                <li><a href="{% url 'contacts' %}">Контакты</a></li>
+            </ol>
+        </nav>
+    </section>
+
+    <!-- Примеры текста -->
+    <section>
+        <h2 id="text-examples">Примеры текста</h2>
+        
+        <h3>Листинг кода:</h3>
+        <pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="ru"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;title&gt;Пиццерия&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;h1&gt;Добро пожаловать!&lt;/h1&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+
+        <h3>Четверостишие с фиксированным переводом строки:</h3>
+        <pre>Пицца наша вкусная,
+Доставка быстрая,
+Клиенты довольные,
+Компания славная!</pre>
+
+        <h3>Четверостишие с потенциальным переводом строки:</h3>
+        <p>Пицца наша вкусная,<br>
+        Доставка быстрая,<br>
+        Клиенты довольные,<br>
+        Компания славная!</p>
+    </section>
+
+    <!-- Глобальные атрибуты -->
+    <section>
+        <h2 id="global-attributes">Глобальные атрибуты</h2>
+        
+        <div id="unique-element" class="demo-class" title="Это элемент с глобальными атрибутами" 
+             lang="ru" dir="ltr" data-custom="example" data-pizza-type="margarita">
+            <p>Этот элемент демонстрирует использование глобальных атрибутов:</p>
+            <ul>
+                <li><strong>id</strong> - уникальный идентификатор</li>
+                <li><strong>class</strong> - CSS класс</li>
+                <li><strong>title</strong> - всплывающая подсказка</li>
+                <li><strong>lang</strong> - язык содержимого</li>
+                <li><strong>dir</strong> - направление текста</li>
+                <li><strong>data-*</strong> - пользовательские данные</li>
+            </ul>
+        </div>
+    </section>
+</article>
+
+<style>
+.html-demo {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+section {
+    margin-bottom: 40px;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+}
+
+h2 {
+    color: #e31837;
+    border-bottom: 2px solid #e31837;
+    padding-bottom: 10px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: left;
+}
+
+th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+}
+
+caption {
+    font-weight: bold;
+    margin-bottom: 10px;
+    text-align: left;
+}
+
+fieldset {
+    border: 1px solid #ddd;
+    padding: 15px;
+    margin: 15px 0;
+}
+
+legend {
+    font-weight: bold;
+    padding: 0 10px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+input, select, textarea {
+    width: 100%;
+    max-width: 400px;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+input[type="checkbox"], input[type="radio"] {
+    width: auto;
+    margin-right: 8px;
+}
+
+.checkbox-group, .radio-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.form-actions {
+    margin-top: 20px;
+}
+
+.btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-right: 10px;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.btn-primary {
+    background-color: #e31837;
+    color: white;
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+    color: white;
+}
+
+.btn-info {
+    background-color: #17a2b8;
+    color: white;
+}
+
+.btn:hover {
+    opacity: 0.8;
+}
+
+figure {
+    margin: 20px 0;
+    text-align: center;
+}
+
+figcaption {
+    font-size: 0.9em;
+    color: #666;
+    margin-top: 5px;
+}
+
+video, audio {
+    max-width: 100%;
+}
+
+iframe {
+    max-width: 100%;
+    border: none;
+}
+
+.horizontal-nav ul {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    gap: 20px;
+}
+
+.horizontal-nav a {
+    text-decoration: none;
+    color: #e31837;
+    padding: 10px 15px;
+    border: 1px solid #e31837;
+    border-radius: 4px;
+}
+
+.horizontal-nav a:hover {
+    background-color: #e31837;
+    color: white;
+}
+
+.vertical-nav ul {
+    list-style: none;
+    padding: 0;
+    width: 200px;
+}
+
+.vertical-nav li {
+    margin-bottom: 5px;
+}
+
+.vertical-nav a {
+    display: block;
+    text-decoration: none;
+    color: #e31837;
+    padding: 10px 15px;
+    border: 1px solid #e31837;
+    border-radius: 4px;
+}
+
+.vertical-nav a:hover {
+    background-color: #e31837;
+    color: white;
+}
+
+pre {
+    background-color: #f4f4f4;
+    padding: 15px;
+    border-radius: 5px;
+    white-space: pre-wrap;
+    font-family: monospace;
+    overflow-x: auto;
+}
+
+code {
+    font-family: monospace;
+    background-color: #f4f4f4;
+    padding: 2px 4px;
+    border-radius: 3px;
+}
+
+blockquote {
+    border-left: 4px solid #e31837;
+    padding-left: 20px;
+    margin: 20px 0;
+    font-style: italic;
+    background-color: white;
+    padding: 15px 20px;
+}
+
+dl {
+    margin: 20px 0;
+}
+
+dt {
+    font-weight: bold;
+    margin-top: 15px;
+    margin-bottom: 5px;
+}
+
+dd {
+    margin-left: 0;
+    margin-bottom: 15px;
+}
+
+ul, ol {
+    padding-left: 20px;
+}
+
+li {
+    margin-bottom: 5px;
+}
+
+abbr {
+    text-decoration: underline;
+    text-decoration-style: dotted;
+}
+
+abbr:hover {
+    cursor: help;
+}
+
+mark {
+    background-color: #ffeb3b;
+    padding: 2px 4px;
+}
+
+.container-demo, .span-demo {
+    margin: 20px 0;
+}
+
+#unique-element {
+    background-color: #e8f5e8;
+    padding: 15px;
+    border-radius: 5px;
+    border: 1px solid #4caf50;
+}
+
+.multicolumn {
+    column-count: 3;
+    column-gap: 24px;
+    column-rule: 1px solid #ddd;
+}
+
+.multicolumn p {
+    break-inside: avoid;
+    margin: 0 0 1rem;
+}
+
+@media (max-width: 992px) {
+    .multicolumn {
+        column-count: 2;
+    }
+}
+
+@media (max-width: 600px) {
+    .multicolumn {
+        column-count: 1;
+        column-rule: none;
+    }
+}
+
+@media (max-width: 768px) {
+    .horizontal-nav ul {
+        flex-direction: column;
+    }
+    
+    .checkbox-group, .radio-group {
+        flex-direction: column;
+    }
+    
+    table {
+        font-size: 0.9em;
+    }
+    
+    th, td {
+        padding: 8px;
+    }
+}
+</style>
+
+{% endblock %}

@@ -1,0 +1,506 @@
+{% extends 'base.html' %}
+{% load pizzeria_extras %}
+
+{% block title %}{{ pizza.name }} - Pizzeria{% endblock %}
+{% block description %}{{ pizza.description|truncatewords:20 }} Заказать {{ pizza.name }} в нашей пиццерии.{% endblock %}
+
+{% block content %}
+<article class="pizza-detail">
+    <header class="pizza-info">
+        {% if pizza.image %}
+        <figure class="pizza-image-container">
+            <img src="{{ pizza.image.url }}" alt="{{ pizza.name }}" class="pizza-image" width="500" height="400">
+            <figcaption>{{ pizza.name }} - {{ pizza.description|truncatewords:10 }}</figcaption>
+        </figure>
+        {% endif %}
+        
+        <div class="pizza-content">
+            <h1>{{ pizza.name }}</h1>
+            <p class="description">{{ pizza.description }}</p>
+            
+            <!-- Информация о пицце -->
+            <section class="pizza-details">
+                <h2>Информация о пицце</h2>
+                <table>
+                    <caption>Детальная информация о пицце</caption>
+                    <tbody>
+                        <tr>
+                            <th scope="row">Базовая цена:</th>
+                            <td><strong>{{ pizza.base_price }} руб.</strong></td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Соус:</th>
+                            <td>{{ pizza.sauce }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Категории:</th>
+                            <td>
+                                {% for category in pizza.categories.all %}
+                                    <span class="category-badge">{{ category.name }}</span>
+                                {% endfor %}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Доступные размеры:</th>
+                            <td>
+                                <ul>
+                                    {% for size in pizza.sizes.all %}
+                                    <li>{{ size.name }} (x{{ size.price_multiplier }})</li>
+                                    {% endfor %}
+                                </ul>
+                            </td>
+                        </tr>
+                        {% if avg_rating %}
+                        <tr>
+                            <th scope="row">Средняя оценка:</th>
+                            <td>
+                                <span class="rating">★ {{ avg_rating|floatformat:1 }}/5</span>
+                                <span class="rating-count">({{ reviews.count }} отзывов)</span>
+                            </td>
+                        </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </section>
+            
+            <!-- Форма заказа -->
+            {% if user.is_authenticated %}
+            <section class="order-section">
+                <h2>Заказать пиццу</h2>
+                <form method="post" action="{% url 'add_to_cart' pizza.id %}" class="add-to-cart-form">
+                    {% csrf_token %}
+                    <fieldset>
+                        <legend>Параметры заказа</legend>
+                        
+                        <div class="form-group">
+                            <label for="size">Размер пиццы:</label>
+                            <select name="size" id="size" required>
+                                <option value="">Выберите размер</option>
+                                {% for size in pizza.sizes.all %}
+                                <option value="{{ size.id }}" data-multiplier="{{ size.price_multiplier }}">
+                                    {{ size.name }} - {{ pizza.base_price|multiply:size.price_multiplier }} руб.
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="quantity">Количество:</label>
+                            <input type="number" name="quantity" id="quantity" value="1" min="1" max="10" required>
+                        </div>
+                        
+                        <div class="price-calculation">
+                            <p><strong>Итого: <span id="total-price">{{ pizza.base_price }}</span> руб.</strong></p>
+                        </div>
+                    </fieldset>
+                    
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary" aria-label="Добавить {{ pizza.name }} в корзину">
+                            🛒 Добавить в корзину
+                        </button>
+                        <a href="{% url 'cart' %}" class="btn btn-secondary">Перейти в корзину</a>
+                    </div>
+                </form>
+            </section>
+            {% else %}
+            <section class="login-prompt">
+                <p><strong>Для заказа необходимо войти в систему</strong></p>
+                <p>
+                    <a href="{% url 'login' %}" class="btn">Войти</a>
+                    <a href="{% url 'register' %}" class="btn btn-secondary">Зарегистрироваться</a>
+                </p>
+            </section>
+            {% endif %}
+        </div>
+    </header>
+
+    <!-- Отзывы -->
+    <section class="reviews-section">
+        <h2>Отзывы о пицце "{{ pizza.name }}"</h2>
+        
+        {% if user.is_authenticated %}
+        <article class="review-form-container">
+            <h3>Оставить отзыв</h3>
+            <form method="post" class="review-form">
+                {% csrf_token %}
+                <fieldset>
+                    <legend>Ваш отзыв</legend>
+                    
+                    <div class="form-group">
+                        <label for="rating">Оценка:</label>
+                        <select name="rating" id="rating" required>
+                            <option value="">Выберите оценку</option>
+                            <option value="5">5 - Отлично</option>
+                            <option value="4">4 - Хорошо</option>
+                            <option value="3">3 - Нормально</option>
+                            <option value="2">2 - Плохо</option>
+                            <option value="1">1 - Ужасно</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="text">Ваш отзыв:</label>
+                        <textarea name="text" id="text" rows="4" required placeholder="Поделитесь своими впечатлениями о пицце..."></textarea>
+                    </div>
+                </fieldset>
+                
+                <button type="submit" class="btn">Оставить отзыв</button>
+            </form>
+        </article>
+        {% endif %}
+
+        <div class="reviews-list">
+            {% if reviews %}
+                {% for review in reviews %}
+                <article class="review">
+                    <header class="review-header">
+                        <h4>{{ review.customer.user.username }}</h4>
+                        <div class="review-meta">
+                            <span class="review-rating" aria-label="Оценка {{ review.rating }} из 5">★ {{ review.rating }}/5</span>
+                            <time datetime="{{ review.created_at|date:'Y-m-d' }}" class="review-date">
+                                {{ review.created_at|date:"d.m.Y" }}
+                            </time>
+                        </div>
+                    </header>
+                    <p class="review-text">{{ review.text }}</p>
+                </article>
+                {% endfor %}
+            {% else %}
+                <div class="no-reviews">
+                    <p>Пока нет отзывов о этой пицце. Будьте первым!</p>
+                </div>
+            {% endif %}
+        </div>
+    </section>
+
+    <!-- Дополнительная информация -->
+    <section class="additional-info">
+        <h2>Дополнительная информация</h2>
+        
+        <h3>Состав пиццы:</h3>
+        <ul>
+            <li>Тесто для пиццы</li>
+            <li>Томатный соус</li>
+            <li>Сыр моцарелла</li>
+            <li>Дополнительные ингредиенты согласно рецепту</li>
+        </ul>
+        
+        <h3>Пищевая ценность (на 100г):</h3>
+        <table>
+            <caption>Примерная пищевая ценность</caption>
+            <thead>
+                <tr>
+                    <th scope="col">Показатель</th>
+                    <th scope="col">Значение</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Калории</td>
+                    <td>250 ккал</td>
+                </tr>
+                <tr>
+                    <td>Белки</td>
+                    <td>12 г</td>
+                </tr>
+                <tr>
+                    <td>Жиры</td>
+                    <td>8 г</td>
+                </tr>
+                <tr>
+                    <td>Углеводы</td>
+                    <td>35 г</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <blockquote>
+            <p>"Каждая пицца готовится с любовью и вниманием к деталям!"</p>
+            <footer>
+                <cite>— Наш шеф-повар</cite>
+            </footer>
+        </blockquote>
+    </section>
+</article>
+
+<style>
+.pizza-detail {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.pizza-info {
+    display: flex;
+    gap: 30px;
+    margin-bottom: 40px;
+    flex-wrap: wrap;
+}
+
+.pizza-image-container {
+    flex: 0 0 500px;
+}
+
+.pizza-image {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.pizza-content {
+    flex: 1;
+    min-width: 300px;
+}
+
+.pizza-details table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+}
+
+.pizza-details th, .pizza-details td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: left;
+}
+
+.pizza-details th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+    width: 30%;
+}
+
+.category-badge {
+    display: inline-block;
+    background-color: #e31837;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.8em;
+    margin-right: 5px;
+}
+
+.rating {
+    color: #e31837;
+    font-weight: bold;
+}
+
+.rating-count {
+    color: #666;
+    font-size: 0.9em;
+}
+
+.order-section {
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    margin: 20px 0;
+}
+
+fieldset {
+    border: 1px solid #ddd;
+    padding: 15px;
+    margin: 15px 0;
+}
+
+legend {
+    font-weight: bold;
+    padding: 0 10px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+select, input[type="number"] {
+    width: 100%;
+    max-width: 300px;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.price-calculation {
+    background-color: #e8f5e8;
+    padding: 10px;
+    border-radius: 4px;
+    margin: 15px 0;
+}
+
+.form-actions {
+    margin-top: 20px;
+}
+
+.btn {
+    display: inline-block;
+    padding: 12px 24px;
+    background-color: #e31837;
+    color: white;
+    text-decoration: none;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-right: 10px;
+    font-size: 14px;
+}
+
+.btn:hover {
+    background-color: #c41230;
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+}
+
+.btn-secondary:hover {
+    background-color: #5a6268;
+}
+
+.login-prompt {
+    background-color: #fff3cd;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+    margin: 20px 0;
+}
+
+.reviews-section {
+    margin-top: 40px;
+}
+
+.review-form-container {
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 30px;
+}
+
+.review-form textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    resize: vertical;
+}
+
+.reviews-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.review {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    border-left: 4px solid #e31837;
+}
+
+.review-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.review-meta {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.review-rating {
+    color: #e31837;
+    font-weight: bold;
+}
+
+.review-date {
+    color: #666;
+    font-size: 0.9em;
+}
+
+.review-text {
+    line-height: 1.6;
+    margin: 0;
+}
+
+.no-reviews {
+    text-align: center;
+    color: #666;
+    padding: 40px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+}
+
+.additional-info {
+    margin-top: 40px;
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+.additional-info table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+}
+
+.additional-info th, .additional-info td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: left;
+}
+
+.additional-info th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+}
+
+blockquote {
+    border-left: 4px solid #e31837;
+    padding-left: 20px;
+    margin: 20px 0;
+    font-style: italic;
+    background-color: white;
+    padding: 15px 20px;
+}
+
+ul {
+    padding-left: 20px;
+}
+
+li {
+    margin-bottom: 5px;
+}
+
+@media (max-width: 768px) {
+    .pizza-info {
+        flex-direction: column;
+    }
+    
+    .pizza-image-container {
+        flex: none;
+    }
+    
+    .review-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    
+    .review-meta {
+        flex-direction: column;
+        gap: 5px;
+    }
+}
+</style>
+
+{% endblock %} 

@@ -1,0 +1,128 @@
+{% extends 'base.html' %}
+
+{% block title %}Статистика - Pizzeria{% endblock %}
+{% block description %}Статистика заказов, популярных пицц и работы курьеров в пиццерии{% endblock %}
+
+{% block content %}
+<div class="mt-4">
+    <header>
+        <h1>Статистика</h1>
+    </header>
+
+    <!-- Общая статистика -->
+    <section class="general-stats">
+        <h2>Общая статистика</h2>
+        <div class="row mb-4">
+            <div class="col-md-4">
+                <article class="card">
+                    <div class="card-body">
+                        <h3 class="card-title">Всего заказов</h3>
+                        <p class="card-text display-4">{{ total_orders }}</p>
+                    </div>
+                </article>
+            </div>
+            <div class="col-md-4">
+                <article class="card">
+                    <div class="card-body">
+                        <h3 class="card-title">Общая выручка</h3>
+                        <p class="card-text display-4">{{ total_revenue|floatformat:2 }} руб.</p>
+                    </div>
+                </article>
+            </div>
+            <div class="col-md-4">
+                <article class="card">
+                    <div class="card-body">
+                        <h3 class="card-title">Средний чек</h3>
+                        <p class="card-text display-4">{{ avg_order_value|floatformat:2 }} руб.</p>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- Популярные пиццы -->
+    <section class="popular-pizzas">
+        <h2>Популярные пиццы</h2>
+        <div class="card mb-4">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Название</th>
+                                <th>Количество заказов</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for pizza in popular_pizzas %}
+                            <tr>
+                                <td>{{ pizza.pizza__name }}</td>
+                                <td>{{ pizza.total_ordered }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Статистика по курьерам -->
+    <section class="courier-stats">
+        <h2>Статистика по курьерам</h2>
+        <div class="card mb-4">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Курьер</th>
+                                <th>Количество заказов</th>
+                                <th>Общая сумма</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for stat in courier_stats %}
+                            <tr>
+                                <td>{{ stat.courier__user_profile__user__username }}</td>
+                                <td>{{ stat.total_orders }}</td>
+                                <td>{{ stat.total_earnings|floatformat:2 }} руб.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Статистика по клиентам -->
+    <section class="customer-stats">
+        <h2>Статистика по клиентам</h2>
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Клиент</th>
+                                <th>Количество заказов</th>
+                                <th>Общая сумма</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for stat in customer_stats %}
+                            <tr>
+                                <td>{{ stat.customer__user_profile__user__username }}</td>
+                                <td>{{ stat.total_orders }}</td>
+                                <td>{{ stat.total_spent|floatformat:2 }} руб.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %} 

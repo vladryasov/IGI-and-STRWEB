@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Акции и промокоды - Pizzeria{% endblock %}
+
+{% block description %}Актуальные промокоды и скидки в нашей пиццерии. Специальные предложения для наших клиентов.{% endblock %}
+
+{% block og_title %}Акции и промокоды - Pizzeria{% endblock %}
+{% block og_description %}Актуальные промокоды и скидки в нашей пиццерии{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/promocodes.css' %}">
+{% endblock %}
+
+{% block content %}
+    <header>
+        <h1>Акции и промокоды</h1>
+        <p>Специальные предложения и скидки для наших клиентов</p>
+    </header>
+
+    <main>
+        <section aria-label="Активные промокоды">
+            <h2>Активные промокоды</h2>
+            {% if active_promos %}
+                <div class="promocodes-container">
+                    {% for promo in active_promos %}
+                        <article class="promocode-card" itemscope itemtype="https://schema.org/Offer">
+                            <header class="promocode-header">
+                                <h3 class="promocode-code" itemprop="name">{{ promo.code }}</h3>
+                                <div class="promocode-discount" itemprop="priceSpecification" itemscope itemtype="https://schema.org/PriceSpecification">
+                                    <span class="discount-value" itemprop="price">{{ promo.discount }}</span>
+                                    <span class="discount-unit">% скидка</span>
+                                </div>
+                            </header>
+                            
+                            <div class="promocode-content">
+                                <div class="promocode-details">
+                                    <p class="promocode-description">
+                                        Используйте промокод <strong>{{ promo.code }}</strong> при оформлении заказа и получите скидку {{ promo.discount }}%
+                                    </p>
+                                </div>
+                                
+                                <footer class="promocode-footer">
+                                    <div class="promocode-expiry">
+                                        <span class="expiry-label">Действует до:</span>
+                                        <time datetime="{{ promo.expiry_date|date:'c' }}" itemprop="priceValidUntil">
+                                            {{ promo.expiry_date|date:"d.m.Y" }}
+                                        </time>
+                                    </div>
+                                    
+                                    {% if promo.description %}
+                                        <div class="promocode-conditions">
+                                            <p><strong>Условия:</strong> {{ promo.description }}</p>
+                                        </div>
+                                    {% endif %}
+                                </footer>
+                            </div>
+                            
+                        </article>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="empty-state">
+                    <h3>Нет активных промокодов</h3>
+                    <p>В данный момент нет активных промокодов. Следите за обновлениями!</p>
+                </div>
+            {% endif %}
+        </section>
+
+        <section aria-label="Архивные промокоды">
+            <h2>Архивные промокоды</h2>
+            {% if archived_promos %}
+                <div class="promocodes-container archived">
+                    {% for promo in archived_promos %}
+                        <article class="promocode-card archived" itemscope itemtype="https://schema.org/Offer">
+                            <header class="promocode-header">
+                                <h3 class="promocode-code">{{ promo.code }}</h3>
+                                <div class="promocode-discount">
+                                    <span class="discount-value">{{ promo.discount }}</span>
+                                    <span class="discount-unit">% скидка</span>
+                                </div>
+                            </header>
+                            
+                            <div class="promocode-content">
+                                <div class="promocode-details">
+                                    <p class="promocode-description">
+                                        Промокод <strong>{{ promo.code }}</strong> (скидка {{ promo.discount }}%)
+                                    </p>
+                                </div>
+                                
+                                <footer class="promocode-footer">
+                                    <div class="promocode-expiry expired">
+                                        <span class="expiry-label">Истек:</span>
+                                        <time datetime="{{ promo.expiry_date|date:'c' }}">
+                                            {{ promo.expiry_date|date:"d.m.Y" }}
+                                        </time>
+                                    </div>
+                                </footer>
+                            </div>
+                        </article>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="empty-state">
+                    <h3>Нет архивных промокодов</h3>
+                    <p>Архив промокодов пуст.</p>
+                </div>
+            {% endif %}
+        </section>
+
+        <nav aria-label="Навигация по сайту">
+            <a href="{% url 'home' %}" class="btn btn-secondary" aria-label="Вернуться на главную страницу">
+                ← Вернуться на главную
+            </a>
+        </nav>
+    </main>
+{% endblock %}

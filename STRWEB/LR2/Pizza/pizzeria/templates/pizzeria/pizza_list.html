@@ -1,0 +1,519 @@
+{% extends 'base.html' %}
+
+{% block title %}Каталог пицц - Pizzeria{% endblock %}
+{% block description %}Широкий выбор вкусных пицц на любой вкус. Свежие ингредиенты, быстрая доставка. Закажите пиццу онлайн!{% endblock %}
+{% block og_title %}Каталог пицц - Pizzeria{% endblock %}
+{% block og_description %}Широкий выбор вкусных пицц на любой вкус. Свежие ингредиенты, быстрая доставка.{% endblock %}
+
+{% block content %}
+<main role="main">
+    <header class="page-header">
+        <h1>Каталог пицц</h1>
+        <p class="lead">Выберите пиццу по своему вкусу из нашего широкого ассортимента</p>
+    </header>
+
+    <div class="catalog-container">
+        <!-- Боковая панель с фильтрами -->
+        <aside class="filters-sidebar" role="complementary" aria-label="Фильтры и сортировка">
+            <section class="filters-section">
+                <h2>Фильтры и сортировка</h2>
+                <form method="get" role="search" aria-label="Поиск и фильтрация пицц">
+                    <fieldset>
+                        <legend>Параметры поиска</legend>
+                        
+                        <!-- Категории -->
+                        <div class="form-group">
+                            <label for="category-select">Категория</label>
+                            <select id="category-select" name="category" class="form-select" aria-label="Выберите категорию пиццы">
+                                <option value="">Все категории</option>
+                                {% for category in categories %}
+                                <option value="{{ category.name }}" {% if request.GET.category == category.name %}selected{% endif %}>
+                                    {{ category.name }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <!-- Цена -->
+                        <div class="form-group">
+                            <fieldset>
+                                <legend>Диапазон цен</legend>
+                                <div class="price-range">
+                                    <div class="price-input">
+                                        <label for="min-price">От (руб.)</label>
+                                        <input type="number" id="min-price" name="min_price" class="form-control" 
+                                               placeholder="От" value="{{ request.GET.min_price }}" 
+                                               min="0" aria-label="Минимальная цена">
+                                    </div>
+                                    <div class="price-input">
+                                        <label for="max-price">До (руб.)</label>
+                                        <input type="number" id="max-price" name="max_price" class="form-control" 
+                                               placeholder="До" value="{{ request.GET.max_price }}" 
+                                               min="0" aria-label="Максимальная цена">
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+
+                        <!-- Сортировка -->
+                        <div class="form-group">
+                            <label for="sort-select">Сортировка</label>
+                            <select id="sort-select" name="sort" class="form-select" aria-label="Выберите способ сортировки">
+                                <option value="">По умолчанию</option>
+                                <option value="price_asc" {% if request.GET.sort == 'price_asc' %}selected{% endif %}>По возрастанию цены</option>
+                                <option value="price_desc" {% if request.GET.sort == 'price_desc' %}selected{% endif %}>По убыванию цены</option>
+                                <option value="name" {% if request.GET.sort == 'name' %}selected{% endif %}>По названию</option>
+                            </select>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100" aria-label="Применить фильтры">
+                            Применить фильтры
+                        </button>
+                    </fieldset>
+                </form>
+            </section>
+        </aside>
+
+        <!-- Основной контент с пиццами -->
+        <section class="pizzas-section" role="main" aria-label="Список пицц">
+            <header class="section-header">
+                <h2>Наши пиццы</h2>
+                {% if pizzas %}
+                    <p class="results-count">Найдено пицц: {{ pizzas|length }}</p>
+                {% endif %}
+            </header>
+
+            {% if pizzas %}
+                <div class="pizzas-grid" role="list" aria-label="Список доступных пицц">
+                    {% for pizza in pizzas %}
+                    <article class="pizza-card" role="listitem" itemscope itemtype="https://schema.org/Product">
+                        {% if pizza.image %}
+                        <figure class="pizza-image">
+                            <img src="{{ pizza.image.url }}" 
+                                 alt="{{ pizza.name }}" 
+                                 class="card-img-top"
+                                 itemprop="image"
+                                 loading="lazy">
+                        </figure>
+                        {% endif %}
+                        
+                        <div class="pizza-content">
+                            <header class="pizza-header">
+                                <h3 class="pizza-title" itemprop="name">{{ pizza.name }}</h3>
+                            </header>
+                            
+                            <div class="pizza-description" itemprop="description">
+                                <p>{{ pizza.description }}</p>
+                            </div>
+                            
+                            <div class="pizza-categories" aria-label="Категории пиццы">
+                                {% for category in pizza.categories.all %}
+                                <span class="category-badge" itemprop="category">{{ category.name }}</span>
+                                {% endfor %}
+                            </div>
+                            
+                            <div class="pizza-price" itemprop="offers" itemscope itemtype="https://schema.org/Offer">
+                                <span class="price-label">Цена:</span>
+                                <span class="price-value" itemprop="price" content="{{ pizza.base_price }}">
+                                    от {{ pizza.base_price }} руб.
+                                </span>
+                                <meta itemprop="priceCurrency" content="RUB">
+                            </div>
+                            
+                            <footer class="pizza-actions">
+                                <a href="#" class="btn btn-primary" 
+                                   aria-label="Добавить {{ pizza.name }} в корзину"
+                                   role="button">
+                                    Добавить в корзину
+                                </a>
+                            </footer>
+                        </div>
+                    </article>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="no-results" role="status" aria-live="polite">
+                    <h3>Пиццы не найдены</h3>
+                    <p>Попробуйте изменить параметры поиска или выберите другую категорию.</p>
+                </div>
+            {% endif %}
+
+            <!-- Пагинация -->
+            {% if pizzas.has_other_pages %}
+            <nav class="pagination-nav" aria-label="Навигация по страницам">
+                <ul class="pagination" role="list">
+                    {% if pizzas.has_previous %}
+                    <li class="page-item" role="listitem">
+                        <a class="page-link" 
+                           href="?page={{ pizzas.previous_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}"
+                           aria-label="Перейти на предыдущую страницу">
+                            <span aria-hidden="true">&laquo;</span>
+                            <span class="sr-only">Предыдущая</span>
+                        </a>
+                    </li>
+                    {% endif %}
+
+                    {% for num in pizzas.paginator.page_range %}
+                    <li class="page-item {% if pizzas.number == num %}active{% endif %}" role="listitem">
+                        <a class="page-link" 
+                           href="?page={{ num }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}"
+                           aria-label="Перейти на страницу {{ num }}"
+                           {% if pizzas.number == num %}aria-current="page"{% endif %}>
+                            {{ num }}
+                        </a>
+                    </li>
+                    {% endfor %}
+
+                    {% if pizzas.has_next %}
+                    <li class="page-item" role="listitem">
+                        <a class="page-link" 
+                           href="?page={{ pizzas.next_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}"
+                           aria-label="Перейти на следующую страницу">
+                            <span aria-hidden="true">&raquo;</span>
+                            <span class="sr-only">Следующая</span>
+                        </a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </nav>
+            {% endif %}
+        </section>
+    </div>
+</main>
+
+<style>
+/* Стили для семантической верстки */
+.page-header {
+    text-align: center;
+    margin-bottom: 2rem;
+    padding: 2rem 0;
+    background: linear-gradient(135deg, #e31837, #ff6b6b);
+    color: white;
+    border-radius: 10px;
+}
+
+.page-header h1 {
+    margin: 0 0 0.5rem 0;
+    font-size: 2.5rem;
+}
+
+.page-header .lead {
+    margin: 0;
+    font-size: 1.2rem;
+    opacity: 0.9;
+}
+
+.catalog-container {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.filters-sidebar {
+    background: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: 10px;
+    height: fit-content;
+    position: sticky;
+    top: 2rem;
+}
+
+.filters-section h2 {
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+    color: #e31837;
+    font-size: 1.5rem;
+}
+
+.filters-section fieldset {
+    border: none;
+    margin: 0;
+    padding: 0;
+}
+
+.filters-section legend {
+    font-weight: bold;
+    margin-bottom: 1rem;
+    color: #333;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: #333;
+}
+
+.form-select, .form-control {
+    width: 100%;
+    padding: 0.75rem;
+    border: 2px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+}
+
+.form-select:focus, .form-control:focus {
+    outline: none;
+    border-color: #e31837;
+    box-shadow: 0 0 0 3px rgba(227, 24, 55, 0.1);
+}
+
+.price-range {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.price-input label {
+    font-size: 0.9rem;
+    margin-bottom: 0.25rem;
+}
+
+.pizzas-section {
+    min-height: 500px;
+}
+
+.section-header {
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.section-header h2 {
+    margin: 0 0 0.5rem 0;
+    color: #333;
+    font-size: 2rem;
+}
+
+.results-count {
+    margin: 0;
+    color: #666;
+    font-size: 1.1rem;
+}
+
+.pizzas-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-bottom: 3rem;
+}
+
+.pizza-card {
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid #eee;
+}
+
+.pizza-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+
+.pizza-image {
+    margin: 0;
+    overflow: hidden;
+}
+
+.pizza-image img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.pizza-card:hover .pizza-image img {
+    transform: scale(1.05);
+}
+
+.pizza-content {
+    padding: 1.5rem;
+}
+
+.pizza-header {
+    margin-bottom: 1rem;
+}
+
+.pizza-title {
+    margin: 0;
+    font-size: 1.4rem;
+    color: #333;
+    font-weight: 600;
+}
+
+.pizza-description {
+    margin-bottom: 1rem;
+    color: #666;
+    line-height: 1.6;
+}
+
+.pizza-categories {
+    margin-bottom: 1rem;
+}
+
+.category-badge {
+    display: inline-block;
+    background: #e31837;
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    margin-right: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.pizza-price {
+    margin-bottom: 1.5rem;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #e31837;
+}
+
+.price-label {
+    font-weight: normal;
+    color: #666;
+}
+
+.pizza-actions {
+    text-align: center;
+}
+
+.btn {
+    background: #e31837;
+    color: white;
+    padding: 0.75rem 2rem;
+    border: none;
+    border-radius: 25px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.btn:hover {
+    background: #c0142f;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(227, 24, 55, 0.3);
+}
+
+.no-results {
+    text-align: center;
+    padding: 3rem;
+    color: #666;
+}
+
+.no-results h3 {
+    margin-bottom: 1rem;
+    color: #333;
+}
+
+.pagination-nav {
+    margin-top: 3rem;
+    display: flex;
+    justify-content: center;
+}
+
+.pagination {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    gap: 0.5rem;
+}
+
+.page-item {
+    margin: 0;
+}
+
+.page-link {
+    display: block;
+    padding: 0.75rem 1rem;
+    background: white;
+    color: #333;
+    text-decoration: none;
+    border: 2px solid #ddd;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+}
+
+.page-link:hover {
+    background: #e31837;
+    color: white;
+    border-color: #e31837;
+}
+
+.page-item.active .page-link {
+    background: #e31837;
+    color: white;
+    border-color: #e31837;
+}
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .catalog-container {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    
+    .filters-sidebar {
+        position: static;
+        order: 2;
+    }
+    
+    .pizzas-section {
+        order: 1;
+    }
+    
+    .pizzas-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .page-header h1 {
+        font-size: 2rem;
+    }
+    
+    .price-range {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .page-header {
+        padding: 1rem;
+    }
+    
+    .page-header h1 {
+        font-size: 1.5rem;
+    }
+    
+    .pizza-content {
+        padding: 1rem;
+    }
+    
+    .pizza-title {
+        font-size: 1.2rem;
+    }
+}
+</style>
+{% endblock %} 

@@ -1,0 +1,172 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Контакты - Pizzeria{% endblock %}
+{% block description %}Контактная информация нашей пиццерии, адреса офисов и информация о сотрудниках.{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/contacts.css' %}">
+{% endblock %}
+
+{% block content %}
+<article>
+    <header>
+        <h1>Наши контакты</h1>
+        <p>Свяжитесь с нами любым удобным способом. Мы всегда рады помочь!</p>
+    </header>
+    
+    <!-- Контактная информация офисов -->
+    <section>
+        <h2>Наши офисы</h2>
+        <div class="contacts-grid">
+            {% for contact in contacts %}
+                <article class="contact-card {% if contact.is_main %}main-office{% endif %}">
+                    {% if contact.is_main %}
+                        <div class="main-office-badge">Основной офис</div>
+                    {% endif %}
+                    
+                    {% if contact.image %}
+                        <figure class="contact-image">
+                            <img src="{{ contact.image.url }}" alt="{{ contact.address }}" width="300" height="200">
+                            <figcaption>{{ contact.address }}</figcaption>
+                        </figure>
+                    {% endif %}
+                    
+                    <div class="contact-info">
+                        <h3>{{ contact.address }}</h3>
+                        <address>
+                            <p><strong>Телефон:</strong> <a href="tel:{{ contact.phone }}">{{ contact.phone }}</a></p>
+                            <p><strong>Email:</strong> <a href="mailto:{{ contact.email }}">{{ contact.email }}</a></p>
+                            <p><strong>Часы работы:</strong> {{ contact.working_hours }}</p>
+                        </address>
+                        
+                        {% if contact.map_link %}
+                            <p><a href="{{ contact.map_link }}" target="_blank" rel="noopener noreferrer" class="map-link">
+                                📍 Показать на карте
+                            </a></p>
+                        {% endif %}
+                    </div>
+                </article>
+            {% empty %}
+                <p class="no-contacts">Контактная информация будет добавлена в ближайшее время.</p>
+            {% endfor %}
+        </div>
+    </section>
+
+    <!-- Сотрудники -->
+    {% if employees %}
+    <section>
+        <h2>Наша команда</h2>
+        <p>Познакомьтесь с нашими сотрудниками, которые делают вашу пиццу вкусной!</p>
+        
+        <div class="employees-container">
+            <h3 class="employees-title">Информация о сотрудниках нашей пиццерии</h3>
+            <div class="employees-flex">
+                {% for employee in employees %}
+                <article class="employee-card">
+                    <figure class="employee-photo">
+                        <img src="{{ employee.photo.url }}" alt="Фото {{ employee.name }}" width="120" height="120">
+                        <figcaption>{{ employee.name }}</figcaption>
+                    </figure>
+                    <div class="employee-info">
+                        <h4 class="employee-name">{{ employee.name }}</h4>
+                        <p class="employee-position"><strong>Должность:</strong> {{ employee.position }}</p>
+                        <p class="employee-phone"><strong>Телефон:</strong> <a href="tel:{{ employee.phone }}">{{ employee.phone }}</a></p>
+                        <p class="employee-email"><strong>Email:</strong> <a href="mailto:{{ employee.email }}">{{ employee.email }}</a></p>
+                        <p class="employee-description"><strong>Описание работы:</strong> {{ employee.description }}</p>
+                    </div>
+                </article>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+    {% endif %}
+
+    <!-- Форма обратной связи -->
+    <section>
+        <h2>Свяжитесь с нами</h2>
+        <p>Есть вопросы или предложения? Заполните форму ниже, и мы обязательно ответим!</p>
+        
+        <form method="post" action="{% url 'contacts' %}">
+            {% csrf_token %}
+            
+            <fieldset>
+                <legend>Контактная информация</legend>
+                
+                <div>
+                    <label for="name">Ваше имя:</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                
+                <div>
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                
+                <div>
+                    <label for="phone">Телефон:</label>
+                    <input type="tel" id="phone" name="phone" pattern="\+375\s\(29\)\s\d{3}-\d{2}-\d{2}" placeholder="+375 (29) 123-45-67">
+                </div>
+            </fieldset>
+
+            <fieldset>
+                <legend>Сообщение</legend>
+                
+                <div>
+                    <label for="subject">Тема сообщения:</label>
+                    <select id="subject" name="subject" required>
+                        <option value="">Выберите тему</option>
+                        <option value="order">Заказ</option>
+                        <option value="complaint">Жалоба</option>
+                        <option value="suggestion">Предложение</option>
+                        <option value="question">Вопрос</option>
+                        <option value="other">Другое</option>
+                    </select>
+                </div>
+                
+                <div>
+                    <label for="message">Сообщение:</label>
+                    <textarea id="message" name="message" rows="5" cols="50" required placeholder="Опишите ваш вопрос или предложение..."></textarea>
+                </div>
+            </fieldset>
+
+            <div>
+                <label>
+                    <input type="checkbox" name="agree_terms" required>
+                    Я согласен с <a href="{% url 'privacy' %}" target="_blank">условиями обработки персональных данных</a>
+                </label>
+            </div>
+
+            <div>
+                <button type="submit" class="btn">Отправить сообщение</button>
+                <button type="reset" class="btn btn-secondary">Очистить форму</button>
+            </div>
+        </form>
+    </section>
+
+    <!-- Дополнительная информация -->
+    <section>
+        <h2>Полезная информация</h2>
+        
+        <h3>Время работы:</h3>
+        <dl>
+            <dt><strong>Понедельник - Пятница:</strong></dt>
+            <dd>10:00 - 23:00</dd>
+            
+            <dt><strong>Суббота - Воскресенье:</strong></dt>
+            <dd>11:00 - 24:00</dd>
+            
+            <dt><strong>Праздничные дни:</strong></dt>
+            <dd>11:00 - 22:00</dd>
+        </dl>
+
+        <h3>Способы связи:</h3>
+        <ul>
+            <li><strong>Телефон:</strong> <a href="tel:+375291234567">+375 (29) 123-45-67</a></li>
+            <li><strong>Email:</strong> <a href="mailto:info@pizzeria.by">info@pizzeria.by</a></li>
+            <li><strong>Telegram:</strong> @pizzeria_by</li>
+            <li><strong>Viber:</strong> +375 (29) 123-45-67</li>
+        </ul>
+    </section>
+</article>
+{% endblock %}
