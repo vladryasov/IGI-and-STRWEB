@@ -1,0 +1,113 @@
+.chart-container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 2rem;
+}
+
+.chart-section {
+    background: var(--bg-white, #fff);
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.chart-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 2px solid #eee;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.range-controls {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.range-controls label {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.range-controls input[type="number"] {
+    padding: 0.5rem;
+    border: 2px solid #ddd;
+    border-radius: 4px;
+    width: 100px;
+    font-size: 1rem;
+}
+
+.chart-wrapper {
+    position: relative;
+    height: 500px;
+    margin: 2rem 0;
+}
+
+.formula-section {
+    margin-top: 2rem;
+    padding: 1.5rem;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+
+.formula-section h3 {
+    margin-top: 0;
+    color: var(--primary, #ff6b35);
+}
+
+.formula {
+    font-family: 'Courier New', monospace;
+    font-size: 1.1rem;
+    line-height: 2;
+    color: var(--text-dark, #333);
+}
+
+.formula p {
+    margin: 0.5rem 0;
+}
+
+.btn {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-primary {
+    background: var(--primary, #ff6b35);
+    color: white;
+}
+
+.btn-primary:hover {
+    background: var(--primary-dark, #e55a2b);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
+}
+
+@media (max-width: 768px) {
+    .chart-controls {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .range-controls {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .chart-wrapper {
+        height: 400px;
+    }
+}
+

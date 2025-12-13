@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Генератор формы - Pizzeria{% endblock %}
+{% block description %}Генератор элементов input type="range"{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/form-generator.css' %}">
+<link rel="stylesheet" href="{% static 'css/range-generator.css' %}">
+{% endblock %}
+
+{% block content %}
+<article class="form-generator-container">
+    <header>
+        <h1>Генератор слайдеров (input type="range")</h1>
+        <p>Установите флажок для генерации элементов input type="range" с возможностью интерактивной установки атрибутов</p>
+    </header>
+
+    <div class="generate-checkbox">
+        <label>
+            <input type="checkbox" id="generate-range-checkbox">
+            <span>Сгенерировать слайдеры</span>
+        </label>
+    </div>
+
+    <div id="range-generator-container">
+        <!-- Сгенерированные слайдеры появятся здесь -->
+    </div>
+</article>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/range-generator.js' %}"></script>
+{% endblock %}
+
+

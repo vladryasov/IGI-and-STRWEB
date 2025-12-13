@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/register.css' %}">
+{% endblock %}
+
+{% block title %}Регистрация нового пользователя - Pizzeria{% endblock %}
+
+{% block description %}Создайте новый аккаунт в нашей пиццерии для заказа пиццы и управления профилем.{% endblock %}
+
+{% block og_title %}Регистрация - Pizzeria{% endblock %}
+{% block og_description %}Создайте новый аккаунт для заказа пиццы и управления профилем{% endblock %}
+
+{% block content %}
+    <header>
+        <h1>Регистрация нового пользователя</h1>
+        <p>Создайте аккаунт для заказа пиццы и управления профилем</p>
+    </header>
+
+    <main>
+        <section aria-label="Форма регистрации нового пользователя">
+            <h2>Создание аккаунта</h2>
+            
+            {% if messages %}
+                <div class="messages" role="alert" aria-live="polite">
+                    {% for message in messages %}
+                        <div class="message message-{{ message.tags }}">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            {% if form.non_field_errors %}
+                <div class="error-messages" role="alert" aria-live="polite">
+                    {% for error in form.non_field_errors %}
+                        <div class="error">{{ error }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <form method="post" class="registration-form" novalidate>
+                {% csrf_token %}
+                
+                <fieldset class="form-fieldset">
+                    <legend class="sr-only">Данные для регистрации</legend>
+                    
+                    {% for field in form %}
+                        <div class="form-group" {% if field.errors %}aria-invalid="true"{% endif %}>
+                            <label for="{{ field.id_for_label }}" class="form-label">
+                                {{ field.label }}
+                                {% if field.field.required %}
+                                    <span class="required" aria-label="обязательное поле">*</span>
+                                {% endif %}
+                            </label>
+                            
+                            {{ field }}
+                            
+                            {% if field.help_text %}
+                                <div class="form-help" id="{{ field.id_for_label }}_help">
+                                    {{ field.help_text }}
+                                </div>
+                            {% endif %}
+                            
+                            {% if field.errors %}
+                                <div class="field-errors" role="alert" aria-live="polite">
+                                    {% for error in field.errors %}
+                                        <div class="error">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </fieldset>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary" aria-describedby="registration-help">
+                        Зарегистрироваться
+                    </button>
+                </div>
+            </form>
+        </section>
+
+        <section aria-label="Дополнительные действия">
+            <h2>Уже есть аккаунт?</h2>
+            <p>Если у вас уже есть аккаунт, вы можете войти в систему.</p>
+            <nav aria-label="Навигация по входу в систему">
+                <a href="{% url 'login' %}" class="btn btn-secondary" aria-label="Перейти к странице входа в систему">
+                    Войти в систему
+                </a>
+            </nav>
+        </section>
+
+        <nav aria-label="Навигация по сайту">
+            <a href="{% url 'home' %}" class="btn btn-outline" aria-label="Вернуться на главную страницу">
+                ← Вернуться на главную
+            </a>
+        </nav>
+    </main>
+
+    
+{% endblock %}

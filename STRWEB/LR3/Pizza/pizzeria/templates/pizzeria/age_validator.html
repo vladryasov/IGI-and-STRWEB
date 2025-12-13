@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Валидация возраста - Pizzeria{% endblock %}
+{% block description %}Проверка возраста пользователя{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/age-validator.css' %}">
+{% endblock %}
+
+{% block content %}
+<article class="age-validator-container">
+    <header>
+        <h1>Валидация возраста</h1>
+        <p>Введите дату рождения для проверки возраста</p>
+    </header>
+
+    <section class="age-form-section">
+        <form id="age-validation-form" class="age-form">
+            <div class="form-group">
+                <label for="birth-date-input">Дата рождения:</label>
+                <input type="date" id="birth-date-input" name="birth_date" required>
+            </div>
+            <button type="submit" id="check-age-btn" class="btn">Проверить</button>
+        </form>
+    </section>
+
+    <section id="age-validation-result" class="age-result">
+        <!-- Результат валидации появится здесь -->
+    </section>
+</article>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/age-validator.js' %}"></script>
+{% endblock %}
+

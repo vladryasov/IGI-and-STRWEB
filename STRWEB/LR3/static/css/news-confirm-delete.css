@@ -1,0 +1,103 @@
+.delete-container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.delete-card {
+    background: white;
+    border-radius: 8px;
+    padding: 30px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    text-align: center;
+}
+
+.delete-card h1 {
+    margin: 0 0 30px 0;
+    color: #333;
+}
+
+.warning-message {
+    margin-bottom: 30px;
+}
+
+.warning-message i {
+    font-size: 3em;
+    color: #dc3545;
+    margin-bottom: 20px;
+}
+
+.warning-message p {
+    color: #333;
+    font-size: 1.1em;
+    margin: 10px 0;
+}
+
+.warning-text {
+    color: #dc3545;
+    font-size: 0.9em;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.delete-card .btn {
+    display: inline-flex;
+    align-items: center;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    font-size: 1em;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background-color 0.2s ease;
+}
+
+.delete-card .btn i {
+    margin-right: 5px;
+}
+
+.delete-card .btn-danger {
+    background: #dc3545;
+    color: white;
+}
+
+.delete-card .btn-danger:hover {
+    background: #c82333;
+}
+
+.delete-card .btn-secondary {
+    background: #6c757d;
+    color: white;
+}
+
+.delete-card .btn-secondary:hover {
+    background: #5a6268;
+}
+
+/* Тёмная тема */
+[data-theme="dark"] .delete-card {
+    background: var(--bg-light);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-sm);
+}
+[data-theme="dark"] .delete-card h1,
+[data-theme="dark"] .warning-message p {
+    color: var(--text-primary);
+}
+[data-theme="dark"] .delete-card .btn {
+    color: #fff;
+}
+@media (max-width: 768px) {
+    .delete-container {
+        padding: 10px;
+    }
+    
+    .delete-card {
+        padding: 20px;
+    }
+}

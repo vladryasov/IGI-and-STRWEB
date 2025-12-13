@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/staff-statistics.css' %}">
+{% endblock %}
+
+{% block title %}Статистика - Pizzeria{% endblock %}
+{% block description %}Статистика работы пиццерии за последние 30 дней: количество пользователей, заказов, выручка и графики динамики{% endblock %}
+
+{% block content %}
+<article class="statistics-container" role="main" aria-labelledby="main-heading">
+    <header>
+        <h1 id="main-heading">Статистика за последние 30 дней</h1>
+        <p class="page-description">Обзор ключевых показателей работы пиццерии</p>
+    </header>
+
+    <section class="stats-summary" aria-labelledby="summary-heading">
+        <h2 id="summary-heading" class="sr-only">Сводная статистика</h2>
+        
+        <article class="stat-card" role="region" aria-labelledby="overall-stats-heading">
+            <header>
+                <h3 id="overall-stats-heading">Общая статистика</h3>
+            </header>
+            <dl class="stats-list">
+                <div class="stat-item">
+                    <dt class="stat-label">Всего пользователей:</dt>
+                    <dd class="stat-value" aria-label="{{ total_users }} пользователей">{{ total_users }}</dd>
+                </div>
+                <div class="stat-item">
+                    <dt class="stat-label">Всего заказов:</dt>
+                    <dd class="stat-value" aria-label="{{ total_orders }} заказов">{{ total_orders }}</dd>
+                </div>
+                <div class="stat-item">
+                    <dt class="stat-label">Средний чек:</dt>
+                    <dd class="stat-value" aria-label="{{ average_order_value|floatformat:2 }} рублей">{{ average_order_value|floatformat:2 }} ₽</dd>
+                </div>
+            </dl>
+        </article>
+
+        <article class="stat-card" role="region" aria-labelledby="period-stats-heading">
+            <header>
+                <h3 id="period-stats-heading">За период (30 дней)</h3>
+            </header>
+            <dl class="stats-list">
+                <div class="stat-item">
+                    <dt class="stat-label">Новых пользователей:</dt>
+                    <dd class="stat-value" aria-label="{{ period_new_users }} новых пользователей">{{ period_new_users }}</dd>
+                </div>
+                <div class="stat-item">
+                    <dt class="stat-label">Заказов:</dt>
+                    <dd class="stat-value" aria-label="{{ period_orders }} заказов">{{ period_orders }}</dd>
+                </div>
+                <div class="stat-item">
+                    <dt class="stat-label">Выручка:</dt>
+                    <dd class="stat-value" aria-label="{{ period_revenue|floatformat:2 }} рублей">{{ period_revenue|floatformat:2 }} ₽</dd>
+                </div>
+            </dl>
+        </article>
+    </section>
+
+    <section class="graphics" aria-labelledby="graphics-heading">
+        <header>
+            <h2 id="graphics-heading">Графическая аналитика</h2>
+        </header>
+        {% if graphic %}
+        <figure class="graph-container" role="img" aria-labelledby="graph-caption">
+            <img src="data:image/png;base64,{{ graphic }}" 
+                 alt="График динамики регистраций и заказов за последние 30 дней" 
+                 class="statistics-graph"
+                 loading="lazy">
+            <figcaption id="graph-caption" class="graph-legend">
+                <p class="legend-note">* График показывает динамику регистраций и заказов за последние 30 дней</p>
+            </figcaption>
+        </figure>
+        {% else %}
+        <div class="no-data" role="status" aria-live="polite">
+            <p>Нет данных для отображения графиков</p>
+            <p class="no-data-note">Данные появятся после первых заказов</p>
+        </div>
+        {% endif %}
+    </section>
+</article>
+
+
+{% endblock %} 

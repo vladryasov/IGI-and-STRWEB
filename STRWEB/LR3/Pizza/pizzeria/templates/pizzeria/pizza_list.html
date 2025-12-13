@@ -1,0 +1,196 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Каталог пицц - Pizzeria{% endblock %}
+{% block description %}Широкий выбор вкусных пицц на любой вкус. Свежие ингредиенты, быстрая доставка. Закажите пиццу онлайн!{% endblock %}
+{% block og_title %}Каталог пицц - Pizzeria{% endblock %}
+{% block og_description %}Широкий выбор вкусных пицц на любой вкус. Свежие ингредиенты, быстрая доставка.{% endblock %}
+
+{% block content %}
+<main role="main">
+    <header class="page-header">
+        <h1>Каталог пицц</h1>
+        <p class="lead">Выберите пиццу по своему вкусу из нашего широкого ассортимента</p>
+    </header>
+
+    <div class="catalog-container">
+        <!-- Боковая панель с фильтрами -->
+        <aside class="filters-sidebar" role="complementary" aria-label="Фильтры и сортировка">
+            <section class="filters-section">
+                <h2>Фильтры и сортировка</h2>
+                <form method="get" role="search" aria-label="Поиск и фильтрация пицц">
+                    <fieldset>
+                        <legend>Параметры поиска</legend>
+                        
+                        <!-- Категории -->
+                        <div class="form-group">
+                            <label for="category-select">Категория</label>
+                            <select id="category-select" name="category" class="form-select" aria-label="Выберите категорию пиццы">
+                                <option value="">Все категории</option>
+                                {% for category in categories %}
+                                <option value="{{ category.name }}" {% if request.GET.category == category.name %}selected{% endif %}>
+                                    {{ category.name }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <!-- Цена -->
+                        <div class="form-group">
+                            <fieldset>
+                                <legend>Диапазон цен</legend>
+                                <div class="price-range">
+                                    <div class="price-input">
+                                        <label for="min-price">От (руб.)</label>
+                                        <input type="number" id="min-price" name="min_price" class="form-control" 
+                                               placeholder="От" value="{{ request.GET.min_price }}" 
+                                               min="0" aria-label="Минимальная цена">
+                                    </div>
+                                    <div class="price-input">
+                                        <label for="max-price">До (руб.)</label>
+                                        <input type="number" id="max-price" name="max_price" class="form-control" 
+                                               placeholder="До" value="{{ request.GET.max_price }}" 
+                                               min="0" aria-label="Максимальная цена">
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+
+                        <!-- Сортировка -->
+                        <div class="form-group">
+                            <label for="sort-select">Сортировка</label>
+                            <select id="sort-select" name="sort" class="form-select" aria-label="Выберите способ сортировки">
+                                <option value="">По умолчанию</option>
+                                <option value="price_asc" {% if request.GET.sort == 'price_asc' %}selected{% endif %}>По возрастанию цены</option>
+                                <option value="price_desc" {% if request.GET.sort == 'price_desc' %}selected{% endif %}>По убыванию цены</option>
+                                <option value="name" {% if request.GET.sort == 'name' %}selected{% endif %}>По названию</option>
+                            </select>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100" aria-label="Применить фильтры">
+                            Применить фильтры
+                        </button>
+                    </fieldset>
+                </form>
+            </section>
+        </aside>
+
+        <!-- Основной контент с пиццами -->
+        <section class="pizzas-section" role="main" aria-label="Список пицц">
+            <header class="section-header">
+                <h2>Наши пиццы</h2>
+                {% if pizzas %}
+                    <p class="results-count">Найдено пицц: {{ pizzas|length }}</p>
+                {% endif %}
+            </header>
+
+            {% if pizzas %}
+                <div class="pizzas-grid" role="list" aria-label="Список доступных пицц">
+                    {% for pizza in pizzas %}
+                    <article class="pizza-card" role="listitem" itemscope itemtype="https://schema.org/Product">
+                        {% if pizza.image %}
+                        <figure class="pizza-image">
+                            <img src="{{ pizza.image.url }}" 
+                                 alt="{{ pizza.name }}" 
+                                 class="card-img-top"
+                                 itemprop="image"
+                                 loading="lazy">
+                        </figure>
+                        {% endif %}
+                        
+                        <div class="pizza-content">
+                            <header class="pizza-header">
+                                <h3 class="pizza-title" itemprop="name">{{ pizza.name }}</h3>
+                            </header>
+                            
+                            <div class="pizza-description" itemprop="description">
+                                <p>{{ pizza.description }}</p>
+                            </div>
+                            
+                            <div class="pizza-categories" aria-label="Категории пиццы">
+                                {% for category in pizza.categories.all %}
+                                <span class="category-badge" itemprop="category">{{ category.name }}</span>
+                                {% endfor %}
+                            </div>
+                            
+                            <div class="pizza-price" itemprop="offers" itemscope itemtype="https://schema.org/Offer">
+                                <span class="price-label">Цена:</span>
+                                <span class="price-value" itemprop="price" content="{{ pizza.base_price }}">
+                                    от {{ pizza.base_price }} руб.
+                                </span>
+                                <meta itemprop="priceCurrency" content="RUB">
+                            </div>
+                            
+                            <footer class="pizza-actions">
+                                <a href="{% url 'pizza_detail' pizza.id %}" class="btn btn-primary" 
+                                   aria-label="Перейти к выбору размера и добавлению {{ pizza.name }} в корзину"
+                                   role="button">
+                                    Добавить в корзину
+                                </a>
+                            </footer>
+                        </div>
+                    </article>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="no-results" role="status" aria-live="polite">
+                    <h3>Пиццы не найдены</h3>
+                    <p>Попробуйте изменить параметры поиска или выберите другую категорию.</p>
+                </div>
+            {% endif %}
+
+            <!-- Пагинация -->
+            {% if pizzas.has_other_pages %}
+            <nav class="pagination-nav" aria-label="Навигация по страницам">
+                <ul class="pagination" role="list">
+                    {% if pizzas.has_previous %}
+                    <li class="page-item" role="listitem">
+                        <a class="page-link" 
+                           href="?page={{ pizzas.previous_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}"
+                           aria-label="Перейти на предыдущую страницу">
+                            <span aria-hidden="true">&laquo;</span>
+                            <span class="sr-only">Предыдущая</span>
+                        </a>
+                    </li>
+                    {% endif %}
+
+                    {% for num in pizzas.paginator.page_range %}
+                    <li class="page-item {% if pizzas.number == num %}active{% endif %}" role="listitem">
+                        <a class="page-link" 
+                           href="?page={{ num }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}"
+                           aria-label="Перейти на страницу {{ num }}"
+                           {% if pizzas.number == num %}aria-current="page"{% endif %}>
+                            {{ num }}
+                        </a>
+                    </li>
+                    {% endfor %}
+
+                    {% if pizzas.has_next %}
+                    <li class="page-item" role="listitem">
+                        <a class="page-link" 
+                           href="?page={{ pizzas.next_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}"
+                           aria-label="Перейти на следующую страницу">
+                            <span aria-hidden="true">&raquo;</span>
+                            <span class="sr-only">Следующая</span>
+                        </a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </nav>
+            {% endif %}
+        </section>
+    </div>
+</main>
+
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/catalog-pagination.js' %}"></script>
+<script src="{% static 'js/card-3d-effect.js' %}"></script>
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/pizza-list.css' %}">
+<link rel="stylesheet" href="{% static 'css/catalog-pagination.css' %}">
+{% endblock %}

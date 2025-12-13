@@ -1,0 +1,256 @@
+.partners-section {
+    margin: 3rem 0;
+}
+
+.partners-section img,
+table img[alt^="Логотип"],
+.partner-logo {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 5px solid var(--bg-white);
+    box-shadow: 
+        0 4px 12px rgba(0, 0, 0, 0.15),
+        0 0 0 4px var(--primary-light),
+        inset 0 0 20px rgba(255, 107, 53, 0.1);
+    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    background: var(--bg-white);
+    padding: 4px;
+}
+
+.partners-section img:hover,
+table img[alt^="Логотип"]:hover,
+.partner-logo:hover {
+    transform: scale(1.15) rotate(360deg);
+    box-shadow: 
+        0 8px 24px rgba(255, 107, 53, 0.3),
+        0 0 0 6px var(--primary),
+        inset 0 0 30px rgba(255, 107, 53, 0.2);
+    border-color: var(--primary);
+}
+
+table {
+    width: 100%;
+    display: grid;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin: 2rem 0;
+    background: var(--bg-white);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+}
+
+table caption {
+    font-weight: 700;
+    font-size: 1.8em;
+    padding: 1.5rem;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    color: white;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    text-align: center;
+}
+
+thead {
+    background: linear-gradient(135deg, var(--text-dark) 0%, #34495e 100%);
+}
+
+thead th {
+    color: white;
+    padding: 1.25rem 1rem;
+    text-align: left;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.9em;
+    letter-spacing: 0.05em;
+}
+
+thead th:first-child {
+    text-align: center;
+    width: 150px;
+}
+
+tbody tr {
+    transition: all 0.3s ease;
+    border-bottom: 2px solid var(--border-color);
+}
+
+tbody tr:hover {
+    background: linear-gradient(135deg, rgba(255, 107, 53, 0.08) 0%, rgba(255, 140, 97, 0.08) 100%);
+    transform: scale(1.01);
+}
+
+tbody tr:last-child {
+    border-bottom: none;
+}
+
+tbody td {
+    padding: 1.5rem 1rem;
+    vertical-align: middle;
+    border: none;
+}
+
+tbody td:first-child {
+    text-align: center;
+}
+
+tbody td:empty {
+    background: rgba(255, 107, 53, 0.05);
+}
+
+td[headers="name"],
+.partner-name {
+    font-kerning: normal;
+    letter-spacing: 0.04em;
+    font-weight: 700;
+    font-size: 1.2em;
+    color: var(--text-dark);
+    text-transform: capitalize;
+}
+
+td[headers="description"],
+.partner-description {
+    color: var(--text-light);
+    line-height: 1.7;
+    text-align: justify;
+    text-indent: 1.5em;
+}
+
+td[headers="website"] a,
+.partner-website {
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 600;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    background: rgba(255, 107, 53, 0.1);
+    transition: all 0.3s ease;
+    display: inline-block;
+}
+
+td[headers="website"] a:hover,
+.partner-website:hover {
+    color: white;
+    background: var(--primary);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-sm);
+}
+
+figcaption {
+    font-size: 0.9em;
+    color: var(--text-muted);
+    margin-top: 0.75rem;
+    font-style: italic;
+    text-align: center;
+}
+
+.partners-section h2 {
+    text-align: center;
+    margin-bottom: 2rem;
+    color: var(--text-dark);
+    font-size: 2.5em;
+    position: relative;
+    padding-bottom: 1rem;
+}
+
+.partners-section h2::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 150px;
+    height: 4px;
+    background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 100%);
+    border-radius: 2px;
+}
+
+@media (max-width: 768px) {
+    .partners-section img,
+    table img[alt^="Логотип"] {
+        width: 80px;
+        height: 80px;
+        border-width: 3px;
+    }
+    
+    table {
+        font-size: 0.9em;
+        display: block;
+        overflow-x: auto;
+    }
+    
+    thead th, tbody td {
+        padding: 1rem 0.75rem;
+    }
+    
+    thead th:first-child {
+        width: 100px;
+    }
+    
+    td[headers="name"] {
+        font-size: 1em;
+    }
+}
+
+@media (max-width: 480px) {
+    .partners-section h2 {
+        font-size: 2em;
+    }
+    
+    .partners-section img,
+    table img[alt^="Логотип"] {
+        width: 60px;
+        height: 60px;
+    }
+}
+
+q:lang(ru) {
+    quotes: "\00AB" "\00BB" "\201E" "\201C";
+}
+
+q:lang(en) {
+    quotes: "\201C" "\201D" "\2018" "\2019";
+}
+
+/* Тёмная тема */
+[data-theme="dark"] .partners-section h2 {
+    color: var(--text-primary);
+}
+[data-theme="dark"] .partners-section img,
+[data-theme="dark"] table img[alt^="Логотип"],
+[data-theme="dark"] .partner-logo {
+    border-color: var(--bg-light);
+    background: var(--bg-light);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35), 0 0 0 4px var(--primary-light), inset 0 0 20px rgba(255, 107, 53, 0.15);
+}
+[data-theme="dark"] table {
+    background: var(--bg-light);
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border-color);
+}
+[data-theme="dark"] thead {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+}
+[data-theme="dark"] td[headers="name"],
+[data-theme="dark"] .partner-name {
+    color: var(--text-primary);
+}
+[data-theme="dark"] td[headers="description"],
+[data-theme="dark"] .partner-description,
+[data-theme="dark"] figcaption {
+    color: var(--text-secondary);
+}
+[data-theme="dark"] td[headers="website"] a,
+[data-theme="dark"] .partner-website {
+    color: var(--primary-light);
+    background: rgba(255, 107, 53, 0.12);
+    border: 1px solid var(--border-color);
+}
+[data-theme="dark"] td[headers="website"] a:hover,
+[data-theme="dark"] .partner-website:hover {
+    color: #fff;
+    background: var(--primary);
+}
+

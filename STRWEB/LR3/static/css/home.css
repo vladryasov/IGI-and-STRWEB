@@ -1,0 +1,397 @@
+.main-content {
+    position: relative;
+}
+
+.partners-section {
+    margin: 3rem 0;
+}
+
+.partners-section img,
+table img[alt^="Логотип"] {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 4px solid var(--bg-white);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    transition: all 0.3s ease;
+}
+
+.partners-section img:hover {
+    transform: scale(1.1) rotate(5deg);
+    box-shadow: 0 6px 20px rgba(255, 107, 53, 0.3);
+}
+
+.partners-section td[headers="name"],
+.partners-section figcaption {
+    font-kerning: normal;
+    letter-spacing: 0.03em;
+    font-weight: 600;
+}
+
+.latest-news {
+    position: relative;
+    margin: 2rem 0;
+    padding: 2rem;
+    background: linear-gradient(135deg, rgba(255, 107, 53, 0.05) 0%, rgba(255, 140, 97, 0.05) 100%);
+    border-radius: 12px;
+    border-left: 4px solid var(--primary);
+}
+
+.latest-news article {
+    position: relative;
+    background: var(--bg-white);
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: var(--shadow-sm);
+}
+
+.catalog-section {
+    margin: 3rem 0;
+}
+
+.pizza-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.pizza-card {
+    background: var(--bg-white);
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: var(--shadow-sm);
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.pizza-card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--primary-light);
+}
+
+.pizza-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+}
+
+.pizza-price {
+    font-size: 1.5em;
+    font-weight: 700;
+    color: var(--primary);
+    margin: 1rem 0;
+}
+
+.pizza-actions {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 1rem;
+}
+
+
+.preloader {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 200px;
+    width: 200px;
+    margin: 60px auto;
+    position: relative;
+    overflow: visible;
+    background: #4a9bcf;
+    border-radius: 50%;
+    box-shadow: 
+        0 4px 12px rgba(74, 155, 207, 0.4),
+        inset 0 -4px 8px rgba(30, 70, 100, 0.3),
+        0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.preloader::after {
+    content: '';
+    position: absolute;
+    width: 120px;
+    height: 120px;
+    border: 2.5px solid transparent;
+    border-bottom-color: white;
+    border-left-color: white;
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    transform-origin: center;
+    transform: translate(-50%, -50%) rotate(180deg);
+    animation: line-rotate 3s ease-in-out infinite;
+    filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.6));
+}
+
+@keyframes line-rotate {
+    0% {
+        transform: translate(-50%, -50%) rotate(180deg);
+        opacity: 1;
+    }
+    25% {
+        transform: translate(-50%, -50%) rotate(270deg);
+    }
+    50% {
+        transform: translate(-50%, -50%) rotate(360deg);
+    }
+    75% {
+        transform: translate(-50%, -50%) rotate(450deg);
+    }
+    100% {
+        transform: translate(-50%, -50%) rotate(540deg);
+        opacity: 1;
+    }
+}
+
+.pizza-animation {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 400px;
+    margin: 60px 0;
+    position: relative;
+    overflow: visible;
+    background: linear-gradient(135deg, #fff8f5 0%, #ffe8e0 50%, #fff8f5 100%);
+    border-radius: 20px;
+    box-shadow: 0 8px 32px rgba(255, 107, 53, 0.2);
+    padding: 2rem;
+}
+
+.pizza-slice {
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-left: 60px solid transparent;
+    border-right: 60px solid transparent;
+    border-bottom: 105px solid var(--primary);
+    transform-origin: bottom center;
+    animation: dance-slice 2s ease-in-out infinite;
+    z-index: 3;
+    filter: drop-shadow(0 6px 12px rgba(0,0,0,0.3));
+    top: calc(50% - 30px);
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.pizza-slice::before {
+    content: '';
+    position: absolute;
+    bottom: -105px;
+    left: -52px;
+    width: 104px;
+    height: 52px;
+    background: linear-gradient(135deg, #f4c542 0%, #f5d269 100%);
+    border-radius: 0 0 50px 50px;
+}
+
+.pizza-eye {
+    position: absolute;
+    top: 25px;
+    width: 8px;
+    height: 8px;
+    background: rgba(0, 0, 0, 0.7);
+    border-radius: 50%;
+    z-index: 1;
+    animation: blink 3s ease-in-out infinite;
+}
+
+.pizza-eye.left-eye {
+    left: calc(50% - 15px);
+}
+
+.pizza-eye.right-eye {
+    left: calc(50% + 7px);
+}
+
+@keyframes blink {
+    0%, 90%, 100% {
+        opacity: 1;
+    }
+    95% {
+        opacity: 0;
+    }
+}
+
+.pizza-arm {
+    position: absolute;
+    width: 12px;
+    height: 42px;
+    background: var(--primary);
+    border-radius: 6px;
+    top: 35px;
+    transform-origin: top center;
+    animation: arm-dance 2s ease-in-out infinite;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.25);
+}
+
+.pizza-arm.left-arm {
+    left: -27px;
+}
+
+.pizza-arm.right-arm {
+    right: -27px;
+}
+
+.pizza-leg {
+    position: absolute;
+    width: 14px;
+    height: 52px;
+    background: var(--primary);
+    border-radius: 7px;
+    bottom: -157px;
+    transform-origin: top center;
+    animation: leg-dance 2s ease-in-out infinite;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.25);
+}
+
+.pizza-leg.left-leg {
+    left: -18px;
+}
+
+.pizza-leg.right-leg {
+    right: -18px;
+}
+
+.ingredient.cheese {
+    width: 25px;
+    height: 25px;
+    background: linear-gradient(135deg, #fff9e6 0%, #ffeaa7 100%);
+    box-shadow: 0 2px 8px rgba(255, 200, 87, 0.3);
+}
+
+.brand-name {
+    position: absolute;
+    bottom: 0px;
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: 2.5em;
+    color: var(--primary);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    animation: fade-in-up-once 1s ease-out;
+    opacity: 1;
+    text-shadow: 
+        2px 2px 4px rgba(255, 107, 53, 0.3),
+        0 0 20px rgba(255, 107, 53, 0.2);
+    z-index: 5;
+}
+
+@keyframes dance-slice {
+    0%, 100% {
+        transform: translateX(-50%) translateY(0) scaleY(1);
+    }
+    50% {
+        transform: translateX(-50%) translateY(25px) scaleY(0.85);
+    }
+}
+
+@keyframes arm-dance {
+    0%, 100% {
+        transform: rotate(-25deg);
+    }
+    50% {
+        transform: rotate(35deg);
+    }
+}
+
+@keyframes leg-dance {
+    0%, 100% {
+        transform: rotate(0deg) scaleY(1);
+    }
+    50% {
+        transform: rotate(20deg) scaleY(0.75);
+    }
+}
+
+@keyframes fade-in-up-once {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.admin-panel {
+    background: linear-gradient(135deg, rgba(255, 107, 53, 0.1) 0%, rgba(255, 140, 97, 0.1) 100%);
+    padding: 2rem;
+    margin-bottom: 2rem;
+    border-radius: 12px;
+    border-left: 4px solid var(--primary);
+}
+
+.admin-buttons {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+    flex-wrap: wrap;
+}
+
+.banners {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin: 2rem 0;
+}
+
+.banners figure {
+    margin: 0;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+    transition: transform 0.3s ease;
+}
+
+.banners figure:hover {
+    transform: scale(1.05);
+}
+
+.banners img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+@media (max-width: 768px) {
+    .preloader {
+        height: 300px;
+        padding: 1.5rem;
+    }
+    
+    .pizza-base {
+        width: 150px;
+        height: 150px;
+    }
+    
+    .brand-name {
+        font-size: 1.8em;
+        bottom: 20px;
+    }
+    
+    .latest-news article {
+        position: static;
+        margin-top: 1rem;
+    }
+}
+
+@media (max-height: 600px) {
+    .preloader {
+        height: 250px;
+    }
+    
+    .brand-name {
+        font-size: 1.5em;
+    }
+    
+    .preloader-triangle {
+        height: 150px;
+    }
+}
+

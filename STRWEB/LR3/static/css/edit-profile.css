@@ -1,0 +1,161 @@
+.profile-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.messages {
+    margin-bottom: 20px;
+}
+
+.message {
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+}
+
+.success {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.error {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+.profile-section, .orders-section {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin-bottom: 30px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.help-text {
+    display: block;
+    color: #666;
+    font-size: 0.9em;
+    margin-top: 5px;
+}
+
+.form-actions {
+    margin-top: 20px;
+}
+
+.btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1em;
+}
+
+.btn-save {
+    background-color: #28a745;
+    color: white;
+}
+
+.order-card {
+    background-color: #f8f9fa;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.order-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+.order-header h3 {
+    margin: 0;
+}
+
+.order-date {
+    color: #666;
+}
+
+.order-status {
+    padding: 4px 8px;
+    background-color: #e9ecef;
+    border-radius: 4px;
+}
+
+.order-items {
+    margin-bottom: 15px;
+}
+
+.order-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.order-total {
+    text-align: right;
+    font-weight: bold;
+    font-size: 1.1em;
+}
+
+.no-orders {
+    text-align: center;
+    color: #666;
+    padding: 20px;
+}
+
+/* Тёмная тема */
+[data-theme="dark"] .profile-section,
+[data-theme="dark"] .orders-section,
+[data-theme="dark"] .order-card {
+    background-color: var(--bg-light);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-sm);
+}
+[data-theme="dark"] .form-group label,
+[data-theme="dark"] .help-text,
+[data-theme="dark"] .order-card h3,
+[data-theme="dark"] .order-card ul li,
+[data-theme="dark"] .message {
+    color: var(--text-primary);
+}
+[data-theme="dark"] .form-group input {
+    background: var(--card-bg, #1f2937);
+    color: var(--text-primary);
+    border-color: var(--border-color);
+}
+[data-theme="dark"] .success {
+    background-color: rgba(33, 150, 83, 0.18);
+    color: #b2f5c0;
+}
+[data-theme="dark"] .error {
+    background-color: rgba(220, 53, 69, 0.18);
+    color: #f8c6cc;
+}
+[data-theme="dark"] .btn {
+    color: #fff;
+}

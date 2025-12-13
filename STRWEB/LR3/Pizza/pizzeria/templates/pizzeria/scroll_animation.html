@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Анимация при скроллинге - Pizzeria{% endblock %}
+{% block description %}Движущиеся пиццы при прокрутке страницы{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/scroll-animation.css' %}">
+{% endblock %}
+
+{% block content %}
+<article>
+    <header>
+        <h1>Анимация при скроллинге</h1>
+        <p>Прокрутите страницу вниз и вверх, чтобы увидеть анимацию движущихся пицц!</p>
+    </header>
+
+    <section style="padding: 2rem; text-align: center;">
+        <h2>Добро пожаловать!</h2>
+        <p>Начните прокручивать страницу, чтобы увидеть анимацию.</p>
+    </section>
+
+    <div id="scroll-animation-container">
+        <!-- Пиццы будут созданы через JavaScript -->
+    </div>
+
+    <section style="padding: 2rem; text-align: center;">
+        <h2>Продолжайте прокручивать</h2>
+        <p>Пиццы будут двигаться и вращаться при прокрутке страницы.</p>
+        <p>Попробуйте прокрутить в обратном направлении!</p>
+    </section>
+
+    <div style="height: 1000px; padding: 2rem;">
+        <h2>Больше контента для скроллинга</h2>
+        <p>Этот раздел добавлен для демонстрации анимации при длинной прокрутке.</p>
+    </div>
+</article>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/scroll-animation-enhanced.js' %}"></script>
+{% endblock %}
+
+

@@ -1,0 +1,281 @@
+.vacancies-page {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.vacancies-list {
+    margin: 2rem 0;
+    overflow: hidden;
+}
+
+.vacancy-card {
+    float: left;
+    width: 48%;
+    background: var(--bg-white);
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: var(--shadow-sm);
+    border-left: 5px solid var(--primary);
+    margin-bottom: 2rem;
+    margin-right: 4%;
+    overflow: hidden;
+    position: relative;
+}
+
+.vacancy-card:nth-child(2n) {
+    margin-right: 0;
+}
+
+.vacancies-list::after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+.vacancy-card header {
+    margin-bottom: 1.5rem;
+    overflow: hidden;
+    position: relative;
+}
+
+.vacancy-card h3 {
+    margin: 0 0 0.5rem 0;
+    color: var(--text-dark);
+    font-size: 1.6em;
+    text-transform: capitalize;
+}
+
+.vacancy-date {
+    float: right;
+    color: var(--text-muted);
+    font-size: 0.9em;
+    font-style: italic;
+    background: linear-gradient(135deg, rgba(255, 107, 53, 0.1) 0%, rgba(255, 140, 97, 0.1) 100%);
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    border-left: 3px solid var(--primary);
+    margin-left: 1rem;
+    margin-bottom: 0.5rem;
+    white-space: nowrap;
+    transition: all 0.3s ease;
+}
+
+.vacancy-card:hover .vacancy-date {
+    background: linear-gradient(135deg, rgba(255, 107, 53, 0.15) 0%, rgba(255, 140, 97, 0.15) 100%);
+    box-shadow: var(--shadow-sm);
+    transform: translateY(-2px);
+}
+
+.vacancy-content {
+    margin: 1.5rem 0;
+    line-height: 1.8;
+    clear: both;
+    text-align: justify;
+    text-indent: 1.5em;
+}
+
+.vacancy-content p {
+    margin-bottom: 1rem;
+    color: var(--text-dark);
+}
+
+.vacancy-content p:first-child {
+    text-indent: 0;
+}
+
+.vacancy-content strong {
+    color: var(--primary);
+    font-weight: 600;
+}
+
+.vacancy-content ul {
+    padding-left: 2rem;
+    margin: 1rem 0;
+    list-style-type: disc;
+}
+
+.vacancy-content li {
+    margin-bottom: 0.5rem;
+    color: var(--text-light);
+}
+
+.vacancy-content li::marker {
+    color: var(--primary);
+}
+
+.vacancy-footer {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 2px solid var(--border-color);
+    clear: both;
+}
+
+.vacancy-footer address {
+    font-style: normal;
+    background: linear-gradient(135deg, rgba(255, 107, 53, 0.05) 0%, rgba(255, 140, 97, 0.05) 100%);
+    padding: 1rem;
+    border-radius: 8px;
+    margin-top: 0.75rem;
+}
+
+.vacancy-footer p {
+    margin: 0.5rem 0;
+    color: var(--text-light);
+}
+
+.vacancy-footer strong {
+    color: var(--primary);
+    font-weight: 600;
+}
+
+.vacancy-footer a {
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.vacancy-footer a:hover {
+    color: var(--primary-dark);
+    text-decoration: underline;
+}
+
+.no-vacancies-section {
+    margin: 3rem 0;
+}
+
+.no-vacancies {
+    text-align: center;
+    padding: 4rem 2rem;
+    background: var(--bg-white);
+    border-radius: 12px;
+    color: var(--text-muted);
+    box-shadow: var(--shadow-sm);
+}
+
+.no-vacancies h2 {
+    color: var(--text-dark);
+    margin-bottom: 1rem;
+}
+
+.no-vacancies a {
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.no-vacancies a:hover {
+    text-decoration: underline;
+}
+
+.benefits-section {
+    margin: 3rem 0;
+    padding: 2rem;
+    background: linear-gradient(135deg, rgba(255, 107, 53, 0.05) 0%, rgba(255, 140, 97, 0.05) 100%);
+    border-radius: 12px;
+    border-left: 5px solid var(--primary);
+}
+
+.benefits-section h2 {
+    color: var(--text-dark);
+    margin-bottom: 1.5rem;
+}
+
+.benefits-section ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.benefits-section li {
+    padding: 1rem;
+    margin-bottom: 0.75rem;
+    background: var(--bg-white);
+    border-radius: 8px;
+    border-left: 4px solid var(--primary);
+    transition: all 0.3s ease;
+}
+
+.benefits-section li:hover {
+    transform: translateX(8px);
+    box-shadow: var(--shadow-sm);
+}
+
+.benefits-section li strong {
+    color: var(--primary);
+    font-weight: 600;
+}
+
+.contact-info-section {
+    margin: 2rem 0;
+    padding: 2rem;
+    background: var(--bg-white);
+    border-radius: 12px;
+    box-shadow: var(--shadow-sm);
+}
+
+.contact-info-section h2 {
+    color: var(--text-dark);
+    margin-bottom: 1.5rem;
+}
+
+.contact-info-section address {
+    font-style: normal;
+    background: linear-gradient(135deg, rgba(255, 107, 53, 0.05) 0%, rgba(255, 140, 97, 0.05) 100%);
+    padding: 1.5rem;
+    border-radius: 8px;
+    border-left: 4px solid var(--primary);
+}
+
+.contact-info-section address p {
+    margin: 0.75rem 0;
+    color: var(--text-light);
+}
+
+.contact-info-section address strong {
+    color: var(--primary);
+    font-weight: 600;
+}
+
+.contact-info-section address a {
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.contact-info-section address a:hover {
+    color: var(--primary-dark);
+    text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+    .vacancy-card {
+        float: none;
+        width: 100%;
+        margin-right: 0;
+        padding: 1.5rem;
+    }
+    
+    .vacancy-card:nth-child(2n) {
+        margin-right: 0;
+        clear: none;
+    }
+    
+    .vacancy-date {
+        float: none;
+        display: block;
+        margin: 0.5rem 0 1rem 0;
+        text-align: center;
+    }
+    
+    .vacancy-content {
+        clear: both;
+    }
+    
+    .benefits-section,
+    .contact-info-section {
+        padding: 1.5rem;
+    }
+}
+
+

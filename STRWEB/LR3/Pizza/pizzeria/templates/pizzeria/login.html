@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/login-page.css' %}">
+{% endblock %}
+
+{% block title %}Вход в систему - Pizzeria{% endblock %}
+
+{% block description %}Войдите в свой аккаунт пиццерии для заказа пиццы и управления профилем.{% endblock %}
+
+{% block og_title %}Вход в систему - Pizzeria{% endblock %}
+{% block og_description %}Войдите в свой аккаунт для заказа пиццы и управления профилем{% endblock %}
+
+{% block content %}
+    <header>
+        <h1>Вход в систему</h1>
+        <p>Войдите в свой аккаунт для заказа пиццы и управления профилем</p>
+    </header>
+
+    <main>
+        <section aria-label="Форма входа в систему">
+            <h2>Авторизация</h2>
+            
+            {% if form.non_field_errors %}
+                <div class="error-messages" role="alert" aria-live="polite">
+                    {% for error in form.non_field_errors %}
+                        <div class="error">{{ error }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <form method="post" class="login-form" novalidate>
+                {% csrf_token %}
+                
+                <fieldset class="form-fieldset">
+                    <legend class="sr-only">Данные для входа</legend>
+                    
+                    {% for field in form %}
+                        <div class="form-group" {% if field.errors %}aria-invalid="true"{% endif %}>
+                            <label for="{{ field.id_for_label }}" class="form-label">
+                                {{ field.label }}
+                                {% if field.field.required %}
+                                    <span class="required" aria-label="обязательное поле">*</span>
+                                {% endif %}
+                            </label>
+                            
+                            {{ field }}
+                            
+                            {% if field.help_text %}
+                                <div class="form-help" id="{{ field.id_for_label }}_help">
+                                    {{ field.help_text }}
+                                </div>
+                            {% endif %}
+                            
+                            {% if field.errors %}
+                                <div class="field-errors" role="alert" aria-live="polite">
+                                    {% for error in field.errors %}
+                                        <div class="error">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </fieldset>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary" aria-describedby="login-help">
+                        Войти в систему
+                    </button>
+                </div>
+            </form>
+        </section>
+
+        <section aria-label="Дополнительные действия">
+            <h2>Нет аккаунта?</h2>
+            <p>Если у вас еще нет аккаунта, вы можете создать его бесплатно.</p>
+            <nav aria-label="Навигация по регистрации">
+                <a href="{% url 'register' %}" class="btn btn-secondary" aria-label="Перейти к регистрации нового аккаунта">
+                    Зарегистрироваться
+                </a>
+            </nav>
+        </section>
+
+        <nav aria-label="Навигация по сайту">
+            <a href="{% url 'home' %}" class="btn btn-outline" aria-label="Вернуться на главную страницу">
+                ← Вернуться на главную
+            </a>
+        </nav>
+    </main>
+
+    
+{% endblock %}

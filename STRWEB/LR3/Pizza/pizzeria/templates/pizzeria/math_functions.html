@@ -1,0 +1,128 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Математические функции - Pizzeria{% endblock %}
+{% block description %}Математические функции для расчетов{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/math-functions.css' %}">
+{% endblock %}
+
+{% block content %}
+<article class="math-functions-container">
+    <header>
+        <h1>Математические функции</h1>
+        <p>Вычисление различных математических функций, связанных с окружностями и площадями (как пицца)</p>
+    </header>
+
+    <div class="math-functions-grid">
+        <!-- Площадь круга -->
+        <div class="math-function-card">
+            <h3>Площадь круга</h3>
+            <div class="formula">S = π × r²</div>
+            <label>Радиус (r):</label>
+            <input type="number" id="input-circle-area" step="0.01" min="0.01">
+            <button class="calculate-btn" data-function="circle-area">Вычислить</button>
+            <div id="result-circle-area" class="result"></div>
+        </div>
+
+        <!-- Периметр круга -->
+        <div class="math-function-card">
+            <h3>Периметр круга</h3>
+            <div class="formula">P = 2 × π × r</div>
+            <label>Радиус (r):</label>
+            <input type="number" id="input-circle-perimeter" step="0.01" min="0.01">
+            <button class="calculate-btn" data-function="circle-perimeter">Вычислить</button>
+            <div id="result-circle-perimeter" class="result"></div>
+        </div>
+
+        <!-- Объем сферы -->
+        <div class="math-function-card">
+            <h3>Объем сферы</h3>
+            <div class="formula">V = (4/3) × π × r³</div>
+            <label>Радиус (r):</label>
+            <input type="number" id="input-sphere-volume" step="0.01" min="0.01">
+            <button class="calculate-btn" data-function="sphere-volume">Вычислить</button>
+            <div id="result-sphere-volume" class="result"></div>
+        </div>
+
+        <!-- Синус -->
+        <div class="math-function-card">
+            <h3>Синус</h3>
+            <div class="formula">sin(x)</div>
+            <label>Аргумент (x в радианах):</label>
+            <input type="number" id="input-sin" step="0.01">
+            <button class="calculate-btn" data-function="sin">Вычислить</button>
+            <div id="result-sin" class="result"></div>
+        </div>
+
+        <!-- Косинус -->
+        <div class="math-function-card">
+            <h3>Косинус</h3>
+            <div class="formula">cos(x)</div>
+            <label>Аргумент (x в радианах):</label>
+            <input type="number" id="input-cos" step="0.01">
+            <button class="calculate-btn" data-function="cos">Вычислить</button>
+            <div id="result-cos" class="result"></div>
+        </div>
+
+        <!-- Тангенс -->
+        <div class="math-function-card">
+            <h3>Тангенс</h3>
+            <div class="formula">tan(x)</div>
+            <label>Аргумент (x в радианах):</label>
+            <input type="number" id="input-tan" step="0.01">
+            <button class="calculate-btn" data-function="tan">Вычислить</button>
+            <div id="result-tan" class="result"></div>
+        </div>
+
+        <!-- Экспонента -->
+        <div class="math-function-card">
+            <h3>Экспонента</h3>
+            <div class="formula">eˣ</div>
+            <label>Аргумент (x):</label>
+            <input type="number" id="input-exp" step="0.01">
+            <button class="calculate-btn" data-function="exp">Вычислить</button>
+            <div id="result-exp" class="result"></div>
+        </div>
+
+        <!-- Натуральный логарифм -->
+        <div class="math-function-card">
+            <h3>Натуральный логарифм</h3>
+            <div class="formula">ln(x)</div>
+            <label>Аргумент (x > 0):</label>
+            <input type="number" id="input-ln" step="0.01" min="0.01">
+            <button class="calculate-btn" data-function="ln">Вычислить</button>
+            <div id="result-ln" class="result"></div>
+        </div>
+
+        <!-- Квадратный корень -->
+        <div class="math-function-card">
+            <h3>Квадратный корень</h3>
+            <div class="formula">√x</div>
+            <label>Аргумент (x ≥ 0):</label>
+            <input type="number" id="input-sqrt" step="0.01" min="0">
+            <button class="calculate-btn" data-function="sqrt">Вычислить</button>
+            <div id="result-sqrt" class="result"></div>
+        </div>
+
+        <!-- Степень -->
+        <div class="math-function-card">
+            <h3>Возведение в степень</h3>
+            <div class="formula">xⁿ</div>
+            <label>Основание (x):</label>
+            <input type="number" id="input-power" step="0.01">
+            <label>Степень (n):</label>
+            <input type="number" id="input-power-value" step="0.01">
+            <button class="calculate-btn" data-function="power">Вычислить</button>
+            <div id="result-power" class="result"></div>
+        </div>
+    </div>
+</article>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/math-functions.js' %}"></script>
+{% endblock %}
+
+

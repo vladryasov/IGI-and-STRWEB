@@ -1,0 +1,333 @@
+dl {
+    margin: 2rem 0;
+}
+
+dt {
+    font-weight: 700;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    padding: 1.25rem;
+    background: linear-gradient(135deg, rgba(255, 107, 53, 0.1) 0%, rgba(255, 140, 97, 0.1) 100%);
+    border-left: 5px solid var(--primary);
+    border-radius: 8px;
+    color: var(--text-dark);
+    font-size: 1.2em;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+dt:hover {
+    transform: translateX(8px);
+    box-shadow: var(--shadow-sm);
+    background: linear-gradient(135deg, rgba(255, 107, 53, 0.15) 0%, rgba(255, 140, 97, 0.15) 100%);
+}
+
+dt::before {
+    content: '\25BA\00A0';
+    margin-right: 0.5rem;
+    color: var(--primary);
+    font-size: 0.8em;
+    transition: transform 0.3s ease;
+}
+
+dt:hover::before {
+    transform: translateX(4px);
+}
+
+.term-date {
+    font-size: 0.7em;
+    color: var(--text-muted);
+    font-weight: 400;
+    font-style: italic;
+    margin-left: 1rem;
+}
+
+.term-toggle {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+    width: 0;
+    height: 0;
+}
+
+dt label {
+    cursor: pointer;
+    display: block;
+}
+
+dd {
+    margin-left: 0;
+    margin-bottom: 2rem;
+    padding: 0 1.5rem;
+    background: var(--bg-white);
+    border-radius: 8px;
+    border-left: 4px solid var(--primary-light);
+    box-shadow: var(--shadow-sm);
+    line-height: 1.8;
+    color: var(--text-dark);
+    text-align: justify;
+    text-indent: 1.5em;
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: max-height 0.4s ease-out, opacity 0.3s ease-out, padding 0.3s ease-out;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+.term-toggle:checked + dt + dd {
+    max-height: 500px;
+    opacity: 1;
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+}
+
+.term-toggle:checked + dt {
+    background: linear-gradient(135deg, rgba(255, 107, 53, 0.2) 0%, rgba(255, 140, 97, 0.2) 100%);
+}
+
+.term-toggle:checked + dt::before {
+    transform: rotate(90deg);
+}
+
+@keyframes slide-down {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+nav ul {
+    list-style: none;
+    padding-left: 0;
+    background: var(--bg-white);
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: var(--shadow-sm);
+    margin: 2rem 0;
+}
+
+nav ul li {
+    margin-bottom: 0.75rem;
+    padding: 0.75rem;
+    background: linear-gradient(135deg, rgba(255, 107, 53, 0.05) 0%, rgba(255, 140, 97, 0.05) 100%);
+    border-left: 3px solid var(--primary);
+    border-radius: 6px;
+    transition: all 0.3s ease;
+}
+
+nav ul li:hover {
+    transform: translateX(8px);
+    box-shadow: var(--shadow-sm);
+}
+
+nav ul li::marker {
+    content: none;
+}
+
+nav ul li a {
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s ease;
+    display: block;
+}
+
+nav ul li a:hover {
+    color: var(--primary-dark);
+}
+
+nav h3 {
+    color: var(--text-dark);
+    margin-bottom: 1rem;
+    font-size: 1.3em;
+}
+
+pre {
+    background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+    color: #ecf0f1;
+    padding: 1.5rem;
+    border-radius: 8px;
+    white-space: pre-wrap;
+    font-family: 'Courier New', monospace;
+    font-size: 0.95em;
+    line-height: 1.6;
+    overflow-x: auto;
+    box-shadow: var(--shadow-md);
+    border-left: 4px solid var(--primary);
+}
+
+code {
+    font-family: 'Courier New', monospace;
+    background: rgba(255, 107, 53, 0.1);
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.9em;
+    color: var(--primary);
+    font-weight: 600;
+}
+
+pre code {
+    background: transparent;
+    padding: 0;
+    color: #ecf0f1;
+    font-weight: normal;
+}
+
+blockquote {
+    border-left: 5px solid var(--primary);
+    padding: 1.5rem 2rem;
+    margin: 2rem 0;
+    font-style: italic;
+    background: linear-gradient(135deg, rgba(255, 107, 53, 0.05) 0%, rgba(255, 140, 97, 0.05) 100%);
+    border-radius: 0 12px 12px 0;
+    position: relative;
+    box-shadow: var(--shadow-sm);
+}
+
+blockquote::before {
+    content: '"';
+    font-size: 4em;
+    color: var(--primary-light);
+    position: absolute;
+    top: -10px;
+    left: 10px;
+    font-family: 'Playfair Display', serif;
+    opacity: 0.3;
+}
+
+blockquote p {
+    margin: 0;
+    color: var(--text-dark);
+    line-height: 1.8;
+    font-size: 1.1em;
+}
+
+blockquote footer {
+    margin-top: 1rem;
+    text-align: right;
+    font-style: normal;
+}
+
+blockquote cite {
+    color: var(--primary);
+    font-weight: 600;
+    font-style: normal;
+}
+
+abbr {
+    text-decoration: underline;
+    text-decoration-style: dotted;
+    text-underline-offset: 3px;
+    cursor: help;
+    font-weight: 600;
+    color: var(--primary);
+}
+
+abbr:hover {
+    text-decoration-style: solid;
+    color: var(--primary-dark);
+}
+
+address {
+    font-style: normal;
+    background: linear-gradient(135deg, rgba(255, 107, 53, 0.05) 0%, rgba(255, 140, 97, 0.05) 100%);
+    padding: 2rem;
+    border-radius: 12px;
+    border-left: 4px solid var(--primary);
+    margin: 2rem 0;
+}
+
+address p {
+    margin: 0.75rem 0;
+    color: var(--text-dark);
+}
+
+address strong {
+    color: var(--primary);
+    font-weight: 600;
+}
+
+address a {
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+address a:hover {
+    color: var(--primary-dark);
+    text-decoration: underline;
+}
+
+mark {
+    background: linear-gradient(135deg, rgba(255, 107, 53, 0.2) 0%, rgba(255, 140, 97, 0.2) 100%);
+    color: var(--text-dark);
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    font-weight: 600;
+}
+
+/* Секции */
+section {
+    margin: 3rem 0;
+    padding: 2rem;
+    background: var(--bg-white);
+    border-radius: 12px;
+    box-shadow: var(--shadow-sm);
+}
+
+section h2 {
+    color: var(--primary);
+    margin-bottom: 1.5rem;
+    font-size: 2em;
+    text-transform: capitalize;
+}
+
+section h3 {
+    color: var(--text-dark);
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    font-size: 1.5em;
+}
+
+section p {
+    line-height: 1.8;
+    color: var(--text-dark);
+    text-align: justify;
+}
+
+@media (max-width: 768px) {
+    dt {
+        font-size: 1em;
+        padding: 1rem;
+    }
+    
+    dd {
+        padding: 1rem;
+        font-size: 0.95em;
+    }
+    
+    nav ul {
+        padding: 1.5rem;
+    }
+    
+    pre {
+        font-size: 0.85em;
+        padding: 1rem;
+    }
+    
+    blockquote {
+        padding: 1rem 1.5rem;
+    }
+    
+    section {
+        padding: 1.5rem;
+    }
+}
+

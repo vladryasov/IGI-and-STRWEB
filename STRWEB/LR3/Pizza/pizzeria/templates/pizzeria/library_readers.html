@@ -1,0 +1,128 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Читатели библиотеки - Pizzeria{% endblock %}
+{% block description %}Управление читателями библиотеки{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/library-readers.css' %}">
+{% endblock %}
+
+{% block content %}
+<article class="library-readers-container">
+    <header>
+        <h1>Читатели библиотеки</h1>
+        <p>Управление информацией о читателях библиотеки</p>
+    </header>
+
+    <section class="controls-section">
+        <div class="control-buttons">
+            <button id="find-oldest-btn" class="btn btn-primary">Найти самого старого читателя</button>
+            <button id="sort-readers-btn" class="btn btn-secondary">Сортировать по году</button>
+            <button id="calculate-avg-btn" class="btn btn-secondary">Средний стаж</button>
+            {% if user.is_authenticated and user.userprofile.role == 'admin' %}
+            <button id="add-reader-btn" class="btn btn-success">Добавить читателя</button>
+            {% endif %}
+        </div>
+
+        <div class="search-section">
+            <input type="text" id="search-reader-input" placeholder="Поиск по ФИО или номеру билета...">
+            <button id="search-reader-btn" class="btn">Найти</button>
+        </div>
+    </section>
+
+    {% if user.is_authenticated and user.userprofile.role == 'admin' %}
+    <section id="add-reader-form" class="add-reader-form" style="display: none;">
+        <h3>Добавить нового читателя</h3>
+        <form>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Фамилия:</label>
+                    <input type="text" id="new-last-name" required>
+                </div>
+                <div class="form-group">
+                    <label>Имя:</label>
+                    <input type="text" id="new-first-name" required>
+                </div>
+                <div class="form-group">
+                    <label>Отчество:</label>
+                    <input type="text" id="new-middle-name" required>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Год начала чтения:</label>
+                    <input type="number" id="new-start-year" min="1900" max="2025" required>
+                </div>
+                <div class="form-group">
+                    <label>Номер билета:</label>
+                    <input type="text" id="new-card-number" required>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="new-is-vip"> VIP читатель
+                    </label>
+                </div>
+                <div class="form-group" id="vip-fields" style="display: none;">
+                    <label>Категория:</label>
+                    <select id="new-category">
+                        <option value="обычный">Обычный</option>
+                        <option value="VIP">VIP</option>
+                        <option value="почетный">Почетный</option>
+                    </select>
+                </div>
+                <div class="form-group" id="vip-books-field" style="display: none;">
+                    <label>Прочитано книг:</label>
+                    <input type="number" id="new-books-read" min="0" value="0">
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Добавить</button>
+        </form>
+    </section>
+    {% endif %}
+
+    <section id="readers-list" class="readers-list">
+        <!-- Список читателей появится здесь -->
+    </section>
+
+    <section id="oldest-reader-result" class="result-section">
+        <!-- Результат поиска самого старого читателя -->
+    </section>
+
+    <section id="search-reader-result" class="result-section">
+        <!-- Результат поиска читателя -->
+    </section>
+
+    <section id="avg-experience-result" class="result-section">
+        <!-- Средний стаж -->
+    </section>
+</article>
+
+<script>
+// Показываем/скрываем поля VIP при изменении чекбокса
+document.addEventListener('DOMContentLoaded', () => {
+    const vipCheckbox = document.getElementById('new-is-vip');
+    const vipFields = document.getElementById('vip-fields');
+    const vipBooksField = document.getElementById('vip-books-field');
+    
+    if (vipCheckbox) {
+        vipCheckbox.addEventListener('change', (e) => {
+            if (e.target.checked) {
+                vipFields.style.display = 'block';
+                vipBooksField.style.display = 'block';
+            } else {
+                vipFields.style.display = 'none';
+                vipBooksField.style.display = 'none';
+            }
+        });
+    }
+});
+</script>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/library-readers.js' %}"></script>
+{% endblock %}
+

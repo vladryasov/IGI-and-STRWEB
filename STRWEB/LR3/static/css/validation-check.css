@@ -1,0 +1,128 @@
+article {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+section {
+    margin-bottom: 40px;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+}
+
+h2 {
+    color: #e31837;
+    border-bottom: 2px solid #e31837;
+    padding-bottom: 10px;
+}
+
+h3 {
+    color: #333;
+    margin-top: 25px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: left;
+}
+
+th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+}
+
+caption {
+    font-weight: bold;
+    margin-bottom: 10px;
+    text-align: left;
+}
+
+ul, ol {
+    padding-left: 20px;
+}
+
+li {
+    margin-bottom: 8px;
+}
+
+dl {
+    margin: 20px 0;
+}
+
+dt {
+    font-weight: bold;
+    margin-top: 15px;
+    margin-bottom: 5px;
+    color: #e31837;
+}
+
+dd {
+    margin-left: 0;
+    margin-bottom: 15px;
+}
+
+blockquote {
+    border-left: 4px solid #e31837;
+    padding-left: 20px;
+    margin: 20px 0;
+    font-style: italic;
+    background-color: white;
+    padding: 15px 20px;
+}
+
+a {
+    color: #e31837;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+[data-theme="dark"] article {
+    color: var(--text-primary);
+}
+[data-theme="dark"] section {
+    background-color: var(--bg-light);
+    border: 1px solid var(--border-color);
+}
+[data-theme="dark"] h2,
+[data-theme="dark"] h3,
+[data-theme="dark"] dt,
+[data-theme="dark"] a {
+    color: var(--text-primary);
+    border-color: var(--primary);
+}
+[data-theme="dark"] table {
+    background: var(--bg-light);
+}
+[data-theme="dark"] th,
+[data-theme="dark"] td {
+    border-color: var(--border-color);
+    color: var(--text-primary);
+}
+[data-theme="dark"] th {
+    background-color: var(--card-bg, #1f2937);
+}
+[data-theme="dark"] blockquote {
+    background-color: var(--bg-light);
+    color: var(--text-primary);
+}
+
+@media (max-width: 768px) {
+    table {
+        font-size: 0.9em;
+    }
+    
+    th, td {
+        padding: 8px;
+    }
+}

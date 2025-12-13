@@ -1,0 +1,298 @@
+.about-logo,
+header figure img {
+    transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    filter: drop-shadow(0 4px 12px rgba(0,0,0,0.1));
+}
+
+.about-logo:hover,
+header figure img:hover {
+    transform: rotate(-5deg) scale(1.1);
+    filter: drop-shadow(0 8px 24px rgba(255, 107, 53, 0.3));
+}
+
+.certificate {
+    position: relative;
+    padding: 3rem;
+    margin: 2rem 0;
+    background: 
+        linear-gradient(135deg, rgba(255, 255, 255, 0.65) 0%, rgba(255, 248, 245, 0.7) 100%),
+        url('/media/logos/pngtree-pizza-restaurant-creative-logo-png-image_5570350.png') center/30% no-repeat;
+    background-clip: padding-box;
+    border: 80px solid transparent;
+    border-image-source: url('/static/images/border_image.png');
+    border-image-slice: 30%;
+    border-image-repeat: round;
+    border-image-width: 40;
+    border-radius: 12px;
+    z-index: 1;
+    box-shadow: var(--shadow-lg);
+}
+
+.certificate::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(255, 107, 53, 0.05) 0%, rgba(247, 147, 30, 0.05) 100%);
+    border-radius: 12px;
+    z-index: -1;
+}
+
+.certificate blockquote {
+    position: relative;
+    z-index: 2;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2em;
+    line-height: 1.8;
+    text-align: center;
+    padding: 2rem;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 8px;
+    margin: 0;
+}
+
+.certificate footer cite {
+    display: block;
+    margin-top: 1rem;
+    font-style: italic;
+    color: var(--primary);
+    font-weight: 600;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 2rem 0;
+    background: var(--bg-white);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    
+}
+
+table caption {
+    font-weight: 700;
+    font-size: 1.5em;
+    padding: 1rem;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    color: white;
+    margin-bottom: 0;
+    text-align: left;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+thead {
+    background: linear-gradient(135deg, var(--text-dark) 0%, #34495e 100%);
+}
+
+thead th {
+    color: white;
+    padding: 1rem;
+    text-align: left;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.9em;
+    letter-spacing: 0.05em;
+}
+
+tbody tr {
+    transition: all 0.3s ease;
+    border-right: 1px solid;
+}
+
+tbody tr:hover {
+    background: rgba(255, 107, 53, 0.08);
+    transform: scale(1.01);
+}
+
+tbody td {
+    padding: 1rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+tbody tr:last-child td {
+    border-bottom: none;
+}
+
+pre {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    padding: 1.5rem;
+    border-radius: 8px;
+    white-space: pre-wrap;
+    font-family: 'Courier New', monospace;
+    font-size: 1rem;
+    line-height: 1.6;
+    border-left: 4px solid var(--primary);
+    box-shadow: var(--shadow-sm);
+    font-weight: 500;
+    color: var(--text-dark);
+}
+
+figure {
+    margin: 2rem 0;
+    text-align: center;
+    background: var(--bg-white);
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: var(--shadow-sm);
+}
+
+iframe {
+    max-width: 100%;
+    border: none;
+    border-radius: 8px;
+    box-shadow: var(--shadow-md);
+    transition: transform 0.3s ease;
+}
+
+iframe:hover {
+    transform: scale(1.02);
+}
+
+figcaption {
+    font-size: 0.9em;
+    color: var(--text-light);
+    margin-top: 0.75rem;
+    font-style: italic;
+}
+
+article section p:first-of-type::first-letter:not(.certificate, h1, h2, h3, h4),
+article section > p:first-child::first-letter {
+    font-size: 150%;
+    font-weight: 700;
+    color: var(--primary);
+    float: left;
+    line-height: 1;
+    margin: 0 0.15rem 0 0;
+    padding-top: 0.1rem;
+}
+
+ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+ul li {
+    padding: 1rem;
+    margin-bottom: 0.75rem;
+    background: linear-gradient(135deg, rgba(255, 107, 53, 0.05) 0%, rgba(255, 140, 97, 0.05) 100%);
+    border-left: 4px solid var(--primary);
+    border-radius: 6px;
+    transition: all 0.3s ease;
+}
+
+ul li:hover {
+    transform: translateX(8px);
+    box-shadow: var(--shadow-sm);
+}
+
+ul li::before {
+    content: "\2713\00A0";
+    color: var(--primary);
+    font-weight: bold;
+    margin-right: 0.5rem;
+}
+
+address {
+    font-style: normal;
+    background: linear-gradient(135deg, rgba(255, 107, 53, 0.05) 0%, rgba(255, 140, 97, 0.05) 100%);
+    padding: 1.5rem;
+    border-radius: 12px;
+    border-left: 4px solid var(--primary);
+    margin: 1.5rem 0;
+}
+
+address p {
+    margin: 0.75rem 0;
+}
+
+address strong {
+    color: var(--primary);
+    font-weight: 600;
+}
+
+section {
+    margin: 2rem 0;
+    padding: 2rem;
+    background: var(--bg-white);
+    border-radius: 12px;
+    box-shadow: var(--shadow-sm);
+}
+
+/* Тёмная тема */
+[data-theme="dark"] .certificate {
+    background: linear-gradient(135deg, rgba(24, 31, 45, 0.85) 0%, rgba(19, 26, 38, 0.9) 100%);
+    border-image-source: none;
+    border: 1px solid var(--border-color);
+}
+[data-theme="dark"] .certificate::before {
+    background: linear-gradient(135deg, rgba(255, 107, 53, 0.12) 0%, rgba(247, 147, 30, 0.1) 100%);
+}
+[data-theme="dark"] .certificate blockquote {
+    background: var(--bg-light);
+    color: var(--text-primary);
+}
+[data-theme="dark"] table {
+    background: var(--bg-light);
+    border-color: var(--border-color);
+}
+[data-theme="dark"] thead {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+}
+[data-theme="dark"] tbody td,
+[data-theme="dark"] tbody tr,
+[data-theme="dark"] tbody tr:hover {
+    color: var(--text-primary);
+    background: transparent;
+    border-color: var(--border-color);
+}
+[data-theme="dark"] pre {
+    background: var(--card-bg, #1f2937);
+    color: var(--text-primary);
+    border-color: var(--border-color);
+}
+[data-theme="dark"] figure {
+    background: var(--bg-light);
+    box-shadow: var(--shadow-sm);
+}
+[data-theme="dark"] figcaption {
+    color: var(--text-secondary);
+}
+[data-theme="dark"] ul li,
+[data-theme="dark"] address {
+    background: linear-gradient(135deg, rgba(255, 107, 53, 0.14) 0%, rgba(255, 140, 97, 0.1) 100%);
+    color: var(--text-primary);
+}
+[data-theme="dark"] ul li::before {
+    color: var(--primary);
+}
+[data-theme="dark"] section {
+    background: var(--bg-light);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+}
+
+@media (max-width: 768px) {
+    .certificate {
+        padding: 1.5rem;
+        border-width: 20px;
+    }
+    
+    .certificate blockquote {
+        font-size: 1em;
+        padding: 1rem;
+    }
+    
+    table {
+        font-size: 0.9em;
+    }
+    
+    thead th, tbody td {
+        padding: 0.75rem;
+    }
+}
+
+

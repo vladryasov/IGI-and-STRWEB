@@ -1,0 +1,193 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/home.css' %}">
+<link rel="stylesheet" href="{% static 'css/catalog.css' %}">
+<link rel="stylesheet" href="{% static 'css/slider.css' %}">
+{% endblock %}
+
+{% block title %}Главная - Pizzeria{% endblock %}
+{% block description %}Добро пожаловать в лучшую пиццерию города! Свежие ингредиенты, быстрая доставка, вкусная пицца на любой вкус.{% endblock %}
+
+{% block content %}
+<article class="main-content" itemscope itemtype="https://schema.org/Restaurant">
+    <!-- Логотип и баннер -->
+    <header>
+        <figure itemprop="logo" itemscope itemtype="https://schema.org/ImageObject">
+            <img src="/media/logos/pngtree-pizza-restaurant-creative-logo-png-image_5570350.png" alt="Логотип Pizzeria" width="200" height="200" itemprop="url">
+            <figcaption>Логотип нашей пиццерии</figcaption>
+        </figure>
+        
+        <section class="banner-section">
+            <h1 itemprop="name">Добро пожаловать в нашу пиццерию!</h1>
+            <p itemprop="description"><strong>Лучшая пицца в городе!</strong> Свежие ингредиенты, быстрая доставка, неповторимый вкус.</p>
+            
+            <!-- Слайдер -->
+            <div id="main-slider"></div>
+        </section>
+    </header>
+
+    {% if user.is_authenticated and user.userprofile.role == 'staff' or user.is_authenticated and user.userprofile.role == 'admin' %}
+    <div class="admin-panel">
+        <h3>Панель управления</h3>
+        <div class="admin-buttons">
+            <a href="{% url 'category_create' %}" class="btn">Добавить категорию</a>
+            <a href="{% url 'category_list' %}" class="btn">Управление категориями</a>
+            <a href="{% url 'pizza_create' %}" class="btn">Добавить пиццу</a>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Последняя новость -->
+    {% if context.latest_news %}
+    <section class="latest-news">
+        <h2>Последние новости</h2>
+        <article itemscope itemtype="https://schema.org/NewsArticle">
+            <h3 itemprop="headline">{{ context.latest_news.title }}</h3>
+            <p><time datetime="{{ context.latest_news.created_at|date:'Y-m-d' }}" itemprop="datePublished">{{ context.latest_news.created_at|date:'d.m.Y' }}</time></p>
+            <p itemprop="description">{{ context.latest_news.content|truncatewords:20 }}</p>
+            <a href="{% url 'news_detail' context.latest_news.slug %}" class="btn" aria-label="Читать полную новость" itemprop="url">Читать далее</a>
+        </article>
+    </section>
+    {% endif %}
+
+    
+
+    <!-- Каталог пицц -->
+    <section class="catalog-section">
+        <h2>Наш каталог пицц</h2>
+    {% if context.categories %}
+        {% for category in context.categories %}
+        <article class="category-section">
+            <header>
+                <h3>{{ category.name }}</h3>
+                {% if category.description %}
+                <p class="category-description">{{ category.description }}</p>
+                {% endif %}
+            </header>
+            
+            <div class="pizza-grid">
+                {% for pizza in category.pizza_set.all %}
+                <article class="pizza-card" itemscope itemtype="https://schema.org/Product">
+                    {% if pizza.image %}
+                    <figure itemprop="image" itemscope itemtype="https://schema.org/ImageObject">
+                        <img src="{{ pizza.image.url }}" alt="{{ pizza.name }}" class="pizza-image" itemprop="url">
+                        <figcaption>{{ pizza.name }}</figcaption>
+                    </figure>
+                    {% endif %}
+                    <h4 itemprop="name">{{ pizza.name }}</h4>
+                    <p class="pizza-description" itemprop="description">{{ pizza.description }}</p>
+                    <p class="pizza-price" itemprop="offers" itemscope itemtype="https://schema.org/Offer">
+                        от <strong itemprop="price">{{ pizza.base_price }}</strong> <span itemprop="priceCurrency" content="RUB">руб.</span>
+                    </p>
+                    <div class="pizza-actions">
+                        <a href="{% url 'pizza_detail' pizza.id %}" class="btn" aria-label="Подробнее о {{ pizza.name }}" itemprop="url">Подробнее</a>
+                        {% if user.is_authenticated %}
+                        <form method="post" action="{% url 'add_to_cart' pizza.id %}" class="add-to-cart-form">
+                            {% csrf_token %}
+                            <button type="submit" class="btn" aria-label="Добавить {{ pizza.name }} в корзину">В корзину</button>
+                        </form>
+                        {% endif %}
+                    </div>
+                </article>
+                {% empty %}
+                <p>В этой категории пока нет пицц.</p>
+                {% endfor %}
+            </div>
+        </article>
+        {% endfor %}
+    {% endif %}
+
+    {% if context.pizzas_without_category %}
+    <div class="category-section">
+        <h2>Другие пиццы</h2>
+        <div class="pizza-grid">
+            {% for pizza in context.pizzas_without_category %}
+            <div class="pizza-card" itemscope itemtype="https://schema.org/Product">
+                {% if pizza.image %}
+                <img src="{{ pizza.image.url }}" alt="{{ pizza.name }}" class="pizza-image" itemprop="image">
+                {% endif %}
+                <h3 itemprop="name">{{ pizza.name }}</h3>
+                <p class="pizza-description" itemprop="description">{{ pizza.description }}</p>
+                <p class="pizza-price" itemprop="offers" itemscope itemtype="https://schema.org/Offer">
+                    от <span itemprop="price">{{ pizza.base_price }}</span> <span itemprop="priceCurrency" content="RUB">руб.</span>
+                </p>
+                <div class="pizza-actions">
+                    <a href="{% url 'pizza_detail' pizza.id %}" class="btn" itemprop="url">Подробнее</a>
+                    {% if user.is_authenticated %}
+                    <form method="post" action="{% url 'add_to_cart' pizza.id %}" class="add-to-cart-form">
+                        {% csrf_token %}
+                        <button type="submit" class="btn">В корзину</button>
+                    </form>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    {% if not context.categories and not context.pizzas_without_category %}
+    <div class="empty-state">
+        <p>К сожалению, пока нет доступных пицц.</p>
+        {% if user.is_authenticated and user.userprofile.role == 'staff' or user.is_authenticated and user.userprofile.role == 'admin' %}
+        <p>Как администратор, вы можете добавить категории и пиццы через панель управления.</p>
+        {% endif %}
+    </div>
+    {% endif %}
+    </section>
+
+    <preloader class="preloader" role="img" aria-label="Загрузка"></preloader>
+
+    <section class="pizza-animation" aria-label="Анимация кусочка пиццы">
+        <div class="pizza-slice">
+            <span class="pizza-eye left-eye"></span>
+            <span class="pizza-eye right-eye"></span>
+            <span class="pizza-arm left-arm"></span>
+            <span class="pizza-arm right-arm"></span>
+            <span class="pizza-leg left-leg"></span>
+            <span class="pizza-leg right-leg"></span>
+        </div>
+        <div class="brand-name">Pizzeria</div>
+    </section>
+</article>
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/slider.js' %}"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const isAuth = "{{ user.is_authenticated|yesno:'true,false' }}" === "true";
+    const userRole = "{% if user.is_authenticated %}{{ user.userprofile.role }}{% else %}{% endif %}";
+    const isAdmin = isAuth && userRole === "admin";
+    const slider = new ImageSlider('main-slider', {
+        loop: true,
+        navs: true,
+        pags: true,
+        auto: true,
+        stopMouseHover: true,
+        delay: 5,
+        showSettings: isAdmin,  // Показывать настройки только админу
+        slides: [
+            {
+                image: '/media/pizzas/images.png',
+                caption: 'Пицца Маргарита - классика жанра',
+                url: '{% url "pizza_list" %}'
+            },
+            {
+                image: '/media/pizzas/images_Sa948q5.png',
+                caption: 'Пицца Пепперони - острая и сочная',
+                url: '{% url "pizza_list" %}'
+            },
+            {
+                image: '/media/pizzas/images.png',
+                caption: 'Пицца Четыре сыра - для любителей сыра',
+                url: '{% url "pizza_list" %}'
+            }
+        ]
+    });
+});
+</script>
+{% endblock %}

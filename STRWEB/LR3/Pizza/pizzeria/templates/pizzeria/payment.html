@@ -1,0 +1,163 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/payment.css' %}">
+{% endblock %}
+
+{% block title %}Оплата заказа - Pizzeria{% endblock %}
+{% block description %}Оплата заказа в нашей пиццерии. Безопасные способы оплаты.{% endblock %}
+
+{% block content %}
+<article>
+    <header>
+        <h1>Оплата заказа</h1>
+        <p>Выберите удобный способ оплаты для вашего заказа.</p>
+    </header>
+
+    {% if order %}
+    <section>
+        <h2>Детали заказа</h2>
+        <table>
+            <caption>Информация о заказе №{{ order.id }}</caption>
+            <thead>
+                <tr>
+                    <th scope="col">Товар</th>
+                    <th scope="col">Размер</th>
+                    <th scope="col">Количество</th>
+                    <th scope="col">Цена за единицу</th>
+                    <th scope="col">Сумма</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in order.orderitem_set.all %}
+                <tr>
+                    <td>{{ item.pizza.name }}</td>
+                    <td>{{ item.size.name }}</td>
+                    <td>{{ item.quantity }}</td>
+                    <td>{{ item.price }} руб.</td>
+                    <td>{{ item.price|multiply:item.quantity }} руб.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="4"><strong>Итого к оплате:</strong></td>
+                    <td><strong>{{ order.total_price }} руб.</strong></td>
+                </tr>
+            </tfoot>
+        </table>
+    </section>
+
+    <section>
+        <h2>Способы оплаты</h2>
+        
+        <form method="post" action="{% url 'checkout' %}">
+            {% csrf_token %}
+            
+            <fieldset>
+                <legend>Выберите способ оплаты</legend>
+                
+                <div>
+                    <input type="radio" id="cash" name="payment_method" value="cash" checked>
+                    <label for="cash">Наличными при получении</label>
+                </div>
+                
+                <div>
+                    <input type="radio" id="card" name="payment_method" value="card">
+                    <label for="card">Банковской картой</label>
+                </div>
+                
+                <div>
+                    <input type="radio" id="online" name="payment_method" value="online">
+                    <label for="online">Онлайн оплата</label>
+                </div>
+            </fieldset>
+
+            <fieldset>
+                <legend>Способ получения</legend>
+                
+                <div>
+                    <input type="radio" id="delivery" name="delivery_method" value="delivery" checked>
+                    <label for="delivery">Доставка</label>
+                </div>
+                
+                <div>
+                    <input type="radio" id="pickup" name="delivery_method" value="pickup">
+                    <label for="pickup">Самовывоз</label>
+                </div>
+            </fieldset>
+
+            <div>
+                <label for="delivery_address">Адрес доставки:</label>
+                <textarea id="delivery_address" name="delivery_address" rows="3" cols="50" placeholder="Укажите адрес доставки"></textarea>
+            </div>
+
+            <div>
+                <label for="special_instructions">Особые пожелания:</label>
+                <textarea id="special_instructions" name="special_instructions" rows="3" cols="50" placeholder="Дополнительные пожелания к заказу"></textarea>
+            </div>
+
+            <div>
+                <label for="phone">Контактный телефон:</label>
+                <input type="tel" id="phone" name="phone" pattern="\+375\s\(29\)\s\d{3}-\d{2}-\d{2}" placeholder="+375 (29) 123-45-67" required>
+            </div>
+
+            <div>
+                <label for="email">Email для уведомлений:</label>
+                <input type="email" id="email" name="email" placeholder="example@email.com">
+            </div>
+
+            <div>
+                <label>
+                    <input type="checkbox" name="agree_terms" required>
+                    Я согласен с <a href="{% url 'privacy' %}" target="_blank">условиями обработки персональных данных</a>
+                </label>
+            </div>
+
+            <div>
+                <button type="submit" class="btn">Подтвердить заказ</button>
+                <a href="{% url 'cart' %}" class="btn btn-secondary">Вернуться в корзину</a>
+            </div>
+        </form>
+    </section>
+
+    <section>
+        <h2>Информация о доставке</h2>
+        <dl>
+            <dt><strong>Время доставки:</strong></dt>
+            <dd>30-60 минут в зависимости от загруженности</dd>
+            
+            <dt><strong>Минимальная сумма заказа:</strong></dt>
+            <dd>20 рублей</dd>
+            
+            <dt><strong>Стоимость доставки:</strong></dt>
+            <dd>Бесплатно при заказе от 30 рублей</dd>
+            
+            <dt><strong>Зона доставки:</strong></dt>
+            <dd>В пределах города Минска</dd>
+        </dl>
+    </section>
+
+    {% else %}
+    <section>
+        <p>Заказ не найден. Пожалуйста, <a href="{% url 'cart' %}">перейдите в корзину</a> для оформления заказа.</p>
+    </section>
+    {% endif %}
+
+    <!-- Контактная информация -->
+    <section>
+        <h2>Нужна помощь?</h2>
+        <p>Если у вас возникли вопросы по оплате или доставке, свяжитесь с нами:</p>
+        <address>
+            <p><strong>Телефон:</strong> <a href="tel:+375291234567">+375 (29) 123-45-67</a></p>
+            <p><strong>Email:</strong> <a href="mailto:support@pizzeria.by">support@pizzeria.by</a></p>
+            <p><strong>Время работы:</strong> Ежедневно с 10:00 до 23:00</p>
+        </address>
+    </section>
+</article>
+
+
+{% endblock %}
+
+

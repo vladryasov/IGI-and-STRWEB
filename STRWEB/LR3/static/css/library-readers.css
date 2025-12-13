@@ -1,0 +1,213 @@
+.library-readers-container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 2rem;
+}
+
+.controls-section {
+    background: var(--bg-white, #fff);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.control-buttons {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.5rem;
+}
+
+.search-section {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.search-section input {
+    flex: 1;
+    padding: 0.75rem;
+    border: 2px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+}
+
+.add-reader-form {
+    background: var(--bg-white, #fff);
+    border-radius: 12px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.add-reader-form h3 {
+    margin-top: 0;
+    color: var(--primary, #ff6b35);
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.form-group label {
+    font-weight: 600;
+    color: var(--text-dark, #333);
+}
+
+.form-group input,
+.form-group select {
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+}
+
+.readers-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.reader-card {
+    background: var(--bg-white, #fff);
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.reader-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+    border-color: var(--primary-light, #ff8c61);
+}
+
+.reader-card.vip-reader {
+    border-left: 4px solid var(--primary, #ff6b35);
+    background: linear-gradient(135deg, rgba(255, 107, 53, 0.05) 0%, rgba(255, 140, 97, 0.05) 100%);
+}
+
+.reader-card.oldest-highlight {
+    border: 3px solid #28a745;
+    background: linear-gradient(135deg, rgba(40, 167, 69, 0.1) 0%, rgba(40, 167, 69, 0.05) 100%);
+    box-shadow: 0 4px 20px rgba(40, 167, 69, 0.3);
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.02);
+    }
+}
+
+.reader-card h4 {
+    margin-top: 0;
+    color: var(--primary, #ff6b35);
+    border-bottom: 2px solid var(--primary-light, #ff8c61);
+    padding-bottom: 0.5rem;
+}
+
+.reader-card p {
+    margin: 0.5rem 0;
+    color: var(--text-light, #666);
+}
+
+.result-section {
+    margin: 2rem 0;
+}
+
+.oldest-reader-card,
+.search-result,
+.avg-result {
+    background: var(--bg-white, #fff);
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.oldest-reader-card h3 {
+    margin-top: 0;
+    color: var(--primary, #ff6b35);
+}
+
+.search-result {
+    border-left: 4px solid var(--primary, #ff6b35);
+}
+
+.search-result.error {
+    border-left: 4px solid #dc3545;
+    color: #721c24;
+}
+
+.search-result.success {
+    border-left: 4px solid #28a745;
+    color: #155724;
+}
+
+.highlight {
+    background: #fff3cd;
+    padding: 1rem;
+    border-radius: 8px;
+    font-weight: 600;
+    color: #856404;
+    margin-top: 1rem;
+}
+
+.avg-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--primary, #ff6b35);
+    text-align: center;
+}
+
+.btn {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-primary {
+    background: var(--primary, #ff6b35);
+    color: white;
+}
+
+.btn-primary:hover {
+    background: var(--primary-dark, #e55a2b);
+}
+
+.btn-secondary {
+    background: #6c757d;
+    color: white;
+}
+
+.btn-secondary:hover {
+    background: #5a6268;
+}
+
+.btn-success {
+    background: #28a745;
+    color: white;
+}
+
+.btn-success:hover {
+    background: #218838;
+}
+

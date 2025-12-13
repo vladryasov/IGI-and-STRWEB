@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Геолокация - Pizzeria{% endblock %}
+{% block description %}Определение местоположения пользователя{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/geolocation.css' %}">
+{% endblock %}
+
+{% block content %}
+<article class="geolocation-container">
+    <header>
+        <h1>Геолокация</h1>
+        <p>Определение вашего местоположения и отображение на карте</p>
+    </header>
+
+    <section class="geolocation-section">
+        <button id="get-location-btn" class="btn btn-primary">Определить местоположение</button>
+        <div id="geolocation-result" class="geolocation-result">
+            <!-- Результат появится здесь -->
+        </div>
+        <div id="map-container" class="map-container">
+            <!-- Карта появится здесь -->
+        </div>
+    </section>
+</article>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/geolocation-api.js' %}"></script>
+{% endblock %}
+

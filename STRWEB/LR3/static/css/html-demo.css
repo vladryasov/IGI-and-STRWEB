@@ -1,0 +1,362 @@
+.html-demo {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+section {
+    margin-bottom: 40px;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+}
+
+h2 {
+    color: #e31837;
+    border-bottom: 2px solid #e31837;
+    padding-bottom: 10px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: left;
+}
+
+th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+}
+
+caption {
+    font-weight: bold;
+    margin-bottom: 10px;
+    text-align: left;
+}
+
+fieldset {
+    border: 1px solid #ddd;
+    padding: 15px;
+    margin: 15px 0;
+}
+
+legend {
+    font-weight: bold;
+    padding: 0 10px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+input, select, textarea {
+    width: 100%;
+    max-width: 400px;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+input[type="checkbox"], input[type="radio"] {
+    width: auto;
+    margin-right: 8px;
+}
+
+.checkbox-group, .radio-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.form-actions {
+    margin-top: 20px;
+}
+
+.html-demo .btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-right: 10px;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.html-demo .btn-primary {
+    background-color: #e31837;
+    color: white;
+}
+
+.html-demo .btn-secondary {
+    background-color: #6c757d;
+    color: white;
+}
+
+.html-demo .btn-info {
+    background-color: #17a2b8;
+    color: white;
+}
+
+.html-demo .btn:hover {
+    opacity: 0.8;
+}
+
+figure {
+    margin: 20px 0;
+    text-align: center;
+}
+
+figcaption {
+    font-size: 0.9em;
+    color: #666;
+    margin-top: 5px;
+}
+
+video, audio {
+    max-width: 100%;
+}
+
+iframe {
+    max-width: 100%;
+    border: none;
+}
+
+.horizontal-nav ul {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    gap: 20px;
+}
+
+.horizontal-nav a {
+    text-decoration: none;
+    color: #e31837;
+    padding: 10px 15px;
+    border: 1px solid #e31837;
+    border-radius: 4px;
+}
+
+.horizontal-nav a:hover {
+    background-color: #e31837;
+    color: white;
+}
+
+.vertical-nav ul {
+    list-style: none;
+    padding: 0;
+    width: 200px;
+}
+
+.vertical-nav li {
+    margin-bottom: 5px;
+}
+
+.vertical-nav a {
+    display: block;
+    text-decoration: none;
+    color: #e31837;
+    padding: 10px 15px;
+    border: 1px solid #e31837;
+    border-radius: 4px;
+}
+
+.vertical-nav a:hover {
+    background-color: #e31837;
+    color: white;
+}
+
+pre {
+    background-color: #f4f4f4;
+    padding: 15px;
+    border-radius: 5px;
+    white-space: pre-wrap;
+    font-family: monospace;
+    overflow-x: auto;
+}
+
+code {
+    font-family: monospace;
+    background-color: #f4f4f4;
+    padding: 2px 4px;
+    border-radius: 3px;
+}
+
+blockquote {
+    border-left: 4px solid #e31837;
+    padding-left: 20px;
+    margin: 20px 0;
+    font-style: italic;
+    background-color: white;
+    padding: 15px 20px;
+}
+
+/* Тёмная тема */
+[data-theme="dark"] .html-demo {
+    color: var(--text-primary);
+}
+[data-theme="dark"] section {
+    background-color: var(--bg-light);
+    border: 1px solid var(--border-color);
+}
+[data-theme="dark"] h2 {
+    color: var(--text-primary);
+    border-color: var(--primary);
+}
+[data-theme="dark"] table {
+    background: var(--bg-light);
+}
+[data-theme="dark"] th, [data-theme="dark"] td {
+    border-color: var(--border-color);
+    color: var(--text-primary);
+}
+[data-theme="dark"] th {
+    background-color: var(--card-bg, #1f2937);
+}
+[data-theme="dark"] fieldset {
+    border-color: var(--border-color);
+}
+[data-theme="dark"] legend,
+[data-theme="dark"] label,
+[data-theme="dark"] figcaption,
+[data-theme="dark"] dt,
+[data-theme="dark"] dd,
+[data-theme="dark"] li,
+[data-theme="dark"] p {
+    color: var(--text-primary);
+}
+[data-theme="dark"] input,
+[data-theme="dark"] select,
+[data-theme="dark"] textarea {
+    background: var(--card-bg, #1f2937);
+    color: var(--text-primary);
+    border-color: var(--border-color);
+}
+[data-theme="dark"] .horizontal-nav a,
+[data-theme="dark"] .vertical-nav a {
+    color: var(--primary-light);
+    border-color: var(--primary);
+}
+[data-theme="dark"] .horizontal-nav a:hover,
+[data-theme="dark"] .vertical-nav a:hover {
+    background-color: var(--primary);
+    color: #fff;
+}
+[data-theme="dark"] pre,
+[data-theme="dark"] code {
+    background-color: var(--card-bg, #1f2937);
+    color: var(--text-primary);
+}
+[data-theme="dark"] blockquote {
+    background-color: var(--bg-light);
+    color: var(--text-primary);
+}
+[data-theme="dark"] #unique-element {
+    background-color: var(--bg-light);
+    border-color: var(--border-color);
+}
+[data-theme="dark"] .multicolumn {
+    column-rule: 1px solid var(--border-color);
+}
+
+dl {
+    margin: 20px 0;
+}
+
+dt {
+    font-weight: bold;
+    margin-top: 15px;
+    margin-bottom: 5px;
+}
+
+dd {
+    margin-left: 0;
+    margin-bottom: 15px;
+}
+
+ul, ol {
+    padding-left: 20px;
+}
+
+li {
+    margin-bottom: 5px;
+}
+
+abbr {
+    text-decoration: underline;
+    text-decoration-style: dotted;
+}
+
+abbr:hover {
+    cursor: help;
+}
+
+mark {
+    background-color: #ffeb3b;
+    padding: 2px 4px;
+}
+
+.container-demo, .span-demo {
+    margin: 20px 0;
+}
+
+#unique-element {
+    background-color: #e8f5e8;
+    padding: 15px;
+    border-radius: 5px;
+    border: 1px solid #4caf50;
+}
+
+.multicolumn {
+    column-count: 3;
+    column-gap: 24px;
+    column-rule: 1px solid #ddd;
+}
+
+.multicolumn p {
+    break-inside: avoid;
+    margin: 0 0 1rem;
+}
+
+@media (max-width: 992px) {
+    .multicolumn {
+        column-count: 2;
+    }
+}
+
+@media (max-width: 600px) {
+    .multicolumn {
+        column-count: 1;
+        column-rule: none;
+    }
+}
+
+@media (max-width: 768px) {
+    .horizontal-nav ul {
+        flex-direction: column;
+    }
+    
+    .checkbox-group, .radio-group {
+        flex-direction: column;
+    }
+    
+    table {
+        font-size: 0.9em;
+    }
+    
+    th, td {
+        padding: 8px;
+    }
+}

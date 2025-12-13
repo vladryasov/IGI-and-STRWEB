@@ -1,0 +1,377 @@
+.pizza-detail {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.pizza-info {
+    display: flex;
+    gap: 30px;
+    margin-bottom: 40px;
+    flex-wrap: wrap;
+}
+
+.pizza-image-container {
+    flex: 0 0 500px;
+}
+
+.pizza-image {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.pizza-content {
+    flex: 1;
+    min-width: 300px;
+}
+
+.pizza-details table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+}
+
+.pizza-details th, .pizza-details td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: left;
+}
+
+.pizza-details th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+    width: 30%;
+}
+
+.category-badge {
+    display: inline-block;
+    background-color: #e31837;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.8em;
+    margin-right: 5px;
+}
+
+.rating {
+    color: #e31837;
+    font-weight: bold;
+}
+
+.rating-count {
+    color: #666;
+    font-size: 0.9em;
+}
+
+.order-section {
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    margin: 20px 0;
+}
+
+fieldset {
+    border: 1px solid #ddd;
+    padding: 15px;
+    margin: 15px 0;
+}
+
+legend {
+    font-weight: bold;
+    padding: 0 10px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+select, input[type="number"] {
+    width: 100%;
+    max-width: 300px;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.price-calculation {
+    background-color: #e8f5e8;
+    padding: 10px;
+    border-radius: 4px;
+    margin: 15px 0;
+}
+
+[data-theme="dark"] .price-calculation {
+    background-color: var(--card-bg, #1f2937);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+}
+
+.form-actions {
+    margin-top: 20px;
+}
+
+.pizza-detail .btn {
+    display: inline-block;
+    padding: 12px 24px;
+    background-color: #e31837;
+    color: white;
+    text-decoration: none;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-right: 10px;
+    font-size: 14px;
+}
+
+.pizza-detail .btn:hover {
+    background-color: #c41230;
+}
+
+.pizza-detail .btn-secondary {
+    background-color: #6c757d;
+}
+
+.pizza-detail .btn-secondary:hover {
+    background-color: #5a6268;
+}
+
+.login-prompt {
+    background-color: #fff3cd;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+    margin: 20px 0;
+}
+
+.reviews-section {
+    margin-top: 40px;
+}
+
+.review-form-container {
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 30px;
+}
+
+.review-form textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    resize: vertical;
+}
+
+.reviews-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.review {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    border-left: 4px solid #e31837;
+}
+
+.review-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.review-meta {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.review-rating {
+    color: #e31837;
+    font-weight: bold;
+}
+
+.review-date {
+    color: #666;
+    font-size: 0.9em;
+}
+
+.review-text {
+    line-height: 1.6;
+    margin: 0;
+}
+
+.no-reviews {
+    text-align: center;
+    color: #666;
+    padding: 40px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+}
+
+.additional-info {
+    margin-top: 40px;
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+.additional-info table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+}
+
+.additional-info th, .additional-info td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: left;
+}
+
+.additional-info th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+}
+
+blockquote {
+    border-left: 4px solid #e31837;
+    padding-left: 20px;
+    margin: 20px 0;
+    font-style: italic;
+    background-color: white;
+    padding: 15px 20px;
+}
+
+/* Тёмная тема */
+[data-theme="dark"] .pizza-detail {
+    background: var(--bg-page, #0b0f18);
+    color: var(--text-primary);
+}
+[data-theme="dark"] .pizza-info .pizza-image-container figcaption,
+[data-theme="dark"] .pizza-info h1,
+[data-theme="dark"] .pizza-info p,
+[data-theme="dark"] .pizza-details,
+[data-theme="dark"] .pizza-details th,
+[data-theme="dark"] .pizza-details td,
+[data-theme="dark"] .reviews-section h2,
+[data-theme="dark"] .reviews-section h3 {
+    color: var(--text-primary);
+}
+[data-theme="dark"] .order-section,
+[data-theme="dark"] .reviews-section,
+[data-theme="dark"] .review-form-container,
+[data-theme="dark"] .reviews-list .review,
+[data-theme="dark"] .login-prompt,
+[data-theme="dark"] .no-reviews {
+    background: var(--bg-light);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-sm);
+}
+[data-theme="dark"] .order-section h2,
+[data-theme="dark"] .review-form-container h3,
+[data-theme="dark"] .reviews-list h4,
+[data-theme="dark"] .review-text,
+[data-theme="dark"] .reviews-section h2 {
+    color: var(--text-primary);
+}
+[data-theme="dark"] .review-meta,
+[data-theme="dark"] .review-date,
+[data-theme="dark"] .review-rating {
+    color: var(--text-secondary);
+}
+[data-theme="dark"] .order-section select,
+[data-theme="dark"] .order-section input,
+[data-theme="dark"] .review-form textarea,
+[data-theme="dark"] .review-form select {
+    background: var(--card-bg, #1f2937);
+    color: var(--text-primary);
+    border-color: var(--border-color);
+}
+[data-theme="dark"] .additional-info {
+    background-color: var(--bg-light);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+}
+[data-theme="dark"] .additional-info th {
+    background-color: var(--card-bg, #1f2937);
+    color: var(--text-primary);
+    border-color: var(--border-color);
+}
+[data-theme="dark"] .additional-info td {
+    border-color: var(--border-color);
+    color: var(--text-primary);
+}
+[data-theme="dark"] blockquote {
+    background-color: var(--bg-light);
+    color: var(--text-primary);
+    border-color: var(--primary);
+}
+[data-theme="dark"] .pizza-details table {
+    background: var(--bg-light);
+}
+[data-theme="dark"] .pizza-details th {
+    background: var(--bg-light);
+    border-color: var(--border-color);
+}
+[data-theme="dark"] .pizza-details td {
+    border-color: var(--border-color);
+}
+[data-theme="dark"] .additional-info {
+    background-color: var(--bg-light);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+}
+[data-theme="dark"] .additional-info th {
+    background-color: var(--card-bg, #1f2937);
+    color: var(--text-primary);
+    border-color: var(--border-color);
+}
+[data-theme="dark"] .additional-info td {
+    border-color: var(--border-color);
+    color: var(--text-primary);
+}
+[data-theme="dark"] blockquote {
+    background-color: var(--bg-light);
+    color: var(--text-primary);
+}
+
+ul {
+    padding-left: 20px;
+}
+
+li {
+    margin-bottom: 5px;
+}
+
+@media (max-width: 768px) {
+    .pizza-info {
+        flex-direction: column;
+    }
+    
+    .pizza-image-container {
+        flex: none;
+    }
+    
+    .review-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    
+    .review-meta {
+        flex-direction: column;
+        gap: 5px;
+    }
+}
