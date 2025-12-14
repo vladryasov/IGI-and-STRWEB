@@ -1,0 +1,14 @@
+{
+  "name": "pizzeria-mern-lr4",
+  "private": true,
+  "version": "1.0.0",
+  "description": "MERN pizzeria (LR4): Node/Express/Mongo + React + Google Vision + OpenAI",
+  "scripts": {
+    "install:all": "npm --prefix server i && npm --prefix client i",
+    "dev": "npm --prefix server run dev",
+    "dev:client": "npm --prefix client start",
+    "seed": "npm --prefix server run seed"
+  }
+}
+
+
