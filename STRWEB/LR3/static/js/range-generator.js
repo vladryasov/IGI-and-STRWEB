@@ -196,9 +196,28 @@ class RangeGenerator {
         // Отображение текущего значения слайдера
         document.querySelectorAll('.range-preview-input').forEach(range => {
             range.addEventListener('input', (e) => {
-                const valueDisplay = document.getElementById(`value-${e.target.id}`);
+                const id = e.target.id;
+                const newValue = e.target.value;
+
+                const valueDisplay = document.getElementById(`value-${id}`);
                 if (valueDisplay) {
-                    valueDisplay.textContent = e.target.value;
+                    valueDisplay.textContent = newValue;
+                }
+
+                // ВАЖНО: синхронизируем значение предпросмотра с моделью,
+                // иначе при переключении disabled/любых других атрибутов
+                // предпросмотр откатывается к сохранённому range.value
+                const rangeModel = this.ranges.find(r => r.id === id);
+                if (rangeModel) {
+                    rangeModel.value = parseFloat(newValue);
+
+                    // Обновляем поле "value" в настройках
+                    const valueInput = document.querySelector(`.range-value[data-id="${id}"]`);
+                    if (valueInput) {
+                        valueInput.value = newValue;
+                    }
+
+                    this.saveToStorage();
                 }
             });
         });
@@ -249,6 +268,22 @@ class RangeGenerator {
                 preview.disabled = true;
             } else {
                 preview.disabled = false;
+            }
+
+            // Синхронизируем отображаемое значение с фактическим (браузер может "зажать" value в min/max)
+            const actualValue = parseFloat(preview.value);
+            if (!Number.isNaN(actualValue)) {
+                range.value = actualValue;
+            }
+
+            const valueDisplay = document.getElementById(`value-${id}`);
+            if (valueDisplay) {
+                valueDisplay.textContent = String(preview.value);
+            }
+
+            const valueInput = document.querySelector(`.range-value[data-id="${id}"]`);
+            if (valueInput) {
+                valueInput.value = String(preview.value);
             }
         }
 

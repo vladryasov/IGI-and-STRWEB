@@ -32,32 +32,37 @@
 
     <section id="add-employee-form" class="add-employee-form" hidden>
         <h3>Добавить сотрудника</h3>
-        <form id="employee-form" novalidate>
+        <form id="employee-form" novalidate enctype="multipart/form-data">
+            {% csrf_token %}
             <div>
                 <label for="form-name">ФИО:</label>
-                <input type="text" id="form-name" required>
+                <input type="text" id="form-name" name="name" required>
             </div>
             <div>
                 <label for="form-position">Должность:</label>
-                <input type="text" id="form-position" required>
+                <input type="text" id="form-position" name="position" required>
             </div>
             <div>
                 <label for="form-photo">Фото (URL):</label>
-                <input type="text" id="form-photo" required>
-                <div id="photo-validation" class="validation-message" aria-live="polite"></div>
+                <input type="file" id="form-photo" name="photo" accept="image/*" required>
+            </div>
+            <div>
+                <label for="form-url">URL:</label>
+                <input type="text" id="form-url" name="url" required>
+                <div id="url-validation" class="validation-message" aria-live="polite"></div>
             </div>
             <div>
                 <label for="form-phone">Телефон:</label>
-                <input type="text" id="form-phone" required>
+                <input type="text" id="form-phone" name="phone" required>
                 <div id="phone-validation" class="validation-message" aria-live="polite"></div>
             </div>
             <div>
                 <label for="form-email">Email:</label>
-                <input type="email" id="form-email" required>
+                <input type="email" id="form-email" name="email" required>
             </div>
             <div>
                 <label for="form-description">Описание работы:</label>
-                <textarea id="form-description" required></textarea>
+                <textarea id="form-description" name="description" required></textarea>
             </div>
             <div class="form-actions">
                 <button type="submit" id="submit-employee-btn" class="btn" disabled>Добавить в таблицу</button>
@@ -75,6 +80,7 @@
                         <th scope="col" class="sortable" data-column="name">ФИО <span class="sort-icon" data-icon="name"></span></th>
                         <th scope="col" class="sortable" data-column="position">Должность <span class="sort-icon" data-icon="position"></span></th>
                         <th scope="col">Фото</th>
+                        <th scope="col" class="sortable" data-column="url">URL <span class="sort-icon" data-icon="url"></span></th>
                         <th scope="col" class="sortable" data-column="phone">Телефон <span class="sort-icon" data-icon="phone"></span></th>
                         <th scope="col" class="sortable" data-column="email">Email <span class="sort-icon" data-icon="email"></span></th>
                         <th scope="col" class="sortable" data-column="description">Описание работы <span class="sort-icon" data-icon="description"></span></th>
@@ -82,7 +88,7 @@
                 </thead>
                 <tbody id="employees-tbody">
                     <tr class="placeholder-row">
-                        <td colspan="7">Данные загружаются...</td>
+                        <td colspan="8">Данные загружаются...</td>
                     </tr>
                 </tbody>
             </table>

@@ -95,14 +95,47 @@
             color: var(--text-primary);
             border-color: var(--border-color);
         }
+        [data-theme="dark"] .form-group input::placeholder {
+            color: var(--text-muted);
+            opacity: 1;
+        }
+        [data-theme="dark"] .form-group input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.25);
+        }
+        [data-theme="dark"] .form-group[aria-invalid="true"] input {
+            border-color: #c82333;
+        }
         [data-theme="dark"] .error-messages {
             background-color: rgba(220, 53, 69, 0.18);
             border-color: #c82333;
             color: #f8c6cc;
         }
+        [data-theme="dark"] .error {
+            color: #ff9aa5;
+        }
         [data-theme="dark"] .login-form .btn-primary {
             background-color: var(--primary);
             color: #fff;
+        }
+        [data-theme="dark"] .btn-outline {
+            color: var(--text-primary);
+            border-color: var(--border-color);
+        }
+        [data-theme="dark"] .btn-outline:hover {
+            background-color: var(--card-bg);
+            color: var(--text-primary);
+            border-color: var(--primary);
+        }
+        [data-theme="dark"] section {
+            background-color: var(--bg-light);
+            border: 1px solid var(--border-color);
+        }
+        [data-theme="dark"] section h2 {
+            color: var(--text-primary);
+        }
+        [data-theme="dark"] section p {
+            color: var(--text-secondary);
         }
 
         .login-form .btn {
@@ -138,13 +171,13 @@
             background-color: #218838;
         }
 
-        .login-form .btn-outline {
+        .btn-outline {
             background-color: transparent;
             color: #333;
             border: 2px solid #333;
         }
 
-        .login-form .btn-outline:hover {
+        .btn-outline:hover {
             background-color: #333;
             color: white;
         }
@@ -164,7 +197,8 @@
         section {
             margin-bottom: 40px;
             padding: 20px;
-            background-color: #f9f9f9;
+            background-color: var(--bg-white);
+            border: 1px solid var(--border-color);
             border-radius: 8px;
         }
 
@@ -174,7 +208,7 @@
         }
 
         section p {
-            color: #666;
+            color: var(--text-light);
             line-height: 1.6;
             margin-bottom: 15px;
         }

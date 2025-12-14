@@ -1,8 +1,48 @@
 from django.contrib import admin
+from django import forms
 from .models import PizzaCategory, PizzaSize, Pizza, Courier, Order, OrderItem, PromoCode, Review, Vacancy, UserProfile, PickupPoint, Coupon, OrderStatistics, Contact, News, Partner, DictionaryTerm, CompanyInfo, CompanyHistory, Employee
+from .validators import normalize_phone
+
+
+class PhoneNormalizeModelForm(forms.ModelForm):
+    """
+    Базовая ModelForm, которая позволяет вводить телефон в «красивом» формате,
+    но сохраняет в БД канонический вид +375XXYYYYYYY (7 цифр основной части).
+    """
+    phone = forms.CharField(required=False, max_length=32)
+
+    def clean_phone(self):
+        phone = self.cleaned_data.get('phone')
+        if not phone:
+            return phone
+        return normalize_phone(phone)
+
+
+class UserProfileAdminForm(PhoneNormalizeModelForm):
+    class Meta:
+        model = UserProfile
+        fields = '__all__'
+
+
+class EmployeeAdminForm(PhoneNormalizeModelForm):
+    class Meta:
+        model = Employee
+        fields = '__all__'
+
+class ContactAdminForm(PhoneNormalizeModelForm):
+    class Meta:
+        model = Contact
+        fields = '__all__'
+
+
+class PickupPointAdminForm(PhoneNormalizeModelForm):
+    class Meta:
+        model = PickupPoint
+        fields = '__all__'
 
 @admin.register(UserProfile)
 class UserProfileAdmin(admin.ModelAdmin):
+    form = UserProfileAdminForm
     list_display = ('user', 'role', 'phone', 'email', 'age')
     list_filter = ('role',)
     search_fields = ('user__username', 'phone', 'email')
@@ -54,6 +94,7 @@ class VacancyAdmin(admin.ModelAdmin):
 
 @admin.register(PickupPoint)
 class PickupPointAdmin(admin.ModelAdmin):
+    form = PickupPointAdminForm
     list_display = ('address', 'working_hours', 'phone', 'is_active')
     list_filter = ('is_active',)
     search_fields = ('address', 'phone')
@@ -71,6 +112,7 @@ class OrderStatisticsAdmin(admin.ModelAdmin):
 
 @admin.register(Contact)
 class ContactAdmin(admin.ModelAdmin):
+    form = ContactAdminForm
     list_display = ('address', 'phone', 'email', 'working_hours', 'is_main')
     list_filter = ('is_main',)
     search_fields = ('address', 'phone', 'email')
@@ -113,6 +155,7 @@ class CompanyHistoryAdmin(admin.ModelAdmin):
 
 @admin.register(Employee)
 class EmployeeAdmin(admin.ModelAdmin):
+    form = EmployeeAdminForm
     list_display = ('name', 'position', 'phone', 'email', 'is_active')
     list_filter = ('is_active', 'position')
     search_fields = ('name', 'position', 'email')

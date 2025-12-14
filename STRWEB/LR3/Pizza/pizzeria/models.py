@@ -3,7 +3,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
 from django.core.validators import MinValueValidator
-from .validators import validate_phone
+from .validators import validate_phone as validate_phone_impl
 from django.db.models.signals import post_save
 from django.core.exceptions import ValidationError
 from django.dispatch import receiver
@@ -13,9 +13,11 @@ from datetime import date
 
 # Валидатор телефона
 def validate_phone(value):
-    pattern = r'^\+375(17|25|29|33|44)\d{7}$'
-    if not re.match(pattern, value):
-        raise ValidationError('Номер телефона должен быть в формате +375XXYYYYYYY')
+    """
+    Оставляем функцию в models.py, потому что на неё ссылаются старые миграции
+    (Pizza.pizzeria.models.validate_phone). Реальная логика вынесена в validators.py.
+    """
+    return validate_phone_impl(value)
 
 # Роли пользователя
 ROLE_CHOICES = (
@@ -347,10 +349,12 @@ class CompanyHistory(models.Model):
 class Employee(models.Model):
     name = models.CharField(max_length=100, verbose_name='Имя')
     position = models.CharField(max_length=100, verbose_name='Должность')
-    photo = models.ImageField(upload_to='employees/', verbose_name='Фото')
+    photo = models.ImageField(upload_to='employees/', blank=True, null=True, verbose_name='Фото')
+    photo_url = models.URLField(blank=True, null=True, verbose_name='Фото (URL)')
     phone = models.CharField(max_length=17, validators=[validate_phone], verbose_name='Телефон')
     email = models.EmailField(verbose_name='Email')
     description = models.TextField(verbose_name='Описание работы')
+    url = models.URLField(blank=True, null=True, verbose_name='URL')
     is_active = models.BooleanField(default=True, verbose_name='Активен')
     
     class Meta:

@@ -79,3 +79,43 @@
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
+/* Темная тема */
+html[data-theme="dark"] .geolocation-container {
+    color: var(--text-primary, #e8edf5);
+}
+
+html[data-theme="dark"] .geolocation-section {
+    background: var(--bg-white, #111827);
+    box-shadow: var(--shadow-sm, 0 2px 8px rgba(0, 0, 0, 0.35));
+}
+
+html[data-theme="dark"] .location-info {
+    background: var(--bg-light, #1b2435);
+    color: var(--text-primary, #e8edf5);
+    border-left-color: var(--primary, #ff6b35);
+}
+
+html[data-theme="dark"] .location-info h3 {
+    color: var(--primary-light, #ffb38a);
+}
+
+html[data-theme="dark"] .location-info p {
+    color: var(--text-primary, #e8edf5);
+}
+
+html[data-theme="dark"] .loading-message {
+    background: rgba(74, 155, 207, 0.18);
+    color: var(--text-primary, #e8edf5);
+    border: 1px solid rgba(74, 155, 207, 0.35);
+}
+
+html[data-theme="dark"] .error-message {
+    background: rgba(248, 215, 218, 0.12);
+    color: var(--text-primary, #e8edf5);
+    border: 1px solid rgba(248, 215, 218, 0.25);
+}
+
+html[data-theme="dark"] .geolocation-container .muted {
+    color: var(--text-muted, #9aa7bd);
+}
+

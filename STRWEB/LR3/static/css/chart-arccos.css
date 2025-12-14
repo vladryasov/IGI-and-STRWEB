@@ -74,6 +74,23 @@
     margin: 0.5rem 0;
 }
 
+/* Тёмная тема */
+[data-theme="dark"] .formula-section {
+    background: var(--bg-light);
+    border: 1px solid var(--border-color);
+}
+
+[data-theme="dark"] .formula {
+    color: var(--text-primary);
+}
+
+[data-theme="dark"] .formula-section .formula {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    padding: 1rem;
+    border-radius: 8px;
+}
+
 .btn {
     padding: 0.75rem 1.5rem;
     border: none;

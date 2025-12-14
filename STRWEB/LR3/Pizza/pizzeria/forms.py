@@ -5,6 +5,7 @@ from .models import PizzaCategory, UserProfile, ROLE_CHOICES, Pizza, PizzaSize
 from django.core.exceptions import ValidationError
 import re
 from datetime import date
+from .validators import normalize_phone
 
 class LoginForm(forms.Form):
     username = forms.CharField(max_length=150)
@@ -17,8 +18,11 @@ class RegistrationForm(UserCreationForm):
         widget=forms.DateInput(attrs={'type': 'date'}),
         help_text='Вам должно быть не менее 18 лет'
     )
-    phone = forms.CharField(required=True, 
-                          help_text='Введите номер телефона в формате +375XXYYYYYYY')
+    phone = forms.CharField(
+        required=True,
+        max_length=32,
+        help_text='Можно вводить +375 (29) 111-22-33 или 8(029) 848 44 03 (будет сохранено как +375XXYYYYYYY)'
+    )
 
     class Meta:
         model = User
@@ -26,13 +30,9 @@ class RegistrationForm(UserCreationForm):
 
     def clean_phone(self):
         phone = self.cleaned_data.get('phone')
-        if phone:  # Проверяем, что телефон не пустой
-            if not re.match(r'^\+375(17|25|29|33|44)\d{7}$', phone):
-                raise ValidationError(
-                    'Неверный формат номера телефона. Используйте формат +375XXYYYYYYY, '
-                    'где XX - код оператора (17, 25, 29, 33, 44)'
-                )
-        return phone
+        if not phone:
+            return phone
+        return normalize_phone(phone)
 
     def clean_birth_date(self):
         birth_date = self.cleaned_data.get('birth_date')
@@ -59,6 +59,12 @@ class RegistrationForm(UserCreationForm):
         return user
 
 class ProfileEditForm(forms.ModelForm):
+    phone = forms.CharField(
+        required=False,
+        max_length=32,
+        help_text='Можно вводить +375 (29) 111-22-33 или 8(029) 848 44 03 (будет сохранено как +375XXYYYYYYY)'
+    )
+
     class Meta:
         model = UserProfile
         fields = ['email', 'phone', 'birth_date']
@@ -72,13 +78,9 @@ class ProfileEditForm(forms.ModelForm):
 
     def clean_phone(self):
         phone = self.cleaned_data.get('phone')
-        if phone:  # Проверяем, что телефон не пустой
-            if not re.match(r'^\+375(17|25|29|33|44)\d{7}$', phone):
-                raise ValidationError(
-                    'Неверный формат номера телефона. Используйте формат +375XXYYYYYYY, '
-                    'где XX - код оператора (17, 25, 29, 33, 44)'
-                )
-        return phone
+        if not phone:
+            return phone
+        return normalize_phone(phone)
 
     def clean_birth_date(self):
         birth_date = self.cleaned_data.get('birth_date')

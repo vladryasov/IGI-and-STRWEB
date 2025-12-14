@@ -54,8 +54,8 @@ urlpatterns = [
     # Страница с таблицей сотрудников
     path('employees/', views.employees_table, name='employees_table'),
     path('api/employees/', views.employees_api, name='employees_api'),
+    path('api/employees/add/', views.employees_add_api, name='employees_add_api'),
     # Страницы для ЛР3
-    path('math-functions/', views.math_functions, name='math_functions'),
     path('form-generator/', views.form_generator, name='form_generator'),
     path('scroll-animation/', views.scroll_animation, name='scroll_animation'),
     path('age-validator/', views.age_validator, name='age_validator'),

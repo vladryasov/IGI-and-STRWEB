@@ -5,7 +5,7 @@
 {% block description %}Определение местоположения пользователя{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/geolocation.css' %}">
+<link rel="stylesheet" href="{% static 'css/geolocation.css' %}?v=2">
 {% endblock %}
 
 {% block content %}
@@ -28,6 +28,6 @@
 {% endblock %}
 
 {% block extra_js %}
-<script src="{% static 'js/geolocation-api.js' %}"></script>
+<script src="{% static 'js/geolocation-api.js' %}?v=2"></script>
 {% endblock %}
 

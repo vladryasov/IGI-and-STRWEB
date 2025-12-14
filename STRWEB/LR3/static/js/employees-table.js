@@ -20,6 +20,7 @@ class EmployeesTable {
         this.detailsBlock = document.getElementById('employee-details');
         this.premiateResult = document.getElementById('premiate-result');
         this.preloader = document.querySelector('.preloader');
+        this.tableWrapper = document.querySelector('.table-wrapper');
 
         this.bindStaticEvents();
         this.init();
@@ -131,7 +132,11 @@ class EmployeesTable {
 
         const photoInput = document.getElementById('form-photo');
         if (photoInput) {
-            photoInput.addEventListener('blur', () => this.validateURL(photoInput.value));
+            photoInput.addEventListener('change', () => this.checkFormValidity());
+        }
+        const urlInput = document.getElementById('form-url');
+        if (urlInput) {
+            urlInput.addEventListener('blur', () => this.validateURL(urlInput.value));
         }
         const phoneInput = document.getElementById('form-phone');
         if (phoneInput) {
@@ -164,7 +169,7 @@ class EmployeesTable {
     }
 
     ensureMinimumRecords(data) {
-        const base = (data && data.length ? data : this.sampleEmployees()).map(emp => this.normalizeEmployee(emp));
+        const base = (data);
         const result = [...base];
         let idx = 0;
         while (result.length < 10 && base.length) {
@@ -173,34 +178,6 @@ class EmployeesTable {
             idx += 1;
         }
         return result;
-    }
-
-    sampleEmployees() {
-        const placeholders = [];
-        for (let i = 1; i <= 10; i++) {
-            placeholders.push({
-                id: i,
-                name: `Сотрудник ${i}`,
-                position: 'Специалист',
-                photo: `https://via.placeholder.com/120?text=Employee+${i}`,
-                phone: '+375 (29) 111-22-33',
-                email: `employee${i}@pizzeria.by`,
-                description: 'Описание работы сотрудника'
-            });
-        }
-        return placeholders;
-    }
-
-    normalizeEmployee(emp) {
-        return {
-            id: emp.id ?? Date.now(),
-            name: emp.name || 'Неизвестный',
-            position: emp.position || 'Сотрудник',
-            photo: emp.photo || 'https://via.placeholder.com/120?text=Photo',
-            phone: emp.phone || '',
-            email: emp.email || '',
-            description: emp.description || ''
-        };
     }
 
     render() {
@@ -218,12 +195,13 @@ class EmployeesTable {
         if (!pageEmployees.length) {
             this.tbody.innerHTML = `
                 <tr class="placeholder-row">
-                    <td colspan="7">Ничего не найдено</td>
+                    <td colspan="8">Ничего не найдено</td>
                 </tr>
             `;
             return;
         }
 
+        const fallbackPhoto = 'https://via.placeholder.com/60?text=Photo';
         const rows = pageEmployees.map(emp => `
             <tr data-id="${emp.id}" class="${this.selectedEmployees.has(emp.id) ? 'selected-row' : ''}">
                 <td class="checkbox-cell">
@@ -231,9 +209,10 @@ class EmployeesTable {
                 </td>
                 <td>${this.escapeHtml(emp.name)}</td>
                 <td>${this.escapeHtml(emp.position)}</td>
-                <td><img src="${emp.photo}" alt="${this.escapeHtml(emp.name)}" width="60" height="60"></td>
-                <td>${this.escapeHtml(emp.phone)}</td>
-                <td>${this.escapeHtml(emp.email)}</td>
+                <td><img src="${emp.photo}" alt="${this.escapeHtml(emp.name)}" width="60" height="60" onerror="this.onerror=null;this.src='${fallbackPhoto}';"></td>
+                <td>${emp.url ? `<a href="${this.escapeHtml(emp.url)}" target="_blank" rel="noopener noreferrer">${this.escapeHtml(emp.url)}</a>` : ''}</td>
+                <td>${emp.phone ? `<a href="tel:${this.escapeHtml(emp.phone)}">${this.escapeHtml(emp.phone)}</a>` : ''}</td>
+                <td>${emp.email ? `<a href="mailto:${this.escapeHtml(emp.email)}">${this.escapeHtml(emp.email)}</a>` : ''}</td>
                 <td>${this.escapeHtml(emp.description)}</td>
             </tr>
         `).join('');
@@ -311,6 +290,7 @@ class EmployeesTable {
             this.filteredEmployees = this.employees.filter(emp =>
                 emp.name.toLowerCase().includes(value) ||
                 emp.position.toLowerCase().includes(value) ||
+                (emp.url || '').toLowerCase().includes(value) ||
                 emp.phone.toLowerCase().includes(value) ||
                 emp.email.toLowerCase().includes(value) ||
                 emp.description.toLowerCase().includes(value)
@@ -333,14 +313,14 @@ class EmployeesTable {
         const value = (url || '').trim();
         const pattern = /^https?:\/\/.+(\.php|\.html)$/;
         const isValid = !!value && pattern.test(value);
-        const validationDiv = document.getElementById('photo-validation');
+        const validationDiv = document.getElementById('url-validation');
         if (validationDiv) {
             validationDiv.textContent = value
                 ? (isValid ? 'URL валиден' : 'URL должен начинаться с http:// или https:// и заканчиваться на .php или .html')
                 : '';
             validationDiv.className = `validation-message ${isValid ? 'valid' : value ? 'invalid' : ''}`;
         }
-        const input = document.getElementById('form-photo');
+        const input = document.getElementById('form-url');
         if (input) {
             input.classList.toggle('invalid-input', value ? !isValid : false);
         }
@@ -368,14 +348,15 @@ class EmployeesTable {
     checkFormValidity() {
         const name = this.form?.querySelector('#form-name')?.value.trim();
         const position = this.form?.querySelector('#form-position')?.value.trim();
-        const photo = this.form?.querySelector('#form-photo')?.value.trim();
+        const photoFile = this.form?.querySelector('#form-photo')?.files?.[0];
+        const url = this.form?.querySelector('#form-url')?.value.trim();
         const phone = this.form?.querySelector('#form-phone')?.value.trim();
         const email = this.form?.querySelector('#form-email')?.value.trim();
         const description = this.form?.querySelector('#form-description')?.value.trim();
 
-        const isURLValid = this.validateURL(photo);
+        const isURLValid = this.validateURL(url);
         const isPhoneValid = this.validatePhone(phone);
-        const allFilled = name && position && photo && phone && email && description;
+        const allFilled = name && position && photoFile && url && phone && email && description;
 
         const submitBtn = document.getElementById('submit-employee-btn');
         if (submitBtn) {
@@ -383,27 +364,42 @@ class EmployeesTable {
         }
     }
 
-    addEmployee() {
+    async addEmployee() {
         const name = this.form?.querySelector('#form-name')?.value.trim();
         const position = this.form?.querySelector('#form-position')?.value.trim();
-        const photo = this.form?.querySelector('#form-photo')?.value.trim();
+        const photoFile = this.form?.querySelector('#form-photo')?.files?.[0];
+        const url = this.form?.querySelector('#form-url')?.value.trim();
         const phone = this.form?.querySelector('#form-phone')?.value.trim();
         const email = this.form?.querySelector('#form-email')?.value.trim();
         const description = this.form?.querySelector('#form-description')?.value.trim();
 
-        if (!name || !position || !photo || !phone || !email || !description) return;
-        if (!this.validateURL(photo) || !this.validatePhone(phone)) return;
+        if (!name || !position || !photoFile || !url || !phone || !email || !description) return;
+        if (!this.validateURL(url) || !this.validatePhone(phone)) return;
 
-        const employee = {
-            id: Date.now(),
-            name,
-            position,
-            photo,
-            phone,
-            email,
-            description
-        };
+        const fd = new FormData();
+        fd.append('name', name);
+        fd.append('position', position);
+        fd.append('url', url);
+        fd.append('phone', phone);
+        fd.append('email', email);
+        fd.append('description', description);
+        fd.append('photo', photoFile);
 
+        const response = await fetch('/api/employees/add/', {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': this.getCookie('csrftoken') || '',
+            },
+            body: fd
+        });
+        const result = await response.json().catch(() => null);
+        if (!response.ok || !result?.success) {
+            const msg = result?.error || `Ошибка добавления сотрудника: ${response.status}`;
+            alert(msg);
+            return;
+        }
+
+        const employee = this.normalizeEmployee(result.employee);
         this.employees.push(employee);
         this.filteredEmployees = [...this.employees];
         this.currentPage = Math.ceil(this.filteredEmployees.length / this.itemsPerPage);
@@ -450,6 +446,7 @@ class EmployeesTable {
                     <p><strong>Должность:</strong> ${this.escapeHtml(employee.position)}</p>
                     <p><strong>Телефон:</strong> ${this.escapeHtml(employee.phone)}</p>
                     <p><strong>Email:</strong> ${this.escapeHtml(employee.email)}</p>
+                    ${employee.url ? `<p><strong>URL:</strong> <a href="${this.escapeHtml(employee.url)}" target="_blank" rel="noopener noreferrer">${this.escapeHtml(employee.url)}</a></p>` : ''}
                     <p><strong>Описание работы:</strong> ${this.escapeHtml(employee.description)}</p>
                 </div>
             </div>
@@ -512,11 +509,17 @@ class EmployeesTable {
         if (this.preloader) {
             this.preloader.removeAttribute('hidden');
         }
+        if (this.tableWrapper) {
+            this.tableWrapper.setAttribute('hidden', 'hidden');
+        }
     }
 
     hidePreloader() {
         if (this.preloader) {
             this.preloader.setAttribute('hidden', 'hidden');
+        }
+        if (this.tableWrapper) {
+            this.tableWrapper.removeAttribute('hidden');
         }
     }
 
@@ -533,6 +536,13 @@ class EmployeesTable {
         const div = document.createElement('div');
         div.textContent = text ?? '';
         return div.innerHTML;
+    }
+
+    getCookie(name) {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop().split(';').shift();
+        return null;
     }
 }
 

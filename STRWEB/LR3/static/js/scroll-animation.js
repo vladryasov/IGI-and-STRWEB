@@ -1,79 +1,107 @@
 /**
- * Анимация при скроллинге - движущиеся пиццы
+ * Анимация “пицца из 8 долек” при скролле:
+ * - в начале секции пицца собрана
+ * - по мере прокрутки внутри секции дольки разъезжаются радиально
+ * - при прокрутке вверх (уменьшении progress) дольки собираются обратно
  */
 
-class ScrollAnimation {
+class PizzaSplitScrollAnimation {
     constructor() {
-        this.pizzas = [];
+        this.container = document.getElementById('scroll-animation-container');
+        this.pizza = document.getElementById('pizza-split-pizza');
+        this.prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        if (!this.container || !this.pizza) return;
+
+        this.slices = Array.from(this.pizza.querySelectorAll('.pizza-slice'));
+        this.ticking = false;
+
+        this.onScroll = this.onScroll.bind(this);
+        this.onResize = this.onResize.bind(this);
+        this.update = this.update.bind(this);
+
         this.init();
     }
 
     init() {
-        this.createPizzaElements();
-        this.attachScrollListener();
-        this.attachResizeListener();
+        // Reduced motion: оставляем собранную пиццу без движения
+        if (this.prefersReducedMotion) {
+            this.setSliceOffsets(0);
+            return;
+        }
+
+        // Скроллим именно контейнер секции, чтобы анимация не “улетала” со страницы
+        this.container.addEventListener('scroll', this.onScroll, { passive: true });
+        window.addEventListener('resize', this.onResize, { passive: true });
+
+        // Первичная отрисовка
+        this.update();
     }
 
-    createPizzaElements() {
-        const container = document.getElementById('scroll-animation-container');
-        if (!container) return;
+    onScroll() {
+        this.requestTick();
+    }
 
-        // Создаем несколько пицц для анимации
-        for (let i = 0; i < 8; i++) {
-            const pizza = document.createElement('div');
-            pizza.className = 'animated-pizza';
-            pizza.style.left = `${Math.random() * 100}%`;
-            pizza.style.top = `${Math.random() * 100}%`;
-            pizza.style.animationDelay = `${Math.random() * 2}s`;
-            // Делаем пиццы всегда яркими
-            pizza.style.opacity = '1';
-            pizza.innerHTML = '🍕';
-            container.appendChild(pizza);
-            this.pizzas.push(pizza);
+    onResize() {
+        this.requestTick();
+    }
+
+    requestTick() {
+        if (this.ticking) return;
+        this.ticking = true;
+        window.requestAnimationFrame(this.update);
+    }
+
+    clamp01(value) {
+        return Math.min(1, Math.max(0, value));
+    }
+
+    smoothstep(t) {
+        // 0..1 -> 0..1 (плавнее в начале/конце)
+        return t * t * (3 - 2 * t);
+    }
+
+    getProgress() {
+        const maxScroll = (this.container.scrollHeight - this.container.clientHeight);
+        if (maxScroll <= 1) return 0;
+        return this.clamp01(this.container.scrollTop / maxScroll);
+    }
+
+    setSliceOffsets(distancePx) {
+        const step = 360 / Math.max(1, this.slices.length);
+        const centerOffset = step / 2;
+
+        for (let i = 0; i < this.slices.length; i++) {
+            // 0-я долька — сверху (12 часов)
+            const angleDeg = (i * step) - 90 + centerOffset;
+            const angle = (angleDeg * Math.PI) / 180;
+
+            const dx = Math.cos(angle) * distancePx;
+            const dy = Math.sin(angle) * distancePx;
+
+            this.slices[i].style.setProperty('--tx', `${dx.toFixed(2)}px`);
+            this.slices[i].style.setProperty('--ty', `${dy.toFixed(2)}px`);
         }
     }
 
-    attachScrollListener() {
-        let lastScrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    update() {
+        this.ticking = false;
 
-        window.addEventListener('scroll', () => {
-            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-            const delta = scrollTop - lastScrollTop;
-            lastScrollTop = scrollTop;
+        const rawProgress = this.getProgress();
+        const progress = this.smoothstep(rawProgress);
 
-            this.pizzas.forEach((pizza, index) => {
-                // Храним накопленный сдвиг для каждого кусочка
-                if (typeof pizza._offsetY !== 'number') {
-                    pizza._offsetY = 0;
-                }
+        const pizzaRect = this.pizza.getBoundingClientRect();
+        const size = pizzaRect.width || pizzaRect.height || 0;
+        const maxDistance = Math.max(0, Math.min(220, size * 0.28));
 
-                // Движение в сторону скролла: вниз при прокрутке вниз, вверх при прокрутке вверх
-                pizza._offsetY += delta * 0.35;
-
-                // Легкое вращение для живости, но без масштабирования/выцветания
-                const rotation = pizza._offsetY * 0.05;
-                pizza.style.transform = `translateY(${pizza._offsetY}px) rotate(${rotation}deg)`;
-                pizza.style.opacity = '1';
-            });
-        });
-    }
-
-    attachResizeListener() {
-        window.addEventListener('resize', () => {
-            // Пересчитываем позиции при изменении размера окна
-            this.pizzas.forEach(pizza => {
-                const randomX = Math.random() * 100;
-                const randomY = Math.random() * 100;
-                pizza.style.left = `${randomX}%`;
-                pizza.style.top = `${randomY}%`;
-            });
-        });
+        this.setSliceOffsets(progress * maxDistance);
     }
 }
 
 // Инициализация
 document.addEventListener('DOMContentLoaded', () => {
-    new ScrollAnimation();
+    if (document.getElementById('scroll-animation-container')) {
+        new PizzaSplitScrollAnimation();
+    }
 });
-
 

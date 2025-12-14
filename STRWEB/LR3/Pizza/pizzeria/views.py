@@ -10,11 +10,13 @@ from decimal import Decimal
 from django.http import JsonResponse, HttpResponse
 from django.core.paginator import Paginator
 from django.contrib import messages
-import matplotlib.pyplot as plt
-import pandas as pd
 import io
 import base64
 from datetime import timedelta
+import re
+from django.core.validators import validate_email
+from django.core.exceptions import ValidationError
+from .validators import normalize_phone
 
 # Проверка роли
 def get_user_role(user):
@@ -33,22 +35,57 @@ def is_client(user):
 
 # Главная страница
 def home(request):
-    # Получаем все категории с их пиццами
-    categories = PizzaCategory.objects.all().prefetch_related('pizza_set')
-    # Получаем пиццы без категории (если такие есть)
-    pizzas_without_category = Pizza.objects.filter(categories=None)
     # Последняя опубликованная новость
     latest_news = News.objects.filter(is_published=True).order_by('-created_at').first()
     # Активные партнеры (для блока на главной)
     partners = Partner.objects.filter(is_active=True)
-    
+
+    # Данные для каталога (как на странице pizza_list)
+    categories = PizzaCategory.objects.all()
+    pizzas_qs = Pizza.objects.all()
+
+    category = request.GET.get('category')
+    if category:
+        pizzas_qs = pizzas_qs.filter(categories__name=category)
+
+    min_price = request.GET.get('min_price')
+    max_price = request.GET.get('max_price')
+    if min_price:
+        pizzas_qs = pizzas_qs.filter(base_price__gte=min_price)
+    if max_price:
+        pizzas_qs = pizzas_qs.filter(base_price__lte=max_price)
+
+    sort = request.GET.get('sort')
+    if sort == 'price_asc':
+        pizzas_qs = pizzas_qs.order_by('base_price')
+    elif sort == 'price_desc':
+        pizzas_qs = pizzas_qs.order_by('-base_price')
+    elif sort == 'name':
+        pizzas_qs = pizzas_qs.order_by('name')
+
+    paginator = Paginator(pizzas_qs.distinct(), 12)
+    page = request.GET.get('page')
+    pizzas = paginator.get_page(page)
+
+    # Пиццы для слайдера (фиксированные ID по вашему требованию)
+    # 4 сыра -> /pizza/1/, пепперони -> /pizza/6/, семейная -> /pizza/7/
+    four_cheese = Pizza.objects.filter(id=1).first()
+    pepperoni = Pizza.objects.filter(id=6).first()
+    family = Pizza.objects.filter(id=7).first()
+
     context = {
-        'categories': categories,
-        'pizzas_without_category': pizzas_without_category,
         'latest_news': latest_news,
         'partners': partners,
     }
-    return render(request, 'pizzeria/home.html', {'context': context})
+
+    return render(request, 'pizzeria/home.html', {
+        'context': context,
+        'categories': categories,
+        'pizzas': pizzas,
+        'featured_four_cheese': four_cheese,
+        'featured_pepperoni': pepperoni,
+        'featured_family': family,
+    })
 
 def about(request):
     company_info = CompanyInfo.objects.first()
@@ -175,6 +212,37 @@ def seed_contacts_if_needed():
 
     if to_create:
         Contact.objects.bulk_create(to_create)
+
+def seed_employees_if_needed():
+    """Создаёт недостающих сотрудников, чтобы было минимум 10 записей."""
+    from .models import Employee
+    existing_count = Employee.objects.count()
+    if existing_count >= 10:
+        return
+
+    samples = []
+    for i in range(1, 11):
+        samples.append({
+            'name': f'Сотрудник {i}',
+            'position': 'Специалист',
+            'photo_url': f'https://via.placeholder.com/120?text=Employee+{i}',
+            'phone': '+375 (29) 111-22-33',
+            'email': f'employee{i}@pizzeria.by',
+            'description': 'Описание работы сотрудника',
+            'url': f'https://example.com/profile{i}.html',
+            'is_active': True,
+        })
+
+    to_create = []
+    for sample in samples:
+        if Employee.objects.filter(email=sample['email']).exists():
+            continue
+        to_create.append(Employee(**sample))
+        if existing_count + len(to_create) >= 10:
+            break
+
+    if to_create:
+        Employee.objects.bulk_create(to_create)
 
 def contacts(request):
     seed_contacts_if_needed()
@@ -661,6 +729,8 @@ def remove_from_cart(request, item_id):
 
 @user_passes_test(lambda u: is_staff(u) or is_admin(u))
 def staff_statistics(request):
+    import matplotlib.pyplot as plt
+    import pandas as pd
     # Получаем данные за последние 30 дней
     end_date = timezone.now()
     start_date = end_date - timedelta(days=30)
@@ -879,23 +949,95 @@ def employees_table(request):
 @user_passes_test(lambda u: is_admin(u), login_url='/no-access/')
 def employees_api(request):
     """API endpoint для получения списка сотрудников"""
-    seed_contacts_if_needed()
-    contacts_qs = Contact.objects.all().order_by('-is_main', 'id')
-    employees = [{
-        'id': contact.id,
-        'name': contact.address,  # используем адрес как ФИО/имя
-        'position': 'Сотрудник',
-        'photo': contact.image.url if contact.image else 'https://via.placeholder.com/120?text=Photo',
-        'phone': contact.phone,
-        'email': contact.email,
-        'description': contact.working_hours or '',
-    } for contact in contacts_qs]
+    from .models import Employee
+    seed_employees_if_needed()
+    employees_qs = Employee.objects.filter(is_active=True).order_by('name', 'id')
+
+    employees = []
+    for emp in employees_qs:
+        photo = None
+        try:
+            if emp.photo:
+                photo = emp.photo.url
+        except Exception:
+            photo = None
+        if not photo:
+            photo = emp.photo_url or 'https://via.placeholder.com/120?text=Photo'
+
+        employees.append({
+            'id': emp.id,
+            'name': emp.name,
+            'position': emp.position,
+            'photo': photo,
+            'url': emp.url or '',
+            'phone': emp.phone,
+            'email': emp.email,
+            'description': emp.description or '',
+        })
 
     return JsonResponse(employees, safe=False)
 
-def math_functions(request):
-    """Страница с математическими функциями"""
-    return render(request, 'pizzeria/math_functions.html')
+@user_passes_test(lambda u: is_admin(u), login_url='/no-access/')
+def employees_add_api(request):
+    """API endpoint для добавления сотрудника (multipart/form-data)."""
+    if request.method != 'POST':
+        return JsonResponse({'success': False, 'error': 'Method not allowed'}, status=405)
+
+    from .models import Employee
+
+    name = (request.POST.get('name') or '').strip()
+    position = (request.POST.get('position') or '').strip()
+    url = (request.POST.get('url') or '').strip()
+    phone = (request.POST.get('phone') or '').strip()
+    email = (request.POST.get('email') or '').strip()
+    description = (request.POST.get('description') or '').strip()
+    photo_file = request.FILES.get('photo')
+
+    if not all([name, position, url, phone, email, description, photo_file]):
+        return JsonResponse({'success': False, 'error': 'Все поля обязательны, включая фото'}, status=400)
+
+    url_pattern = re.compile(r'^https?:\/\/.+(\.php|\.html)$', re.IGNORECASE)
+    if not url_pattern.match(url):
+        return JsonResponse({'success': False, 'error': 'URL должен начинаться с http(s):// и заканчиваться на .php или .html'}, status=400)
+
+    try:
+        phone = normalize_phone(phone)
+    except ValidationError as e:
+        return JsonResponse({'success': False, 'error': str(e.message)}, status=400)
+
+    try:
+        validate_email(email)
+    except ValidationError:
+        return JsonResponse({'success': False, 'error': 'Некорректный email'}, status=400)
+
+    if getattr(photo_file, 'content_type', '') and not photo_file.content_type.startswith('image/'):
+        return JsonResponse({'success': False, 'error': 'Фото должно быть изображением'}, status=400)
+
+    emp = Employee(
+        name=name,
+        position=position,
+        url=url,
+        phone=phone,
+        email=email,
+        description=description,
+        photo=photo_file,
+        is_active=True,
+    )
+    emp.save()
+
+    return JsonResponse({
+        'success': True,
+        'employee': {
+            'id': emp.id,
+            'name': emp.name,
+            'position': emp.position,
+            'photo': emp.photo.url if emp.photo else (emp.photo_url or 'https://via.placeholder.com/120?text=Photo'),
+            'url': emp.url or '',
+            'phone': emp.phone,
+            'email': emp.email,
+            'description': emp.description or '',
+        }
+    })
 
 @user_passes_test(lambda u: is_admin(u), login_url='/no-access/')
 def form_generator(request):

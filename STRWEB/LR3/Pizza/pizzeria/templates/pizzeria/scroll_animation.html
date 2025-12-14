@@ -20,8 +20,20 @@
         <p>Начните прокручивать страницу, чтобы увидеть анимацию.</p>
     </section>
 
-    <div id="scroll-animation-container">
-        <!-- Пиццы будут созданы через JavaScript -->
+    <div id="scroll-animation-container" role="region" aria-label="Секция анимации пиццы (прокрутите внутри блока)" tabindex="0">
+        <div class="pizza-stage" aria-hidden="true">
+            <div id="pizza-split-pizza" class="pizza" role="img" aria-label="Пицца из 8 долек">
+                <div class="pizza-slice" style="--i: 0"></div>
+                <div class="pizza-slice" style="--i: 1"></div>
+                <div class="pizza-slice" style="--i: 2"></div>
+                <div class="pizza-slice" style="--i: 3"></div>
+                <div class="pizza-slice" style="--i: 4"></div>
+                <div class="pizza-slice" style="--i: 5"></div>
+                <div class="pizza-slice" style="--i: 6"></div>
+                <div class="pizza-slice" style="--i: 7"></div>
+            </div>
+        </div>
+        <div class="pizza-scroll-spacer" aria-hidden="true"></div>
     </div>
 
     <section style="padding: 2rem; text-align: center;">
@@ -38,7 +50,5 @@
 {% endblock %}
 
 {% block extra_js %}
-<script src="{% static 'js/scroll-animation-enhanced.js' %}"></script>
+<script src="{% static 'js/scroll-animation.js' %}"></script>
 {% endblock %}
-
-

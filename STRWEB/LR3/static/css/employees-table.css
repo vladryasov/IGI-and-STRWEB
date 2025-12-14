@@ -138,6 +138,7 @@
     padding: 0.5rem 1rem;
     border: 1px solid #ddd;
     background: white;
+    color: var(--text-dark, #333);
     border-radius: 4px;
     cursor: pointer;
     transition: all 0.3s ease;
@@ -158,6 +159,8 @@
 .pagination-btn:disabled {
     opacity: 0.5;
     cursor: not-allowed;
+    color: var(--text-muted, #888);
+    background: #f5f5f5;
 }
 
 .pagination-ellipsis {
@@ -200,6 +203,22 @@
 .add-employee-form textarea.invalid-input {
     border-color: #ff0000;
     background-color: #ffe0e0;
+}
+
+/* Темная тема: делаем невалидные поля читабельными */
+[data-theme="dark"] .add-employee-form input.invalid-input,
+[data-theme="dark"] .add-employee-form textarea.invalid-input {
+    border-color: #ff6b6b;
+    background-color: rgba(255, 107, 107, 0.18);
+    color: var(--text-primary);
+}
+
+[data-theme="dark"] .validation-message.invalid {
+    color: #ff9a9a;
+}
+
+[data-theme="dark"] .validation-message.valid {
+    color: #7ee787;
 }
 
 .add-employee-form textarea {
