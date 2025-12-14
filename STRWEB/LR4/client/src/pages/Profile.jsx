@@ -18,15 +18,34 @@ export function Profile() {
   useEffect(() => {
     if (!token) return;
     fetchMe();
-    fetch(ordersUrl, { headers: { ...authHeaders, "X-Timezone": Intl.DateTimeFormat().resolvedOptions().timeZone } })
-      .then(r => r.json())
-      .then(d => setOrders(d.items || []))
-      .catch(() => {});
+    
+    const loadOrders = () => {
+      fetch(ordersUrl, { headers: { ...authHeaders, "X-Timezone": Intl.DateTimeFormat().resolvedOptions().timeZone } })
+        .then(r => r.json())
+        .then(d => setOrders(d.items || []))
+        .catch(() => {});
+    };
+    
+    loadOrders();
+    
+    // Автоматическое обновление списка заказов каждые 3 секунды
+    const intervalId = setInterval(loadOrders, 3000);
+    
+    return () => clearInterval(intervalId);
   }, [token, authHeaders, ordersUrl, fetchMe]);
 
   function onOrderTrack(data) {
     // required by lab: onOrderTrack event handler
     setTrackEvents(prev => [{ at: new Date().toISOString(), data }, ...prev].slice(0, 10));
+    
+    // Обновляем статус заказа в списке "Мои заказы"
+    if (data.orderId && data.status) {
+      setOrders(prevOrders =>
+        prevOrders.map(order =>
+          order._id === data.orderId ? { ...order, status: data.status, updatedAtView: data.updatedAtView } : order
+        )
+      );
+    }
   }
 
   async function submit() {

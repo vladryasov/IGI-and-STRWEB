@@ -58,7 +58,7 @@ export class OrderTracker extends React.Component {
             updatedAtView: data.updatedAtView,
             error: ""
           });
-          this.onOrderTrack(data);
+          this.onOrderTrack({ ...data, orderId: this.props.orderId });
         } else {
           this.setState({ error: `XHR error: ${xhr.status}` });
         }

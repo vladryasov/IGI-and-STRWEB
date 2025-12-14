@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useMemo, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { API_URL } from "../config";
 import { AuthContext } from "../contexts/AuthContext";
 import { PizzaCustomizer } from "../components/PizzaCustomizer";
@@ -7,6 +7,7 @@ import { autoCancelAfter } from "../utils/autoCancel";
 
 export function PizzaDetail() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const { token, authHeaders } = useContext(AuthContext);
   const [pizza, setPizza] = useState(null);
   const [ingredients, setIngredients] = useState([]);
@@ -14,6 +15,7 @@ export function PizzaDetail() {
   const [error, setError] = useState("");
   const [orderId, setOrderId] = useState("");
   const [autoCancelInfo, setAutoCancelInfo] = useState(null);
+  const [deleting, setDeleting] = useState(false);
 
   const pizzaUrl = useMemo(() => `${API_URL}/api/pizzas/${id}`, [id]);
 
@@ -83,19 +85,60 @@ export function PizzaDetail() {
     t.cancel();
   }
 
+  async function handleDelete() {
+    if (!window.confirm("Вы уверены, что хотите удалить эту пиццу?")) return;
+
+    setDeleting(true);
+    try {
+      const res = await fetch(`${API_URL}/api/pizzas/${id}`, {
+        method: "DELETE",
+        headers: { ...authHeaders }
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || "Delete failed");
+      navigate("/catalog");
+    } catch (e) {
+      setError(e.message || "Delete failed");
+      setDeleting(false);
+    }
+  }
+
   if (loading) return <div className="container muted">Загрузка…</div>;
-  if (error) return <div className="container error">{error}</div>;
+  if (error && !pizza) return <div className="container error">{error}</div>;
   if (!pizza) return <div className="container muted">Пицца не найдена</div>;
+
+  const imageUrl = pizza.imageUrl 
+    ? (pizza.imageUrl.startsWith('data:') || pizza.imageUrl.startsWith('http')
+        ? pizza.imageUrl 
+        : `${API_URL}${pizza.imageUrl.startsWith('/') ? '' : '/'}${pizza.imageUrl}`)
+    : null;
 
   return (
     <div className="container">
       <div className="card card--detail">
+        {imageUrl && (
+          <div className="detail__image">
+            <img src={imageUrl} alt={pizza.name} />
+          </div>
+        )}
         <div className="detail__head">
           <div>
             <h2 className="h2">{pizza.name}</h2>
             <div className="muted">{pizza.description}</div>
           </div>
-          <div className="price price--big">{Math.round(pizza.basePrice)} ₴</div>
+          <div>
+            <div className="price price--big">{Math.round(pizza.basePrice)} ₴</div>
+            {token && (
+              <div className="row" style={{ marginTop: "12px", justifyContent: "flex-end" }}>
+                <button className="btn btn--ghost" onClick={() => navigate(`/manage-pizza/${id}/edit`)}>
+                  Редактировать
+                </button>
+                <button className="btn btn--ghost" onClick={handleDelete} disabled={deleting}>
+                  {deleting ? "Удаление..." : "Удалить"}
+                </button>
+              </div>
+            )}
+          </div>
         </div>
         <div className="tags">
           {(pizza.tags || []).map(t => (
@@ -111,6 +154,8 @@ export function PizzaDetail() {
           ))}
         </ul>
       </div>
+
+      {error && <div className="card error">{error}</div>}
 
       <PizzaCustomizer
         basePizza={pizza}

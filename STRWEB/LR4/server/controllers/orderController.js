@@ -124,7 +124,7 @@ export async function processOrder(req, res) {
   await step("confirmed", 500);
   await step("cooking", 800);
   await step("packed", 600);
-  await step("delivering", 800);
+  await step("delivering", 30000);
 
   // simulate courier moving
   order.courierLocation = { lat: 50.4501 + Math.random() / 100, lng: 30.5234 + Math.random() / 100 };

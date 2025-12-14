@@ -13,6 +13,13 @@ import {
   updateOrder
 } from "../controllers/orderController.js";
 
+// Валидация адреса: формат "ул. XXX, д. XXXX, кв. XXXXX"
+function validateAddressFormat(address) {
+  if (typeof address !== "string") return false;
+  const addressPattern = /^ул\.\s+\S+,\s+д\.\s+\S+,\s+кв\.\s+\S+$/i;
+  return addressPattern.test(address.trim());
+}
+
 export const orderRouter = Router();
 
 orderRouter.get("/", requireAuth, asyncHandler(listMyOrders));
@@ -20,7 +27,15 @@ orderRouter.post(
   "/",
   requireAuth,
   [
-    body("deliveryAddress").isString().isLength({ min: 5, max: 200 }),
+    body("deliveryAddress")
+      .isString()
+      .isLength({ min: 5, max: 200 })
+      .custom(value => {
+        if (!validateAddressFormat(value)) {
+          throw new Error("Адрес должен быть в формате: ул. XXX, д. XXXX, кв. XXXXX");
+        }
+        return true;
+      }),
     body("promoCode").optional().isString().isLength({ max: 30 }),
     body("items").isArray({ min: 1 }),
     body("items.*.pizza").isString(),
@@ -36,7 +51,16 @@ orderRouter.put(
   "/:id",
   requireAuth,
   [
-    body("deliveryAddress").optional().isString().isLength({ min: 5, max: 200 }),
+    body("deliveryAddress")
+      .optional()
+      .isString()
+      .isLength({ min: 5, max: 200 })
+      .custom(value => {
+        if (value && !validateAddressFormat(value)) {
+          throw new Error("Адрес должен быть в формате: ул. XXX, д. XXXX, кв. XXXXX");
+        }
+        return true;
+      }),
     body("promoCode").optional().isString().isLength({ max: 30 }),
     body("items").optional().isArray({ min: 1 }),
     body("items.*.pizza").optional().isString(),

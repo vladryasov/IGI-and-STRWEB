@@ -1,8 +1,10 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useContext, useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { API_URL } from "../config";
+import { AuthContext } from "../contexts/AuthContext";
 
 export function Catalog() {
+  const { token } = useContext(AuthContext);
   const [q, setQ] = useState("");
   const [sort, setSort] = useState("createdAt");
   const [dir, setDir] = useState("desc");
@@ -56,27 +58,53 @@ export function Catalog() {
             <option value="asc">ASC</option>
           </select>
         </div>
+        {token && (
+          <div style={{ marginTop: "12px" }}>
+            <Link className="btn btn--primary" to="/manage-pizza">
+              🍕 Управление пиццами
+            </Link>
+          </div>
+        )}
         {loading ? <div className="muted">Загрузка…</div> : null}
         {error ? <div className="error">{error}</div> : null}
       </div>
 
       <div className="grid grid--cards">
-        {items.map(p => (
-          <Link to={`/pizza/${p._id}`} className="card card--pizza animate-in" key={p._id}>
-            <div className="card__top">
-              <h3 className="h3">{p.name}</h3>
-              <span className="price">{Math.round(p.basePrice)} ₴</span>
-            </div>
-            <p className="muted">{p.description}</p>
-            <div className="tags">
-              {(p.tags || []).slice(0, 4).map(t => (
-                <span className="tag" key={t}>
-                  {t}
-                </span>
-              ))}
-            </div>
-          </Link>
-        ))}
+        {items.map(p => {
+          const imageUrl = p.imageUrl 
+            ? (p.imageUrl.startsWith('data:') || p.imageUrl.startsWith('http')
+                ? p.imageUrl 
+                : `${API_URL}${p.imageUrl.startsWith('/') ? '' : '/'}${p.imageUrl}`)
+            : null;
+          
+          return (
+            <Link to={`/pizza/${p._id}`} className="card card--pizza animate-in" key={p._id}>
+              <div className="card__image">
+                {imageUrl ? (
+                  <img src={imageUrl} alt={p.name} onError={(e) => {
+                    e.target.style.display = 'none';
+                    e.target.nextSibling.style.display = 'flex';
+                  }} />
+                ) : null}
+                <div className="card__image-placeholder" style={{ display: imageUrl ? 'none' : 'flex' }}>
+                  🍕
+                </div>
+              </div>
+              <div className="card__top">
+                <h3 className="h3">{p.name}</h3>
+                <span className="price">{Math.round(p.basePrice)} ₴</span>
+              </div>
+              <p className="muted">{p.description}</p>
+              <div className="tags">
+                {(p.tags || []).slice(0, 4).map(t => (
+                  <span className="tag" key={t}>
+                    {t}
+                  </span>
+                ))}
+              </div>
+            </Link>
+          );
+        })}
       </div>
     </div>
   );

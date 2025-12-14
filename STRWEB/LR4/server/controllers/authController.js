@@ -57,7 +57,7 @@ export function googleCallback(req, res) {
   // passport puts user on req.user
   const user = req.user;
   const token = signToken(user);
-  const origin = process.env.CLIENT_ORIGIN || "http://localhost:5173";
+  const origin = process.env.CLIENT_ORIGIN || "http://localhost:3000";
   // Redirect back to SPA with token
   res.redirect(`${origin}/profile?token=${encodeURIComponent(token)}`);
 }

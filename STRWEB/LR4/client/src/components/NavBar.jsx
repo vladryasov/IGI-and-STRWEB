@@ -18,6 +18,14 @@ export function NavBar() {
         <NavLink className={({ isActive }) => (isActive ? "nav__link nav__link--active" : "nav__link")} to="/catalog">
           Каталог
         </NavLink>
+        {token && (
+          <NavLink
+            className={({ isActive }) => (isActive ? "nav__link nav__link--active" : "nav__link")}
+            to="/manage-pizza"
+          >
+            Управление пиццами
+          </NavLink>
+        )}
         <NavLink
           className={({ isActive }) => (isActive ? "nav__link nav__link--active" : "nav__link")}
           to="/profile"

@@ -7,6 +7,7 @@ import { Catalog } from "./pages/Catalog";
 import { PizzaDetail } from "./pages/PizzaDetail";
 import { Profile } from "./pages/Profile";
 import { NotFound } from "./pages/NotFound";
+import { ManagePizza } from "./pages/ManagePizza";
 
 export default function App() {
   return (
@@ -17,6 +18,8 @@ export default function App() {
           <Route path="/" element={<Home />} />
           <Route path="/catalog" element={<Catalog />} />
           <Route path="/pizza/:id" element={<PizzaDetail />} />
+          <Route path="/manage-pizza" element={<ManagePizza />} />
+          <Route path="/manage-pizza/:id/edit" element={<ManagePizza />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="*" element={<NotFound />} />
         </Routes>

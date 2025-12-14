@@ -52,6 +52,12 @@ export function PizzaCustomizer({ basePizza, allIngredients, onPizzaBuild }) {
     return Math.round(base * (1 - promoDiscount));
   }, [basePizza, sizeMultiplier, extraPrice, promoDiscount]);
 
+  function validateAddress(address) {
+    // Формат: ул. XXX, д. XXXX, кв. XXXXX
+    const addressPattern = /^ул\.\s+\S+,\s+д\.\s+\S+,\s+кв\.\s+\S+$/i;
+    return addressPattern.test(address.trim());
+  }
+
   function onIngredientSelect(id) {
     // required by lab: onIngredientSelect event handler
     dispatch({ type: "toggleIngredient", id });
@@ -65,8 +71,13 @@ export function PizzaCustomizer({ basePizza, allIngredients, onPizzaBuild }) {
 
   async function handleBuild() {
     // required by lab: onPizzaBuild handler
-    if (!deliveryAddress || deliveryAddress.trim().length < 5) {
-      alert("Адрес доставки минимум 5 символов.");
+    const trimmedAddress = deliveryAddress.trim();
+    if (!trimmedAddress) {
+      alert("Введите адрес доставки.");
+      return;
+    }
+    if (!validateAddress(trimmedAddress)) {
+      alert("Адрес должен быть в формате: ул. XXX, д. XXXX, кв. XXXXX");
       return;
     }
     await onPizzaBuild?.({
@@ -132,7 +143,7 @@ export function PizzaCustomizer({ basePizza, allIngredients, onPizzaBuild }) {
               className="input"
               value={deliveryAddress}
               onChange={e => setDeliveryAddress(e.target.value)}
-              placeholder="ул. Примерная, 10"
+              placeholder="ул. Примерная, д. 10, кв. 25"
             />
           </label>
 
